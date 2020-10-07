@@ -1,0 +1,14 @@
+[
+    {
+        "name": "MatCinema",
+        "totalCapacity": "333",
+        "address": "nomadas",
+        "ticketValue": "133"
+    },
+    {
+        "name": "El Mat",
+        "totalCapacity": "3",
+        "address": "direccion",
+        "ticketValue": "35"
+    }
+]
