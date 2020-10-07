@@ -55,11 +55,12 @@
 
                 foreach($arrayToDecode as $valuesArray)
                 {
-                    $cine = new cine();
-                    $cine->setName($valuesArray["name"]);
-                    $cine->setTotalCapacity($valuesArray["totalCapacity"]);
-                    $cine->setAddress($valuesArray["address"]);
-                    $cine->setTicketValue($valuesArray["ticketValue"]);
+                    $cine = new cine(
+                        $valuesArray["name"],
+                        $valuesArray["totalCapacity"],
+                        $valuesArray["address"],
+                        $valuesArray["ticketValue"]
+                    );
 
                     array_push($this->cineList, $cine);
                 }

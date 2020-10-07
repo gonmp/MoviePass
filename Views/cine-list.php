@@ -4,24 +4,24 @@
 <main class="py-5">
      <section id="listado" class="mb-5">
           <div class="container">
-               <h2 class="mb-4">Listado de cines</h2>
+               <h2 class="mb-4">Cine List</h2>
                <table class="table bg-light-alpha">
                     <thead>
-                         <th>Nombre</th>
-                         <th>Capacidad</th>
-                         <th>Direccion</th>
-                         <th>Valor de la entrada</th>
+                         <th>Name</th>
+                         <th>Capacity</th>
+                         <th>Direction</th>
+                         <th>Ticket value</th>
                     </thead>
                     <tbody>
                          <?php
-                              foreach($cinelist as $cine)
+                              foreach($cineList as $cine)
                               {
                                    ?>
                                         <tr>
-                                             <td><?php echo $cine->getNombreCine() ?></td>
-                                             <td><?php echo $cine->getCapacidadTotal() ?></td>
-                                             <td><?php echo $cine->getDireccion() ?></td>
-                                             <td><?php echo $cine->getValorEntrada() ?></td>
+                                             <td><?php echo $cine->getName() ?></td>
+                                             <td><?php echo $cine->getTotalCapacity() ?></td>
+                                             <td><?php echo $cine->getAddress() ?></td>
+                                             <td><?php echo $cine->getTicketValue() ?></td>
                                         </tr>
                                    <?php
                               }
@@ -29,8 +29,8 @@
                          </tr>
                     </tbody>
                 </table>
-                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Modificar</button>
-                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Borrar</button>
+                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Modify</button>
+                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Delete</button>
         </div>
     </section>
 </main>
