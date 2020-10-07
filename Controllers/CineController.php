@@ -5,11 +5,16 @@
     use Models\Cine as Cine;
 
     class CineController{
-
+        
         private $cineDAO;
 
         public function __construct(){
             $this->cineDAO = new CineDAO();
+        }
+
+        public function ShowModifyView($idCine)
+        {
+            require_once(VIEWS_PATH."cine-modify.php");
         }
 
         public function ShowAddView(){

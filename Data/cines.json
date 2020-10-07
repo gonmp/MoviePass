@@ -1,14 +1,30 @@
 [
     {
+        "id":"1",
         "name": "MatCinema",
         "totalCapacity": "333",
         "address": "nomadas",
         "ticketValue": "133"
     },
     {
+        "id":"2",
         "name": "El Mat",
         "totalCapacity": "3",
         "address": "direccion",
         "ticketValue": "35"
+    },
+    {
+        "id":"3",
+        "name": "1",
+        "totalCapacity": "2",
+        "address": "3",
+        "ticketValue": "4"
+    },
+    {
+        "id":"4",
+        "name": "12",
+        "totalCapacity": "21",
+        "address": "21",
+        "ticketValue": "31312123231"
     }
 ]

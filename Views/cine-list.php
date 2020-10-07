@@ -15,22 +15,23 @@
                     <tbody>
                          <?php
                               foreach($cineList as $cine)
-                              {
+                              {                                   
                                    ?>
                                         <tr>
                                              <td><?php echo $cine->getName() ?></td>
                                              <td><?php echo $cine->getTotalCapacity() ?></td>
                                              <td><?php echo $cine->getAddress() ?></td>
                                              <td><?php echo $cine->getTicketValue() ?></td>
+                                             
+                                             <td><a href="<?php echo FRONT_ROOT?>Cine/ShowModifyView?idCine=<?php echo $cine->getId();?>" class="btn btn-dark ml-auto d-block">Modify</button></td>
+                                             <td><a href="" class="btn btn-dark ml-auto d-block">Delete</button></td>                                             
                                         </tr>
                                    <?php
                               }
                          ?>
                          </tr>
                     </tbody>
-                </table>
-                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Modify</button>
-                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Delete</button>
+                </table>                                
         </div>
     </section>
 </main>

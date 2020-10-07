@@ -24,12 +24,18 @@
             return $this->cineList;
         }
 
+        public function GetCineById ($id)
+        {
+            # TODO: devuelve el cine que corresponda al ID pasado como parametro
+        }
+
         private function SaveData()
         {
             $arrayToEncode = array();
 
             foreach($this->cineList as $cine)
-            {
+            {                
+                $valuesArray["id"] = 30;
                 $valuesArray["name"] = $cine->getName();
                 $valuesArray["totalCapacity"] = $cine->getTotalCapacity();
                 $valuesArray["address"] = $cine->getAddress();
@@ -56,6 +62,7 @@
                 foreach($arrayToDecode as $valuesArray)
                 {
                     $cine = new cine(
+                        $valuesArray["id"],
                         $valuesArray["name"],
                         $valuesArray["totalCapacity"],
                         $valuesArray["address"],
