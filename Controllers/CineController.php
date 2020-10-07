@@ -1,8 +1,8 @@
 <?php
     namespace Controllers;
 
-    use DAO\CineDAO as CineDAO;
-    use Models\Cine asi Cine;
+    use DAO\CineDAO as cineDAO;
+    use Models\Cine as Cine;
 
     class CineController{
 
@@ -13,19 +13,23 @@
         }
 
         public function ShowAddView(){
-            require_once(VIEW_PATH."cine-alta.php");
+            require_once(VIEWS_PATH."cine-add.php");
         }
 
         public function ShowListView(){
 
             $cineList = $this->cineDAO->GetAll();
 
-            require_once(VIEW_PATH."cine-list.php");
+            require_once(VIEWS_PATH."cine-list.php");
         }
 
-        public function Add(){
+        public function Add($name, $totalCapacity, $address, $ticketValue) {    
+            
+            $cine = new Cine($name, $totalCapacity, $address, $ticketValue);
+            
+            $this->cineDAO->Add($cine);
 
-            //INSERTE ADD AQUI
+            $this->ShowAddView();
         }
     }
 ?>
