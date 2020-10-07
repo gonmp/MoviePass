@@ -29,13 +29,20 @@
             # TODO: devuelve el cine que corresponda al ID pasado como parametro
         }
 
+        public function GetNewId ()
+        {
+            # TODO: busca el ultimo ID y devuelve ese ID + 1         
+
+            return 0;   
+        }
+
         private function SaveData()
         {
             $arrayToEncode = array();
 
             foreach($this->cineList as $cine)
             {                
-                $valuesArray["id"] = 30;
+                $valuesArray["id"] = $cine->getId();
                 $valuesArray["name"] = $cine->getName();
                 $valuesArray["totalCapacity"] = $cine->getTotalCapacity();
                 $valuesArray["address"] = $cine->getAddress();
