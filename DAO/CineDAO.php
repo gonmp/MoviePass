@@ -25,15 +25,30 @@
         }
 
         public function GetCineById ($id)
-        {
-            # TODO: devuelve el cine que corresponda al ID pasado como parametro
+        {            
+            $this->RetrieveData();            
+
+            foreach($cineList as $cine)
+            {
+                if ($cine->GetId() == $id) 
+                return $cine;
+            }            
         }
 
         public function GetNewId ()
         {
-            # TODO: busca el ultimo ID y devuelve ese ID + 1         
+            $this->RetrieveData();
+            $newId;
 
-            return 0;   
+            foreach($cineList as $cine)
+            {
+                if ($cine->getId() > $newId)
+                {
+                    $newId = $cine->getId();
+                }
+            }
+            
+            return ($newId + 1);   
         }
 
         private function SaveData()
