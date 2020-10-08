@@ -11,6 +11,8 @@
         public function Add(Cine $cine)
         {
             $this->RetrieveData();
+
+            $cine->setId($this->GetNewId());
             
             array_push($this->cineList, $cine);
 
