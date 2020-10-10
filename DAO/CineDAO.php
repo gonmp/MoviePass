@@ -49,18 +49,44 @@
             $this->SaveData();
         }
 
-        public function Modify($id, Cine $datosActualizados)
+        public function Modify($id, $name, $totalCapacity, $address, $ticketValue)
         {
             # modifica el cine del id con los datos actualizados
+
+            $this->RetrieveData();           
+
+            $cine = $this->GetCineById($id);
+
+            $cine->setName($name);
+            $cine->setTotalCapacity($totalCapacity);
+            $cine->setAddress($address);
+            $cine->setTicketValue($ticketValue);            
+
+            $this->SaveData();
         }
 
         public function Delete($id)
         {
             # borra un cine
 
+            $this->RetrieveData();
+
             $cine = $this->GetCineById($id);
 
             $cine->SetEnabled(false);
+            
+            $this->SaveData();
+        }        
+        
+        public function UnDelete($id)
+        {
+            # habilita un cine
+
+            $this->RetrieveData();
+
+            $cine = $this->GetCineById($id);
+
+            $cine->SetEnabled(true);
             
             $this->SaveData();
         }        

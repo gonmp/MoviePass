@@ -1,42 +1,10 @@
 [
     {
         "id": 1,
-        "name": "x",
-        "totalCapacity": "c",
-        "address": "z",
-        "ticketValue": "a",
-        "enabled": false
-    },
-    {
-        "id": 2,
-        "name": "sda",
-        "totalCapacity": "sdasdasad",
-        "address": "sdsssda",
-        "ticketValue": "sads",
-        "enabled": false
-    },
-    {
-        "id": 3,
-        "name": "sdasda",
-        "totalCapacity": "sdadsa",
-        "address": "1412",
-        "ticketValue": "4211224112",
-        "enabled": false
-    },
-    {
-        "id": 4,
-        "name": "ab1",
-        "totalCapacity": "ds",
-        "address": "dsa",
-        "ticketValue": "cxz",
-        "enabled": false
-    },
-    {
-        "id": 5,
-        "name": "sdsad",
-        "totalCapacity": "sdasdas",
-        "address": "asdasda",
-        "ticketValue": "sda",
-        "enabled": false
+        "name": "El Matias",
+        "totalCapacity": "300",
+        "address": "Avenida siempreviva 123",
+        "ticketValue": "30",
+        "enabled": true
     }
 ]

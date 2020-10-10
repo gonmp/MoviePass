@@ -14,6 +14,8 @@
 
         public function ShowModifyView($idCine)
         {
+            $cine = $this->cineDAO->GetCineById($idCine);            
+
             require_once(VIEWS_PATH."cine-modify.php");
         }
 
@@ -33,16 +35,30 @@
 
         public function Add($name, $totalCapacity, $address, $ticketValue) {    
             
-            $cine = new Cine($this->cineDAO->GetNewID(), $name, $totalCapacity, $address, $ticketValue, true);
-            
+            $cine = new Cine($this->cineDAO->GetNewID(), $name, $totalCapacity, $address, $ticketValue, true);            
             $this->cineDAO->Add($cine);
-
             $this->ShowAddView();
+        }
+
+        public function Modify($id, $name, $totalCapacity, $address, $ticketValue)
+        {            
+            $this->cineDAO->Modify($id, $name, $totalCapacity, $address, $ticketValue);
+            $this->ShowListView();
         }
 
         public function Delete($cineId)
         {
-            $this->cineDAO->Delete($cineId);
+            $cine = $this->cineDAO->GetCineById($cineId);
+
+            if ($cine->getEnabled())
+            {
+                $this->cineDAO->Delete($cineId);
+            }
+            else
+            {
+                $this->cineDAO->UnDelete($cineId);
+            }
+            
             $this->ShowListView();
         }
     }
