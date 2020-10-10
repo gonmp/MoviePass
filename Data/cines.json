@@ -2,7 +2,7 @@
     {
         "id": 1,
         "name": "El Matias",
-        "totalCapacity": "300",
+        "totalCapacity": "345",
         "address": "Avenida siempreviva 123",
         "ticketValue": "30",
         "enabled": true
