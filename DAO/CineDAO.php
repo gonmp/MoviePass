@@ -1,4 +1,14 @@
 <?php
+    /* funcionalidades: 
+            . agregar cine
+            . modicar cine
+            . borrar cine (de forma logica)
+
+            . obtener todos los cines de la lista
+            . obtener un cine de la lista segun el id    
+            . obtener el ultimo id de la lista de cines
+    */
+
     namespace DAO;
 
     use DAO\ICineDAO as ICineDAO;
@@ -8,41 +18,14 @@
     {
         private $cineList = array();
 
-        public function Add(Cine $cine)
+        public function GetNewId()
         {
+            # devuelve el ID correspondiente al nuevo cine
+
             $this->RetrieveData();
+            $newId = 0;
 
-            $cine->setId($this->GetNewId());
-            
-            array_push($this->cineList, $cine);
-
-            $this->SaveData();
-        }
-
-        public function GetAll()
-        {
-            $this->RetrieveData();
-
-            return $this->cineList;
-        }
-
-        public function GetCineById ($id)
-        {            
-            $this->RetrieveData();            
-
-            foreach($cineList as $cine)
-            {
-                if ($cine->GetId() == $id) 
-                return $cine;
-            }            
-        }
-
-        public function GetNewId ()
-        {
-            $this->RetrieveData();
-            $newId;
-
-            foreach($cineList as $cine)
+            foreach($this->cineList as $cine)
             {
                 if ($cine->getId() > $newId)
                 {
@@ -53,8 +36,80 @@
             return ($newId + 1);   
         }
 
+        public function Add(Cine $cine)
+        {
+            # agrega un cine
+            
+            $this->RetrieveData();
+
+            $cine->setId($this->GetNewId());
+            
+            array_push($this->cineList, $cine);
+
+            $this->SaveData();
+        }
+
+        public function Modify($id, Cine $datosActualizados)
+        {
+            # modifica el cine del id con los datos actualizados
+        }
+
+        public function Delete($id)
+        {
+            # borra un cine
+
+            $cine = $this->GetCineById($id);
+
+            $cine->SetEnabled(false);
+            
+            $this->SaveData();
+        }        
+
+        public function GetAllEnabled ()
+        {
+            # devuelve todos los cines de la lista que no fueron borrados de forma logica            
+
+            $this->RetrieveData();
+
+            $enabledCineList = array();
+
+            foreach($this->cineList as $cine)
+            {
+                if ($cine->GetEnabled() == true)
+                {
+                    array_push($enabledCineList, $cine);
+                }
+            }
+
+            return $enabledCineList;
+        }
+
+        public function GetCineById ($id)
+        {            
+            # devuelve el cine correspondiente al paramatro id
+
+            $this->RetrieveData();            
+
+            foreach($this->cineList as $cine)
+            {
+                if ($cine->GetId() == $id) 
+                return $cine;
+            }            
+        }
+
+        public function GetAll()
+        {
+            # devuelve todos los cines de la lista
+
+            $this->RetrieveData();                      
+
+            return $this->cineList;
+        }        
+
         private function SaveData()
         {
+            # salva los cines en Json
+
             $arrayToEncode = array();
 
             foreach($this->cineList as $cine)
@@ -64,6 +119,7 @@
                 $valuesArray["totalCapacity"] = $cine->getTotalCapacity();
                 $valuesArray["address"] = $cine->getAddress();
                 $valuesArray["ticketValue"] = $cine->getTicketValue();
+                $valuesArray["enabled"] = $cine->getEnabled();
 
                 array_push($arrayToEncode, $valuesArray);
             }
@@ -75,6 +131,8 @@
 
         private function RetrieveData()
         {
+            # obtiene todos los cines de un json y los pone en cineList
+
             $this->cineList = array();
 
             if(file_exists('Data/cines.json'))
@@ -90,7 +148,8 @@
                         $valuesArray["name"],
                         $valuesArray["totalCapacity"],
                         $valuesArray["address"],
-                        $valuesArray["ticketValue"]
+                        $valuesArray["ticketValue"],
+                        $valuesArray["enabled"]
                     );
 
                     array_push($this->cineList, $cine);

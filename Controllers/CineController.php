@@ -23,6 +23,9 @@
 
         public function ShowListView(){
 
+            # el admin deberia poder ver todos, el cliente no
+            # $cineList = $this->cineDAO->GetAllEnabled();
+
             $cineList = $this->cineDAO->GetAll();
 
             require_once(VIEWS_PATH."cine-list.php");
@@ -30,11 +33,17 @@
 
         public function Add($name, $totalCapacity, $address, $ticketValue) {    
             
-            $cine = new Cine($name, $totalCapacity, $address, $ticketValue);
+            $cine = new Cine($this->cineDAO->GetNewID(), $name, $totalCapacity, $address, $ticketValue, true);
             
             $this->cineDAO->Add($cine);
 
             $this->ShowAddView();
+        }
+
+        public function Delete($cineId)
+        {
+            $this->cineDAO->Delete($cineId);
+            $this->ShowListView();
         }
     }
 ?>
