@@ -28,7 +28,7 @@
                                              <td><?php echo ($cine->getEnabled() == true)? "true" : "false"; ?></td>
                                              
                                              <td><a href="<?php echo FRONT_ROOT?>Cine/ShowModifyView?idCine=<?php echo $cine->getId();?>" class="btn btn-dark ml-auto d-block">Modify</button></td>
-                                             <td><a href="<?php echo FRONT_ROOT?>Cine/Delete?idCine=<?php echo $cine->getId();?>" class="btn btn-dark ml-auto d-block">Delete</button></td>                                             
+                                             <td><a href="<?php echo FRONT_ROOT?>Cine/Delete?idCine=<?php echo $cine->getId();?>" class="btn btn-dark ml-auto d-block">Delete/Undelete</button></td>                                             
                                         </tr>
                                    <?php
                               }
