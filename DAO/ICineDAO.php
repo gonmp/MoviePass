@@ -6,6 +6,6 @@
     interface ICineDAO
     {
         function Add(Cine $cine);
-        function GetAll();
+        function GetAllEnabled();
     }
 ?>
