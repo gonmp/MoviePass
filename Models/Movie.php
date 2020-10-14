@@ -3,24 +3,24 @@ namespace Models;
 
 class Movie
 {
-    private float $popularity;
-    private int $voteCount;
-    private boolean $video;
-    private String $posterPath;
-    private int $id;
-    private boolean $adult;
-    private String $backdropPath;
-    private String $originalLenguage;
-    private String $originalTitle;
+    private $popularity;
+    private $voteCount;
+    private $video;
+    private $posterPath;
+    private $id;
+    private $adult;
+    private $backdropPath;
+    private $originalLenguage;
+    private $originalTitle;
     #private Arrayvalue $genreIds;
-    private String $title;
-    private float $voteAverage;
-    private String $overview;
-    private date $releaseDate;
-    private boolean $enabled;
+    private $title;
+    private $voteAverage;
+    private $overview;
+    private $releaseDate;
+    private $enabled;
    
     
-    public function __construct (){}
+    
     public function __construct ($popularity, $voteCount, $video, $posterPath, $id, $adult, $backdropPath, $originalLenguage, $originalTitle, $genreIds,
      $title, $voteAverage, $overview, $releaseDate, $enabled)
     {

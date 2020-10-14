@@ -174,7 +174,7 @@
             
             file_put_contents('Data/movies.json', $jsonContent);
 
-            echo $jsonContent;
+           
         }
 
         private function RetrieveData()
@@ -214,7 +214,7 @@
             }
         }
 
-        private function getMoviesFromAPI()
+        public function getMoviesFromAPI()
         {
 
             # obtiene el json con todos los movies de la API
@@ -223,17 +223,29 @@
             $handle =curl_init();
             // Will return the response, if false it prints the response
             curl_setopt($handle,CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
             // Set the url
             curl_setopt($handle, CURLOPT_URL,"https://api.themoviedb.org/3/movie/now_playing?api_key=32629d64c451c1bd620ae0ad25053beb&language=en-US&page=1%22%22");
 
-            // Execute the session and store the contents in $result
+            // Execute the session and store the contents in $result y lo muestra
+        
             $result=curl_exec($handle);
             // Closing the session
             curl_close($handle);
 
-            # guarda el json en un archivo
+            #Paso el JSON a array
+            $arrayToDecode=json_decode($result);
 
-            file_put_contents('Data/movies.json', $result);
+            #Paso el array a JSON para que se vea PRETTY
+            $jsonContent = json_encode($arrayToDecode, JSON_PRETTY_PRINT);
+        
+            #Guardo el json en un archivo
+            file_put_contents('Data/movies.json', $jsonContent);
+
+
+
+            
+            
         }
     }
 ?>
