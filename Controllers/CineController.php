@@ -10,7 +10,7 @@
 
         public function __construct(){
             $this->cineDAO = new CineDAO();
-        }
+        }        
 
         public function ShowModifyView($idCine)
         {

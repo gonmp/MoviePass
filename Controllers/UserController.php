@@ -14,65 +14,47 @@
             $this->userDAO = new UserDAO();
         }        
 
-        public function Login ($user, $password)
+        public function Add ($userName, $password)
         {
-            $loginUser = new User($user, $password);          
+            $user = new User($this->userDAO->GetNewID(), $userName, $password);
+            $this->userDAO->Add($user);
+            
+            $this->ShowLoginView();
+        }
 
-            if ($this->CheckUserName($loginUser))
+        public function ShowLoginView ()
+        {
+            require_once(VIEWS_PATH."login.php");
+        }
+
+        public function ShowRegisterView ()
+        {
+            require_once(VIEWS_PATH."register.php");
+        }
+
+        public function Login ($user, $password)
+        {  
+            if ($this->userDAO->CheckAdmin($user, $password))
+            {                           
+                $cineController = new CineController();
+                $cineController->ShowListView();
+            }   
+            else if ($this->userDAO->CheckUser($user, $password))
             {
-                if ($this->CheckUserPassword($loginUser))
-                {
-                    // TODO: si es admin, ir a la ventana de administracion de CINES
-                    //       si es usuario, ir a una ventana cualquiera con el mensaje de login realizado con exito                    
-                    
-                    if ($this->CheckAdmin($loginUser))
-                    {                           
-                        require_once(FRONT_ROOT."Cine/ShowListView");                    
-                    }   
-                    else
-                    {
-                        // TODO: esto despues lo ponemos con el link que corresponde
+                require_once(VIEWS_PATH."cine-add.php");                
 
-                        require_once(VIEWS_PATH."index.php");
-                        echo "logueado correctamente";
-                    }                                     
-                }
-                else
-                {
-                    // TODO: error en la password
-                    $this->LoginError("password incorrecta");
-                }
+                // TODO: enviarlo a algun lugar
             }
             else
-            {
-                // TODO: error en el usuario
+            {                
                 $this->LoginError("usuario incorrecto");
             }
-        }
-        
-        private function CheckUserName ($loginUser)
-        {
-            // TODO: devolver lo que de el DAO
-
-            return true;
-        }
-        private function CheckUserPassword ($loginPassword)
-        {
-            // TODO: devolver lo que de el DAO
-
-            return true;
-        }
-        
-        private function CheckAdmin ($loginUser)
-        {
-            // TODO: devolver lo que de el DAO
-
-            return $loginUser->GetAdmin();
         }
 
         private function LoginError ($error)
         {
             // TODO: ir a la ventana de login mostrando el error
+
             require_once(VIEWS_PATH."login.php");            
         }
     }
