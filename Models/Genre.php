@@ -10,15 +10,15 @@ class Genre{
 
     public function __construct ($idGenre, $nameGenre){
 
-        $this->setIdGenre($idGenre);
-        $this->setNameGenre($nameGenre);
+        $this->SetIdGenre($idGenre);
+        $this->SetNameGenre($nameGenre);
     }
 
-    public function setIdGenre($idGenre){$this->idGenre= $idGenre;}
-    public function setNameGenre($nameGenre){$this->nameGenre= $nameGenre;}
+    public function SetIdGenre($idGenre){$this->idGenre= $idGenre;}
+    public function SetNameGenre($nameGenre){$this->nameGenre= $nameGenre;}
 
-    public function getIdGenre(){return $this->idGenre;}
-    public function getNameGenre(){return $this->nameGenre;}
+    public function GetIdGenre(){return $this->idGenre;}
+    public function GetNameGenre(){return $this->nameGenre;}
 }
 
 ?>
