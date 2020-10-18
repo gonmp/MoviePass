@@ -3,6 +3,7 @@
 
     use DAO\IGenreDAO as IGenreDAO;
     use Models\Genre as Genre;
+    
 
     class GenreDAO implements IGenreDAO{
 
