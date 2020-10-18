@@ -1,10 +1,26 @@
 [
     {
         "id": 1,
-        "name": "El Matias",
+        "name": "El Matias123",
         "totalCapacity": "345",
-        "address": "Avenida siempreviva 123",
+        "address": "fdsfdsmpreviva 123",
         "ticketValue": "30",
+        "enabled": true
+    },
+    {
+        "id": 2,
+        "name": "matias",
+        "totalCapacity": "3232",
+        "address": "21",
+        "ticketValue": "dsadsdssad",
+        "enabled": true
+    },
+    {
+        "id": 3,
+        "name": "czxxcz",
+        "totalCapacity": "cxcxxc",
+        "address": "zcxxczxcz",
+        "ticketValue": "cxxczxzc",
         "enabled": true
     }
 ]
