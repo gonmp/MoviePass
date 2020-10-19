@@ -20,6 +20,10 @@
                                 <br>
                                 <a class="btn btn-dark ml-auto d-block" href="<?php echo FRONT_ROOT ?>User/ShowRegisterView">Register</a>
                               </div>
+                              <div>                            
+                                   <?php if(isset($_SESSION['error'])){?> 
+                                   <p class="form-control"> <?= $_SESSION['error'] ?></p> <?php } ?>                                          
+                              </div>                              
                          </div>                                                  
                     </div>                    
                </form>

@@ -34,26 +34,37 @@
 
         public function Login ($user, $password)
         {  
+            # chekear si es admin
+
             if ($this->userDAO->CheckAdmin($user, $password))
             {                           
+                $_SESSION['userLoged'] = true;
                 $cineController = new CineController();
                 $cineController->ShowListView();
             }   
+
+            # chekear si es un usuario valido
+
             else if ($this->userDAO->CheckUser($user, $password))
             {
-                require_once(VIEWS_PATH."cine-add.php");                
+                // TODO: enviarlo al inicio para el usuario
+                $_SESSION['userLoged'] = true;
 
-                // TODO: enviarlo a algun lugar
+                require_once(VIEWS_PATH."cine-add.php");                                
             }
+
+            # enviarlo a login e informarle del error
+
             else
-            {                
+            {   
                 $this->LoginError("usuario incorrecto");
             }
         }
 
-        private function LoginError ($error)
+        private function LoginError ($errorMessage)
         {
             // TODO: ir a la ventana de login mostrando el error
+            $_SESSION["error"] = $errorMessage;
 
             require_once(VIEWS_PATH."login.php");            
         }
