@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-class Movie
+class Movie_Genre
 {
     private $popularity;
     private $vote_count;
@@ -12,7 +12,7 @@ class Movie
     private $backdrop_path;
     private $original_language;
     private $original_title;
-    #private $genre_ids;
+    private $genre;
     private $title;
     private $vote_average;
     private $overview;
@@ -22,7 +22,7 @@ class Movie
     
     
     public function __construct ($popularity, $vote_count, $video, $poster_path, $id, 
-    $adult, $backdrop_path, $original_language, $original_title, #$genre_ids,
+    $adult, $backdrop_path, $original_language, $original_title, $genre,
      $title, $vote_average, $overview, $release_date)#$enabled)
     {
         $this->setPopularity($popularity);
@@ -34,7 +34,7 @@ class Movie
         $this->setbackdrop_path($backdrop_path);
         $this->setoriginal_language($original_language);
         $this->setoriginal_title($original_title);
-        #$this->setgenre_ids($genre_ids);
+        $this->setgenre($genre);
         $this->setTitle($title);
         $this->setvote_average($vote_average);
         $this->setOverview($overview);
@@ -52,7 +52,7 @@ class Movie
     public function setbackdrop_path ($backdrop_path) {$this->backdrop_path = $backdrop_path;}
     public function setoriginal_language ($original_language) {$this->original_language = $original_language;}
     public function setoriginal_title ($original_title) {$this->original_title = $original_title;}
-    #public function setgenre_ids($genre_ids) {$this->genre_ids = $genre_ids;}
+    public function setgenre($genre) {$this->genre = $genre;}
     public function setTitle ($title) {$this->title = $title;}
     public function setvote_average ($vote_average) {$this->vote_average=$vote_average;} 
     public function setOverview($overview) {$this->overview= $overview;}
@@ -68,7 +68,7 @@ class Movie
     public function getbackdrop_path () {return $this->backdrop_path;}
     public function getoriginal_language () {return $this->original_language;}
     public function getoriginal_title () {return $this->original_title;}
-    #public function getgenre_ids () {return $this->genre_ids;}
+    public function getgenre () {return $this->genre;}
     public function getTitle () {return $this->title;}
     public function getvote_average () {return $this->vote_average;}
     public function getOverview () {return $this->overview;}

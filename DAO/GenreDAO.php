@@ -43,7 +43,7 @@
 
             foreach($this->genreList as $genre){
 
-                if ($genre->GetGenreId() == $idGenre) 
+                if ($genre->GetIdGenre() == $idGenre) 
                 return $genre;
             }            
         }
@@ -121,9 +121,10 @@
             {
                 $jsonContent = file_get_contents('Data/genres.json');
 
-                $arrayToDecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
+                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
 
-                foreach($arrayToDecode as $valuesArray)
+                foreach($objectTODecode["genres"] as $valuesArray)
+               
                 {
                     $genre = new Genre(
                         $valuesArray["id"],
@@ -132,6 +133,7 @@
 
                     array_push($this->genreList, $genre);
                 }
+                
             }
         }
     }
