@@ -3,9 +3,12 @@
 
     class HomeController
     {
-        public function Index($message = "")
+        public function Index($message = null)
         {
-            require_once(VIEWS_PATH."index.php");
-        }        
+            $_SESSION['userLoged'] = false;            
+            $_SESSION['error'] = $message;
+            
+            require_once(VIEWS_PATH."login.php");
+        }                
     }
 ?>
