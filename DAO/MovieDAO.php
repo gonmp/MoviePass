@@ -191,10 +191,78 @@
 
         }
 
-        private function SaveDataGenre()
+        public function GetMoviesByGenre($genreId)
         {
-           
+           //$movieListGenre = array();
 
+           $moviesGenre = array();
+
+           if(file_exists('Data/movieGenreIds.json'))
+            {
+                $jsonContent = file_get_contents('Data/movieGenreIds.json');
+
+                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
+
+                $this->idList = array();
+
+                foreach($objectTODecode as $id)
+                {
+                    $arrayIds=$id;
+                    
+                     #Guardo en el arreglo los valores id pelicula e id genero
+                     array_push($this->idList, $arrayIds);
+
+                    
+                }
+
+                foreach($objectTODecode as $id)
+                {
+
+                    if($id["idGenre"] == $genreId)
+                    {
+                        $movie = $this->GetmovieById($id["idMovie"]);
+
+                        $valuesArray["popularity"] = $movie->getPopularity();
+                        $valuesArray["vote_count"] = $movie->getvote_count();
+                        $valuesArray["video"] = $movie->getVideo();
+                        $valuesArray["poster_path"] = $movie->getposter_path();
+                        $valuesArray["id"] = $movie->getId();
+                        $valuesArray["adult"] = $movie->getAdult();
+                        $valuesArray["backdrop_path"] = $movie->getbackdrop_path();
+                        $valuesArray["original_language"] = $movie->getoriginal_language();
+                        $valuesArray["original_title"] = $movie->getoriginal_title();
+                        $valuesArray["title"] = $movie->getTitle();
+                        $valuesArray["vote_average"] = $movie->getvote_average();
+                        $valuesArray["overview"] = $movie->getOverview();
+                        $valuesArray["release_date"] = $movie->getrelease_date();
+
+                        $arrayGenre = array();
+
+                        foreach($this->idList as $movieGenreIds){
+
+                            if($movieGenreIds['idMovie']==$valuesArray["id"]){
+
+                                array_push($arrayGenre, $this->genreDAO->GetGenreById($movieGenreIds["idGenre"]));
+                                
+                            }
+                   
+                        }
+              
+                
+                
+                        $valuesArray["genre"] =$arrayGenre;
+
+                        #$valuesArray["genre"].concat($arrayGenre);
+                        #array_push($valuesArray["genre"],$arrayGenre);
+                        
+                        array_push($moviesGenre, $valuesArray);
+                    }
+                     #Guardo en el arreglo los valores id pelicula e id genero
+                }
+                
+            }
+
+            return $moviesGenre;
             
         }
 
@@ -226,14 +294,50 @@
                         $valuesArray["title"],
                         $valuesArray["vote_average"],
                         $valuesArray["overview"],
-                        $valuesArray["release_date"],
-                        
+                        $valuesArray["release_date"]
                     );
 
                     array_push($this->movieList, $movie);
                 }
-            } 
-            
+            }
+
+        }
+
+            public function GetAllMoviesGenre()
+            {
+            # obtiene todos los movies de un json y los pone en movieList
+
+            $this->movieList = array();
+
+            if(file_exists('Data/movies.json'))
+            {
+                $jsonContent = file_get_contents('Data/movies.json');
+
+                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
+
+                
+                foreach($objectTODecode as $valuesArray)
+                {
+                    $movie = new movie(
+                        $valuesArray["popularity"],
+                        $valuesArray["vote_count"],
+                        $valuesArray["video"],
+                        $valuesArray["poster_path"],
+                        $valuesArray["id"],
+                        $valuesArray["adult"],
+                        $valuesArray["backdrop_path"],
+                        $valuesArray["original_language"],
+                        $valuesArray["original_title"],
+                        $valuesArray["title"],
+                        $valuesArray["vote_average"],
+                        $valuesArray["overview"],
+                        $valuesArray["release_date"]
+                    );
+
+                    array_push($this->movieList, $movie);
+                }
+            }
+           
             $this->idList = array();
 
             if(file_exists('Data/movieGenreIds.json'))
@@ -294,8 +398,9 @@
                 array_push($this->movieGenre, $valuesArray);
                 }
 
+               //var_dump($this->movieGenre[0]);
 
-               var_dump($this->movieGenre[0]["genre"]);
+               return $this->movieGenre;
 
             }
 
@@ -358,7 +463,7 @@
                         $valuesArray["title"],
                         $valuesArray["vote_average"],
                         $valuesArray["overview"],
-                        $valuesArray["release_date"],
+                        $valuesArray["release_date"]
                       
                     );
 
