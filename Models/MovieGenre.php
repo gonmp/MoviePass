@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-class Movie_Genre
+class MovieGenre
 {
     private $popularity;
     private $vote_count;

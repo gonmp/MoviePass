@@ -13,6 +13,7 @@
 
     use DAO\IMovieDAO as IMovieDAO;
     use Models\Movie as Movie;
+    use Models\MovieGenre as MovieGenre;
     use Models\Genre as Genre;
     use DAO\GenreDAO as GenreDAO;
 
@@ -209,6 +210,7 @@
 
                 $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
 
+                
                 foreach($objectTODecode as $valuesArray)
                 {
                     $movie = new movie(
@@ -234,7 +236,7 @@
             
             $this->idList = array();
 
-            if(file_exists('Data/movieGenre.json'))
+            if(file_exists('Data/movieGenreIds.json'))
             {
                 $jsonContent = file_get_contents('Data/movieGenreIds.json');
 
@@ -242,16 +244,18 @@
 
                 foreach($objectTODecode as $id)
                 {
-                    $arrayIds["idGenre"]=$id;
-                    $arrayIds["idMovie"]=$valuesArray["id"];
-
+                    $arrayIds=$id;
+                    
                      #Guardo en el arreglo los valores id pelicula e id genero
                      array_push($this->idList, $arrayIds);
+
+                    
                 }
+                
             }
 
-        
 
+           
             foreach($this->movieList as $movie){
 
                 $valuesArray["popularity"] = $movie->getPopularity();
@@ -275,19 +279,23 @@
                     if($movieGenreIds['idMovie']==$valuesArray["id"]){
 
                         array_push($arrayGenre, $this->genreDAO->GetGenreById($movieGenreIds["idGenre"]));
-                    
+                        
                     }
                    
                 }
+              
+                
+                
+                $valuesArray["genre"] =$arrayGenre;
 
-                $valuesArray["genre"].concat($arrayGenre);
+                #$valuesArray["genre"].concat($arrayGenre);
                 #array_push($valuesArray["genre"],$arrayGenre);
                 
                 array_push($this->movieGenre, $valuesArray);
                 }
 
 
-               var_dump($this->movieGenre);
+               var_dump($this->movieGenre[0]["genre"]);
 
             }
 
