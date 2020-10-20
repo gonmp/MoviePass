@@ -4,6 +4,7 @@
     use DAO\UserDAO as UserDAO;    
     use Models\User as User;
     use Controllers\CineController as CineController;
+    use Controllers\MovieController as MovieController;
 
     class UserController
     {        
@@ -48,9 +49,12 @@
             else if ($this->userDAO->CheckUser($user, $password))
             {
                 // TODO: enviarlo al inicio para el usuario
-                $_SESSION['userLoged'] = true;
+                $_SESSION['userLoged'] = true;                
 
-                require_once(VIEWS_PATH."cine-add.php");                                
+                $movieController = new MovieController();
+                $movieController->ShowSearchMovieView();
+                
+                #require_once(VIEWS_PATH."user-movie-form.php");                                
             }
 
             # enviarlo a login e informarle del error

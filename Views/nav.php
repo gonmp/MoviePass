@@ -4,8 +4,8 @@ if (isset($_SESSION['userLoged']))
 {
      if ($_SESSION['userLoged'] == false)
      {          
-          $homeController = new Controllers\HomeController();
-          $homeController->Index("Debe loguerse");
+          //$homeController = new Controllers\HomeController();
+          //$homeController->Index("Debe loguerse");
      }
 }
 ?>
