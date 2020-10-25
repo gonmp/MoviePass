@@ -17,13 +17,8 @@ class MovieGenre
     private $vote_average;
     private $overview;
     private $release_date;
-    #private $enabled;
-   
-    
-    
-    public function __construct ($popularity, $vote_count, $video, $poster_path, $id, 
-    $adult, $backdrop_path, $original_language, $original_title, $genre,
-     $title, $vote_average, $overview, $release_date)#$enabled)
+     
+    public function __construct ($popularity, $vote_count, $video, $poster_path, $id, $adult, $backdrop_path, $original_language, $original_title, $genre, $title, $vote_average, $overview, $release_date)
     {
         $this->setPopularity($popularity);
         $this->setvote_count($vote_count);
@@ -39,9 +34,7 @@ class MovieGenre
         $this->setvote_average($vote_average);
         $this->setOverview($overview);
         $this->setrelease_date($release_date);
-        #$this->setEnabled($enabled);
     }
-    
     
     public function setPopularity ($popularity) {$this->popularity = $popularity;}
     public function setvote_count ($vote_count) {$this->vote_count = $vote_count;}
@@ -57,8 +50,7 @@ class MovieGenre
     public function setvote_average ($vote_average) {$this->vote_average=$vote_average;} 
     public function setOverview($overview) {$this->overview= $overview;}
     public function setrelease_date ($release_date) {$this->release_dateId = $release_date;}
-    #public function setEnabled ($enabled) {$this->enabled = $enabled;}
-
+    
     public function getPopularity () {return $this->popularity;}
     public function getvote_count () {return $this->vote_count;}
     public function getVideo () {return $this->video;}
@@ -73,7 +65,6 @@ class MovieGenre
     public function getvote_average () {return $this->vote_average;}
     public function getOverview () {return $this->overview;}
     public function getrelease_date () {return $this->release_date;}
-    #public function getEnabled () {return $this->enabled;}
 }
 
 ?>
