@@ -7,12 +7,12 @@
                          <div class="col-lg-4">
                               <div class="form-group">
                                    <label for="">User</label>
-                                   <input type="text" name="userName" value="" class="form-control" required>
+                                   <input type="text" pattern="[A-Za-z0-9]+" title="Only letters and numbers" name="userName" value="" class="form-control" minlength="5" maxlength="10" required>
                               </div>
                               
                               <div class="form-group">
                                    <label for="">Password</label>
-                                   <input type="text" name="password" value="" class="form-control" required>
+                                   <input type="password" name="password" value="" class="form-control" minlength="5" maxlength="10" required>
                               </div>
 
                               <div class="form-group">
@@ -22,7 +22,7 @@
                               </div>
                               <div>                            
                                    <?php if(isset($_SESSION['error'])){?> 
-                                   <p class="form-control"> <?= $_SESSION['error'] ?></p> <?php } ?>                                          
+                                   <p class="btn btn-dark"> <?= $_SESSION['error'] ?></p> <?php } ?>                                          
                               </div>                              
                          </div>                                                  
                     </div>                    

@@ -23,10 +23,7 @@
             require_once(VIEWS_PATH."cine-add.php");
         }
 
-        public function ShowListView(){
-
-            # el admin deberia poder ver todos, el cliente no
-            # $cineList = $this->cineDAO->GetAllEnabled();
+        public function ShowListView(){            
 
             $cineList = $this->cineDAO->GetAll();
 

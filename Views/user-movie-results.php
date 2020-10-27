@@ -5,13 +5,13 @@
 <main class="py-5">
      <section id="listado" class="mb-5">
           <div class="container">
-               <h2 class="mb-4">Resultado</h2>
+               <h2 class="mb-4">Result</h2>
                <table class="table bg-light-alpha">
                     <thead>
-                         <th>Título</th>
-                         <th>Lenguaje</th>
-                         <th>Resumen</th>
-                         <th>Géneros</th>
+                         <th>Title</th>
+                         <th>Lenguage</th>
+                         <th>Description</th>
+                         <th>Genres</th>
                     </thead>
                     <tbody>
                          <?php

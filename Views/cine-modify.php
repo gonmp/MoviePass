@@ -12,27 +12,27 @@
                             <input type="hidden" name="id" value="<?php echo $cine->getId();?>"  />
 
                             <label for="">Name</label>                            
-                            <input type="text" name="name" value="<?php echo $cine->getName();?>" class="form-control" >
+                            <input type="text" pattern="[A-Za-z0-9]+" title="Only letters and numbers" name="name" value="<?php echo $cine->getName();?>" class="form-control" minlength="2" maxlength="50" required>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Capacity</label>
-                            <input type="text" name="totalCapacity" value="<?php echo $cine->getTotalCapacity();?>" class="form-control">
+                            <input type="number" name="totalCapacity" value="<?php echo $cine->getTotalCapacity();?>" class="form-control"  min="1" max="500" required>
                         </div>
                     </div>
                     
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Address</label>
-                            <input type="text" name="address" value="<?php echo $cine->getAddress();?>" class="form-control">
+                            <input type="text" pattern="[A-Za-z0-9]+" title="Only letters and numbers" name="address" value="<?php echo $cine->getAddress();?>" class="form-control" minlength="10" maxlength="100" required>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Ticket value</label>
-                            <input type="text" name="ticketValue" value="<?php echo $cine->getTicketValue();?>" class="form-control">
+                            <input type="number" name="ticketValue" value="<?php echo $cine->getTicketValue();?>" class="form-control" min="1" max="500" required>
                         </div>
                     </div>
                 </div>

@@ -10,14 +10,14 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">User</label>
-                            <input type="text" name="userName" value="" class="form-control">
+                            <input type="text" pattern="[A-Za-z0-9]+" name="userName" value="" class="form-control" minlength="5" maxlength="10" required>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Password</label>
-                            <input type="text" name="password" value="" class="form-control">
+                            <input type="password" name="password" value="" class="form-control" minlength="5" maxlength="10" required>
                         </div>
                     </div>
                 </div>                

@@ -8,12 +8,11 @@ class User
     private $password;
     private $admin;
 
-    public function __construct ($id, $userName, $password)
+    public function __construct ($userName, $password)
     {
-        $this->SetId($id);
         $this->SetUserName($userName);
         $this->SetPassword($password);
-    }
+    }   
 
     public function GetId(){return $this->id;}
     public function GetUserName(){return $this->userName;}

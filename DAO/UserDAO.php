@@ -12,7 +12,7 @@
         {
             $this->RetrieveData();
             $newId = 0;
-
+            
             foreach($this->userList as $user)
             {
                 if ($user->GetId() > $newId)
@@ -43,6 +43,21 @@
             {
                 if ($userName == $user->GetUserName()
                 &&  $password == $user->GetPassword())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public function CheckUserName ($userName)
+        {
+            $this->RetrieveData();
+
+            foreach($this->userList as $user)
+            {
+                if ($userName == $user->GetUserName())
                 {
                     return true;
                 }
@@ -171,11 +186,12 @@
 
                 foreach($arrayToDecode as $valuesArray)
                 {
-                    $user = new user(
-                        $valuesArray["id"],
+                    $user = new user(                        
                         $valuesArray["userName"],
                         $valuesArray["password"],                        
                     );
+
+                    $user->SetId($valuesArray["id"]);
 
                     array_push($this->userList, $user);
                 }

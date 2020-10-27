@@ -17,10 +17,18 @@
 
         public function Add ($userName, $password)
         {
-            $user = new User($this->userDAO->GetNewID(), $userName, $password);
-            $this->userDAO->Add($user);
-            
-            $this->ShowLoginView();
+            if ($this->userDAO->CheckUserName($userName) == true)
+            {
+                $this->Error("username is already in use");
+            }
+            else
+            {
+                $user = new User($userName, $password);
+                $this->userDAO->Add($user);
+                $_SESSION["error"] = null;
+                
+                $this->ShowLoginView();
+            }            
         }
 
         public function ShowLoginView ()
@@ -61,13 +69,12 @@
 
             else
             {   
-                $this->LoginError("usuario incorrecto");
+                $this->Error("wrong username or password");
             }
         }
 
-        private function LoginError ($errorMessage)
-        {
-            // TODO: ir a la ventana de login mostrando el error
+        private function Error ($errorMessage)
+        {            
             $_SESSION["error"] = $errorMessage;
 
             require_once(VIEWS_PATH."login.php");            
