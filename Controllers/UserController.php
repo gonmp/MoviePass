@@ -3,7 +3,7 @@
 
     use DAO\UserDAO as UserDAO;    
     use Models\User as User;
-    use Controllers\CineController as CineController;
+    use Controllers\CinemaController as CinemaController;
     use Controllers\MovieController as MovieController;
 
     class UserController
@@ -48,8 +48,8 @@
             if ($this->userDAO->CheckAdmin($user, $password))
             {                           
                 $_SESSION['userLoged'] = true;
-                $cineController = new CineController();
-                $cineController->ShowListView();
+                $cinemaController = new CinemaController();
+                $cinemaController->ShowListView();
             }   
 
             # chekear si es un usuario valido

@@ -2,23 +2,25 @@
 
 namespace Models;
 
-class Genre{
+class Genre
+{
 
     private $idGenre;
     private $nameGenre;
 
 
-    public function __construct ($idGenre, $nameGenre){
+    public function __construct ($idGenre, $nameGenre)
+    {
 
-        $this->SetIdGenre($idGenre);
-        $this->SetNameGenre($nameGenre);
+        $this->setIdGenre($idGenre);
+        $this->setNameGenre($nameGenre);
     }
 
-    public function SetIdGenre($idGenre){$this->idGenre= $idGenre;}
-    public function SetNameGenre($nameGenre){$this->nameGenre= $nameGenre;}
+    public function setIdGenre($idGenre){$this->idGenre= $idGenre;}
+    public function setNameGenre($nameGenre){$this->nameGenre= $nameGenre;}
 
-    public function GetIdGenre(){return $this->idGenre;}
-    public function GetNameGenre(){return $this->nameGenre;}
+    public function getIdGenre(){return $this->idGenre;}
+    public function getNameGenre(){return $this->nameGenre;}
 }
 
 ?>

@@ -2,7 +2,7 @@
     require_once('nav.php');
 ?>
 <main class="py-5">
-    <section id="Add Cine" class="mb-5">
+    <section id="Add Cinema" class="mb-5">
         <div class="container">
             <h2 class="mb-4">Register User<h2>
             <form action="<?php echo FRONT_ROOT ?>User/Add" method="post" class="bg-light-alpha p-5">

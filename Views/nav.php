@@ -16,10 +16,10 @@ if (isset($_SESSION['userLoged']))
      </span>
      <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-               <a class="nav-link" href="<?php echo FRONT_ROOT ?>Cine/ShowAddView">Add Cine</a>
+               <a class="nav-link" href="<?php echo FRONT_ROOT ?>Cinema/ShowAddView">Add Cinema</a>
           </li>
           <li class="nav-item">
-               <a class="nav-link" href="<?php echo FRONT_ROOT ?>Cine/ShowListView">List Cine</a>
+               <a class="nav-link" href="<?php echo FRONT_ROOT ?>Cinema/ShowListView">List Cinema</a>
           </li>          
      </ul>
 </nav>

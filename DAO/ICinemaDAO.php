@@ -1,16 +1,16 @@
 <?php
     namespace DAO;
 
-    use Models\Cine as Cine;
+    use Models\Cinema as Cinema;
 
-    interface ICineDAO
+    interface ICinemaDAO
     {
         function GetNewId();
-        function Add(Cine $cine);
+        function Add(Cinema $cinema);
         function Modify($id, $name, $totalCapacity, $address, $ticketValue);
         function Delete($id);
         function UnDelete($id);
-        function GetCineById ($id);
+        function GetCinemaById ($id);
         function GetAll();
         function GetAllEnabled();
     }
