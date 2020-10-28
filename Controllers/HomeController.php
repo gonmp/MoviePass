@@ -5,7 +5,7 @@
     {
         public function Index($message = null)
         {
-            $_SESSION['userLoged'] = false;            
+            $_SESSION['adminLogged'] = false;            
             $_SESSION['error'] = $message;
             
             require_once(VIEWS_PATH."login.php");

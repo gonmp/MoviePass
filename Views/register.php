@@ -10,7 +10,7 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">User</label>
-                            <input type="text" pattern="[A-Za-z0-9]+" name="userName" value="" class="form-control" minlength="5" maxlength="10" required>
+                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="userName" value="" class="form-control" minlength="5" maxlength="10" required>
                         </div>
                     </div>
 
