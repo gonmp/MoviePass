@@ -12,7 +12,7 @@
                             <input type="hidden" name="id" value="<?php echo $cine->getId();?>"  />
 
                             <label for="">Name</label>                            
-                            <input type="text" pattern="[A-Za-z0-9]+" title="Only letters and numbers" name="name" value="<?php echo $cine->getName();?>" class="form-control" minlength="2" maxlength="50" required>
+                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="name" value="<?php echo $cine->getName();?>" class="form-control" minlength="2" maxlength="50" required>
                         </div>
                     </div>
 

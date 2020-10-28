@@ -47,7 +47,7 @@
 
             if ($this->userDAO->CheckAdmin($user, $password))
             {                           
-                $_SESSION['userLoged'] = true;
+                $_SESSION['adminLogged'] = true;
                 $cineController = new CineController();
                 $cineController->ShowListView();
             }   
@@ -56,8 +56,7 @@
 
             else if ($this->userDAO->CheckUser($user, $password))
             {
-                // TODO: enviarlo al inicio para el usuario
-                $_SESSION['userLoged'] = true;                
+                # TODO: ACA ESTA LOGUEADO EL USUARIO                
 
                 $movieController = new MovieController();
                 $movieController->ShowSearchMovieView();
