@@ -59,5 +59,9 @@
             $this->ShowListView();
         }
 
+        public function GoHome()
+        {
+            require_once(VIEWS_PATH."login.php");        
+        }
     }
 ?>
