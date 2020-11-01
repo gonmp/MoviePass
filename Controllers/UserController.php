@@ -39,15 +39,17 @@
         public function ShowRegisterView ()
         {
             require_once(VIEWS_PATH."register.php");
-        }
+        }        
 
-        public function Login ($user, $password)
+        public function Login ($user = null, $password = null)
         {  
             # chekear si es admin
 
             if ($this->userDAO->CheckAdmin($user, $password))
             {                           
+                $_SESSION["validLogin"] = true;
                 $_SESSION['adminLogged'] = true;
+
                 $cineController = new CineController();
                 $cineController->ShowListView();
             }   
@@ -55,13 +57,12 @@
             # chekear si es un usuario valido
 
             else if ($this->userDAO->CheckUser($user, $password))
-            {
-                # TODO: ACA ESTA LOGUEADO EL USUARIO                
+            {                
+                $_SESSION["validLogin"] = true;
+                $_SESSION["userLogged"] = true;                                         
 
                 $movieController = new MovieController();
-                $movieController->ShowSearchMovieView();
-                
-                #require_once(VIEWS_PATH."user-movie-form.php");                                
+                $movieController->ShowSearchMovieView();    
             }
 
             # enviarlo a login e informarle del error
@@ -76,6 +77,11 @@
         {            
             $_SESSION["error"] = $errorMessage;
 
+            $this->GoHome();
+        }
+
+        public function GoHome()
+        {
             require_once(VIEWS_PATH."login.php");            
         }
     }

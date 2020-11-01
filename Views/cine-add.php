@@ -33,7 +33,7 @@
                             <input type="number" name="ticketValue" value="" class="form-control" min="1" max="500" required>
                         </div>
                     </div>
-
+                    
                 </div>
                 <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Add cine</button>
             </form>

@@ -27,12 +27,17 @@
             require_once(VIEWS_PATH."user-movie-form.php");
         }
 
-        public function ShowResultMovieView($categoryId)
+        public function ShowResultMovieView($categoryId = null)
         {
             $genresList = $this->genreDAO->GetAllGenres();
             $list = $this->movieDAO->GetMoviesByGenre($_POST['categoryId']);
             //var_dump($list);
             require_once(VIEWS_PATH."user-movie-results.php");
+        }
+
+        public function GoHome()
+        {
+            require_once(VIEWS_PATH."login.php");            
         }
     }
 ?>

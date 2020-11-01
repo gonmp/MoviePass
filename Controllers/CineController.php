@@ -8,7 +8,8 @@
         
         private $cineDAO;
 
-        public function __construct(){
+        public function __construct()
+        {
             $this->cineDAO = new CineDAO();
         }        
 
@@ -19,19 +20,20 @@
             require_once(VIEWS_PATH."cine-modify.php");
         }
 
-        public function ShowAddView(){
+        public function ShowAddView()
+        {
             require_once(VIEWS_PATH."cine-add.php");
         }
 
-        public function ShowListView(){            
-
+        public function ShowListView()
+        {   
             $cineList = $this->cineDAO->GetAll();
 
             require_once(VIEWS_PATH."cine-list.php");
         }
 
-        public function Add($name, $totalCapacity, $address, $ticketValue) {    
-            
+        public function Add($name, $totalCapacity, $address, $ticketValue)
+        {                
             $cine = new Cine($this->cineDAO->GetNewID(), $name, $totalCapacity, $address, $ticketValue, true);            
             $this->cineDAO->Add($cine);
             $this->ShowAddView();
@@ -57,6 +59,11 @@
             }
             
             $this->ShowListView();
+        }
+
+        public function GoHome()
+        {
+            require_once(VIEWS_PATH."login.php");            
         }
     }
 ?>
