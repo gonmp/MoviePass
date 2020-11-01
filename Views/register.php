@@ -5,7 +5,7 @@
 </nav>
 
 <main class="py-5">
-    <section id="Add Cine" class="mb-5">
+    <section id="Add Cinema" class="mb-5">
         <div class="container">
             <h2 class="mb-4">Register User<h2>
             

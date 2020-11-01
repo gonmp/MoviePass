@@ -5,19 +5,23 @@
     use Models\Genre as Genre;
     
 
-    class GenreDAO implements IGenreDAO{
+    class GenreDAO implements IGenreDAO
+    {
 
         private $genreList = array();
 
 
-        public function GetNewGenreId(){
+        public function GetNewGenreId()
+        {
 
             $this->RetrieveData();
             $newId = 0;
 
-            foreach($this->genreList as $genre){
+            foreach($this->genreList as $genre)
+            {
 
-                if($genre->getGenreId() > $newId){
+                if($genre->getGenreId() > $newId)
+                {
 
                     $newId = $genre->getGenreId();
                 }
@@ -26,47 +30,53 @@
             return $newId + 1;
         }
 
-        public function AddGenre(Genre $genre){
+        public function AddGenre(Genre $genre)
+        {
             
             $this->RetrieveData();
 
-            $genre->GetGenreId($this->GetNewGenreId());
+            $genre->getGenreId($this->GetNewGenreId());
             
             array_push($this->genreList, $genre);
 
             $this->SaveData();
         }
 
-        public function GetGenreById ($idGenre){            
+        public function GetGenreById ($idGenre)
+        {            
 
             $this->RetrieveData();            
 
-            foreach($this->genreList as $genre){
+            foreach($this->genreList as $genre)
+            {
 
-                if ($genre->GetIdGenre() == $idGenre) 
+                if ($genre->getIdGenre() == $idGenre) 
                 return $genre;
             }            
         }
 
-        public function ModifyGenre($idGenre, $nameGenre){
+        public function ModifyGenre($idGenre, $nameGenre)
+        {
 
             $this->RetrieveData();           
 
-            $genre = $this->GetGenreById($idGenre);
+            $genre = $this->getGenreById($idGenre);
 
-            $genre->SetNameGenre($nameGenre);            
+            $genre->setNameGenre($nameGenre);            
 
             $this->SaveData();
         }
 
-        public function GetAllGenres(){
+        public function GetAllGenres()
+        {
 
             $this->RetrieveData();                      
 
             return $this->genreList;
         }   
 
-        public function GetGenresFromAPI(){
+        public function GetGenresFromAPI()
+        {
 
             # obtiene el json con todos los genres de la API
 
@@ -96,14 +106,15 @@
         }
         
 
-        private function SaveData(){
+        private function SaveData()
+        {
 
             $arrayToEncode = array();
 
             foreach($this->genreList as $genre)
             {                
-                $valuesArray["idGenre"] = $genre->GetIdGenre();
-                $valuesArray["nameGenre"] = $genre->GetNameGenre();
+                $valuesArray["idGenre"] = $genre->getIdGenre();
+                $valuesArray["nameGenre"] = $genre->getNameGenre();
                 
                 array_push($arrayToEncode, $valuesArray);
             }
@@ -113,7 +124,8 @@
             file_put_contents('Data/genres.json', $jsonContent);
         }
 
-        private function RetrieveData(){
+        private function RetrieveData()
+        {
             
             $this->genreList = array();
 

@@ -9,10 +9,10 @@
     },
     {
         "id": 2,
-        "name": "matias",
-        "totalCapacity": "3232",
+        "name": "matiasmatias",
+        "totalCapacity": "123",
         "address": "21",
-        "ticketValue": "dsadsdssad",
+        "ticketValue": "12",
         "enabled": true
     },
     {
@@ -37,6 +37,14 @@
         "totalCapacity": "1",
         "address": "sdaaaaaaaaaaaaaaaa",
         "ticketValue": "1",
+        "enabled": true
+    },
+    {
+        "id": 6,
+        "name": "Ambassador",
+        "totalCapacity": "300",
+        "address": "LaRioja5990",
+        "ticketValue": "340",
         "enabled": true
     }
 ]

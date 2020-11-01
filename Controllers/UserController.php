@@ -3,7 +3,7 @@
 
     use DAO\UserDAO as UserDAO;    
     use Models\User as User;
-    use Controllers\CineController as CineController;
+    use Controllers\CinemaController as CinemaController;
     use Controllers\MovieController as MovieController;
 
     class UserController
@@ -49,9 +49,8 @@
             {                           
                 $_SESSION["validLogin"] = true;
                 $_SESSION['adminLogged'] = true;
-
-                $cineController = new CineController();
-                $cineController->ShowListView();
+                $cinemaController = new CinemaController();
+                $cinemaController->ShowListView();
             }   
 
             # chekear si es un usuario valido
