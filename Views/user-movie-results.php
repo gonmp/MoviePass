@@ -1,5 +1,5 @@
 <?php
-    require_once('nav.php');
+    require_once('checkUser.php');
     require_once(VIEWS_PATH."user-movie-form.php");
 ?>
 <main class="py-5">

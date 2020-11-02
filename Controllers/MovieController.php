@@ -29,14 +29,26 @@
 
         public function ShowResultMovieView($categoryId = null)
         {
-            $genresList = $this->genreDAO->GetAllGenres();
-            $list = $this->movieDAO->GetMoviesByGenre($_POST['categoryId']);
-            //var_dump($list);
-            require_once(VIEWS_PATH."user-movie-results.php");
+            if (!$categoryId)
+            {
+                $this->GoHome();
+            }
+            else
+            {
+                $genresList = $this->genreDAO->GetAllGenres();
+                $list = $this->movieDAO->GetMoviesByGenre($_POST['categoryId']);
+                
+                require_once(VIEWS_PATH."user-movie-results.php");
+            }            
         }
 
         public function GoHome()
         {
+            $_SESSION['adminLogged'] = null;            
+            $_SESSION['userLogged'] = null; 
+
+            $_SESSION['error'] = 'Forced logout by using URL to navigate';
+
             require_once(VIEWS_PATH."login.php");            
         }
     }

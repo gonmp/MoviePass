@@ -61,6 +61,11 @@
 
         public function GoHome()
         {
+            $_SESSION['adminLogged'] = null;            
+            $_SESSION['userLogged'] = null; 
+
+            $_SESSION['error'] = 'Forced logout by using URL to navigate';
+            
             require_once(VIEWS_PATH."login.php");        
         }
     }

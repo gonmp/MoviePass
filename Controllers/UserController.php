@@ -43,6 +43,11 @@
 
         public function Login ($user = null, $password = null)
         {  
+            if (!$user || !$password)
+            {
+                $this->Error('Forced logout by using URL for navigate');
+            }
+
             # chekear si es admin
 
             if ($this->userDAO->CheckAdmin($user, $password))
@@ -81,6 +86,9 @@
 
         public function GoHome()
         {
+            $_SESSION['adminLogged'] = null;            
+            $_SESSION['userLogged'] = null; 
+
             require_once(VIEWS_PATH."login.php");            
         }
     }
