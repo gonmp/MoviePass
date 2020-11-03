@@ -39,8 +39,6 @@
                 $this->Prepare($query);
                 
                 $this->BindParameters($parameters, $queryType);
-                
-                var_dump($this->pdoStatement);
 
                 $this->pdoStatement->execute();
 
@@ -59,8 +57,6 @@
                 $this->Prepare($query);
                 
                 $this->BindParameters($parameters, $queryType);
-
-                var_dump($this->pdoStatement);
 
                 $this->pdoStatement->execute();
 
@@ -91,8 +87,6 @@
             foreach($parameters as $parameterName => &$value)
             {                
                 $i++;
-
-                var_dump($value);
 
                 if($queryType == QueryType::Query)
                 {
