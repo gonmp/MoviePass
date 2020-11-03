@@ -13,18 +13,51 @@
         public function __construct()
         {
             $this->userDAO = new UserDAO();
-        }        
+        }
+
+        public function TestGetAll()
+        {
+            $users = $this->userDAO->GetAll();;
+            var_dump($users);
+        }
+
+        public function TestGetUserByName($userName)
+        {
+            $user = $this->userDAO->GetUserByName($userName);;
+            var_dump($user);
+        }
+        
+        public function TestAdd($userName, $password, $admin)
+        {
+            $user = new User($userName, $password, $admin);
+            var_dump($user);
+            $this->userDAO->Add($user);
+        }
+
+        public function TestUpdate($id, $userName, $password, $admin)
+        {
+            $user = new User($userName, $password, $admin);
+            $user->setId($id);
+            var_dump($user);
+            $this->userDAO->Update($user);
+        }
+
+        public function TestDelete($id)
+        {
+            $this->userDAO->Delete($id);
+        }
 
         public function Add ($userName, $password)
         {
-            if ($this->userDAO->CheckUserName($userName) == true)
+            $admin = 0;
+            $user = new User($userName, $password, $admin);
+            $rowsAffected = $this->userDAO->Add($user);
+            if ($rowsAffected == 0)
             {
-                $this->Error("username is already in use");
+                $this->Error("Username is already in use");
             }
             else
             {
-                $user = new User($userName, $password);
-                $this->userDAO->Add($user);
                 $_SESSION["error"] = null;
                 
                 $this->ShowLoginView();
@@ -41,40 +74,39 @@
             require_once(VIEWS_PATH."register.php");
         }        
 
-        public function Login ($user = null, $password = null)
+        public function Login ($name = null, $password = null)
         {  
-            if (!$user || !$password)
+            if (!$name || !$password)
             {
                 $this->Error('Forced logout by using URL for navigate');
             }
 
-            # chekear si es admin
-
-            if ($this->userDAO->CheckAdmin($user, $password))
-            {                           
-                $_SESSION["validLogin"] = true;
-                $_SESSION['adminLogged'] = true;
-                $cinemaController = new CinemaController();
-                $cinemaController->ShowListView();
-            }   
-
+            $user = $this->userDAO->GetUserByName($name);
             # chekear si es un usuario valido
+            if($user != null && $user->GetPassword() == $password)
+            {
+                # chekear si es admin
+                if($user->GetAdmin())
+                {
+                    $_SESSION["validLogin"] = true;
+                    $_SESSION['adminLogged'] = true;
+                    $cinemaController = new CinemaController();
+                    $cinemaController->ShowListView();
+                }
+                else
+                {
+                    $_SESSION["validLogin"] = true;
+                    $_SESSION["userLogged"] = true;                                         
 
-            else if ($this->userDAO->CheckUser($user, $password))
-            {                
-                $_SESSION["validLogin"] = true;
-                $_SESSION["userLogged"] = true;                                         
-
-                $movieController = new MovieController();
-                $movieController->ShowSearchMovieView();    
+                    $movieController = new MovieController();
+                    $movieController->ShowSearchMovieView();
+                }
             }
-
-            # enviarlo a login e informarle del error
-
             else
             {   
-                $this->Error("wrong username or password");
-            }
+                # enviarlo a login e informarle del error
+                $this->Error("Wrong username or password");
+            }            
         }
 
         private function Error ($errorMessage)
