@@ -15,44 +15,12 @@
             $this->userDAO = new UserDAO();
         }
 
-        public function TestGetAll()
-        {
-            $users = $this->userDAO->GetAll();;
-            var_dump($users);
-        }
-
-        public function TestGetUserByName($userName)
-        {
-            $user = $this->userDAO->GetUserByName($userName);;
-            var_dump($user);
-        }
-        
-        public function TestAdd($userName, $password, $admin)
-        {
-            $user = new User($userName, $password, $admin);
-            var_dump($user);
-            $this->userDAO->Add($user);
-        }
-
-        public function TestUpdate($id, $userName, $password, $admin)
-        {
-            $user = new User($userName, $password, $admin);
-            $user->setId($id);
-            var_dump($user);
-            $this->userDAO->Update($user);
-        }
-
-        public function TestDelete($id)
-        {
-            $this->userDAO->Delete($id);
-        }
-
         public function Add ($userName, $password)
         {
             $admin = 0;
             $user = new User($userName, $password, $admin);
             $rowsAffected = $this->userDAO->Add($user);
-            if ($rowsAffected == 0)
+            if ($rowsAffected == -1)
             {
                 $this->Error("Username is already in use");
             }

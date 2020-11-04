@@ -29,7 +29,7 @@
                 #El nombre ya existe en la base de datos
                 if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
                 {
-                    return 0;
+                    return -1;
                 } 
             }            
         }
@@ -102,11 +102,16 @@
 
             try
             {
-                $this->connection->ExecuteNonQuery($query, $parameters);
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
             }
             catch(\Exception $ex)
             {
-                throw $ex;
+                #El nombre ya existe en la base de datos
+                if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
+                {
+                    return -1;
+                }
             }
         }
 
@@ -122,7 +127,8 @@
 
             try
             {
-                $this->connection->ExecuteNonQuery($query, $parameters);
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
             }
             catch(\Exception $ex)
             {
