@@ -6,195 +6,133 @@
 
     class UserDAO implements IUserDAO
     {
+        private $connection;
         private $userList = array();
-
-        public function GetNewId()
-        {
-            $this->RetrieveData();
-            $newId = 0;
-            
-            foreach($this->userList as $user)
-            {
-                if ($user->GetId() > $newId)
-                {
-                    $newId = $user->GetId();
-                }
-            }
-            
-            return ($newId + 1);   
-        }
+        private $table = "Users";
 
         public function Add(User $user)
-        {            
-            $this->RetrieveData();
-
-            $user->SetId($this->GetNewId());
+        {
             
-            array_push($this->userList, $user);
+            $query = 'INSERT INTO ' . $this->table . ' (name, password, admin) VALUES (:name, :password, :admin);';
 
-            $this->SaveData();
-        }
+            $parameters = array(':name' => $user->getUserName(), ':password' => $user->getPassword(), ':admin' => $user->getAdmin());
 
-        public function CheckUser($userName, $password)
-        {
-            $this->RetrieveData();
+            $this->connection = Connection::GetInstance();
 
-            foreach($this->userList as $user)
+            try
             {
-                if ($userName == $user->GetUserName()
-                &&  $password == $user->GetPassword())
-                {
-                    return true;
-                }
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
             }
-
-            return false;
-        }
-
-        public function CheckUserName ($userName)
-        {
-            $this->RetrieveData();
-
-            foreach($this->userList as $user)
+            catch(\Exception $ex)
             {
-                if ($userName == $user->GetUserName())
+                #El nombre ya existe en la base de datos
+                if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
                 {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public function CheckAdmin ($userName, $password)
-        {            
-            return ($userName == "admin" && $password == "admin");            
-        }
-
-        /*
-        public function Modify($id, $name, $totalCapacity, $address, $ticketValue)
-        {
-            # modifica el user del id con los datos actualizados
-
-            $this->RetrieveData();           
-
-            $user = $this->GetuserById($id);
-
-            $user->setName($name);
-            $user->setTotalCapacity($totalCapacity);
-            $user->setAddress($address);
-            $user->setTicketValue($ticketValue);            
-
-            $this->SaveData();
-        }
-
-        public function Delete($id)
-        {
-            # borra un user
-
-            $this->RetrieveData();
-
-            $user = $this->GetUserById($id);
-
-            $user->SetEnabled(false);
-            
-            $this->SaveData();
-        }        
-        
-        public function UnDelete($id)
-        {
-            # habilita un user
-
-            $this->RetrieveData();
-
-            $user = $this->GetUserById($id);
-
-            $user->SetEnabled(true);
-            
-            $this->SaveData();
-        }        
-        
-        public function GetAllEnabled ()
-        {
-            # devuelve todos los users de la lista que no fueron borrados de forma logica            
-
-            $this->RetrieveData();
-
-            $enabledUserList = array();
-
-            foreach($this->userList as $user)
-            {
-                if ($user->GetEnabled() == true)
-                {
-                    array_push($enabledUserList, $user);
-                }
-            }
-
-            return $enabledUserList;
-        }
-                
-        public function GetUserById ($id)
-        {            
-            # devuelve el user correspondiente al paramatro id
-
-            $this->RetrieveData();            
-
-            foreach($this->userList as $user)
-            {
-                if ($user->GetId() == $id) 
-                return $user;
+                    return -1;
+                } 
             }            
+        }
+
+        public function GetUserByName($name)
+        {
+            try
+            {
+                $query = "SELECT id, name, password, admin FROM " . $this->table . " WHERE name = :name;";
+                
+                $this->connection = Connection::GetInstance();
+                
+                $parameters = array(':name' => $name);
+                
+                $result = $this->connection->Execute($query, $parameters);
+
+                if($result == null)
+                {
+                    return null;
+                }
+                
+                $user = new User($result[0]['name'], $result[0]['password'], $result[0]['admin']);
+                
+                $user->setId($result[0]['id']);
+
+                return $user;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }   
         }
 
         public function GetAll()
         {
-            # devuelve todos los users de la lista
-
-            $this->RetrieveData();                      
-
-            return $this->userList;
-        }        
-        */
-
-        private function SaveData()
-        {
-            $arrayToEncode = array();
-
-            foreach($this->userList as $user)
-            {                
-                $valuesArray["id"] = $user->GetId();
-                $valuesArray["userName"] = $user->GetUserName();
-                $valuesArray["password"] = $user->GetPassword();                
-
-                array_push($arrayToEncode, $valuesArray);
-            }
-
-            $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
-            
-            file_put_contents('Data/users.json', $jsonContent);
-        }
-
-        private function RetrieveData()
-        {           
             $this->userList = array();
 
-            if(file_exists('Data/users.json'))
+            $query = "SELECT id, name, password, admin FROM " . $this->table;
+
+            $this->connection = Connection::GetInstance();
+
+            try
             {
-                $jsonContent = file_get_contents('Data/users.json');
+                $results = $this->connection->Execute($query);
 
-                $arrayToDecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-
-                foreach($arrayToDecode as $valuesArray)
+                foreach($results as $result)
                 {
-                    $user = new user(                        
-                        $valuesArray["userName"],
-                        $valuesArray["password"],                        
-                    );
-
-                    $user->SetId($valuesArray["id"]);
-
+                    $user = new User($result['name'], $result['password'], $result['admin']);
+                    $user->setId($result['id']);
                     array_push($this->userList, $user);
                 }
+
+                return $this->userList;
+            }
+            catch(\Excecption $ex)
+            {
+                throw $ex;                
+            }
+        }
+
+        public function Update(User $user)
+        {
+            $query = 'UPDATE ' . $this->table . ' SET name = :name, password = :password, admin = :admin WHERE id = :id';
+            
+            var_dump($query);
+
+            $parameters = array(':name' => $user->getUserName(), ':password' => $user->getPassword(), ':admin' => $user->getAdmin(), ':id' => $user->getId());
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
+            }
+            catch(\Exception $ex)
+            {
+                #El nombre ya existe en la base de datos
+                if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
+                {
+                    return -1;
+                }
+            }
+        }
+
+        public function Delete($id)
+        {
+            $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
+            
+            var_dump($query);
+
+            $parameters = array(':id' => $id);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex; 
             }
         }
     }
