@@ -84,17 +84,21 @@
 
                 return $this->userList;
             }
-            catch(\Excecption $ex)
+            # MP : corregido Excecption por Exception
+            catch(\Exception $ex)
             {
                 throw $ex;                
             }
         }
 
+
+        # MP : puse como comentario var_dump($query)
+
         public function Update(User $user)
         {
             $query = 'UPDATE ' . $this->table . ' SET name = :name, password = :password, admin = :admin WHERE id = :id';
             
-            var_dump($query);
+            # var_dump($query);
 
             $parameters = array(':name' => $user->getUserName(), ':password' => $user->getPassword(), ':admin' => $user->getAdmin(), ':id' => $user->getId());
 
@@ -115,11 +119,13 @@
             }
         }
 
+        # MP : puse el var_dump como comentario
+
         public function Delete($id)
         {
             $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
             
-            var_dump($query);
+            #var_dump($query);
 
             $parameters = array(':id' => $id);
 

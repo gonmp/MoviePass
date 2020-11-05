@@ -17,20 +17,20 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Capacity</label>
-                            <input type="number" name="totalCapacity" value="" class="form-control" min="1" max="500" required>
+                            <input type="number" name="totalCapacity" value="" class="form-control" min="1" max="5000" required>
                         </div>
                     </div>
                     
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Address</label>
-                            <input type="text" pattern="[A-Za-z0-9]+" title="Only letters and numbers" name="address" value="" class="form-control" minlength="10" maxlength="100" required>
+                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="address" value="" class="form-control" minlength="10" maxlength="100" required>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Ticket value</label>
-                            <input type="number" name="ticketValue" value="" class="form-control" min="1" max="500" required>
+                            <input type="number" name="ticketValue" value="" class="form-control" min="1" max="1000" required>
                         </div>
                     </div>
                     
