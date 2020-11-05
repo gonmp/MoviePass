@@ -4,14 +4,11 @@
     use Models\Cinema as Cinema;
 
     interface ICinemaDAO
-    {
-        function GetNewId();
-        function Add(Cinema $cinema);
-        function Modify($id, $name, $totalCapacity, $address, $ticketValue);
+    {        
+        function Add(Cinema $cinema);             
+        function GetCinemaByName ($name);
+        function GetAll();        
+        function Update(Cinema $cinema);
         function Delete($id);
-        function UnDelete($id);
-        function GetCinemaById ($id);
-        function GetAll();
-        function GetAllEnabled();
     }
 ?>

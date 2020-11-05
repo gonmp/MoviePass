@@ -27,8 +27,7 @@
                                              <td><?php echo $cinema->getTicketValue(); ?></td>
                                              <td><?php echo ($cinema->getEnabled() == true)? "true" : "false"; ?></td>
                                              
-                                             <td><a href="<?php echo FRONT_ROOT?>Cinema/ShowModifyView?idCinema=<?php echo $cinema->getId();?>" class="btn btn-dark ml-auto d-block">Modify</button></td>
-                                             <td><a href="<?php echo FRONT_ROOT?>Cinema/Delete?idCinema=<?php echo $cinema->getId();?>" class="btn btn-dark ml-auto d-block">Delete/Undelete</button></td>                                             
+                                             <td><a href="<?php echo FRONT_ROOT?>Cinema/ShowModifyView?name=<?php echo $cinema->getName();?>" class="btn btn-dark ml-auto d-block">Modify</button></td>                                             
                                         </tr>
                                    <?php
                               }

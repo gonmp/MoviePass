@@ -10,9 +10,8 @@ class Cinema
     private $ticketValue;
     private $enabled;
     
-    public function __construct ($id, $name, $totalCapacity, $address, $ticketValue, $enabled)
-    {
-        $this->setId($id);
+    public function __construct ($name, $totalCapacity, $address, $ticketValue, $enabled)
+    {    
         $this->setName($name);
         $this->setTotalCapacity($totalCapacity);
         $this->setAddress($address);
