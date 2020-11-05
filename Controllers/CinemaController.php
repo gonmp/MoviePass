@@ -58,14 +58,25 @@
 
         public function Update($id, $name, $totalCapacity, $address, $ticketValue, $enable)
         {   
-            $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);            
+            # solo realiza el update si el nombre del cine no existe en la base de datos
+            # tambien se fija que el nombre no sea el nombre del propio cinema, para eso compara los id
 
+            $changeCinema = false;
+
+            $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);        
             if ($cinemaExist)
             {
-                # TODO: hacer que sea un cartel de error mas agradable 
-                echo "Invalid cinema name. The name of the cinema already exists.";
+                if ($cinemaExist->getId() == $id)
+                {                 
+                    $changeCinema = true;                                          
+                }                                
             }
             else
+            {
+                $changeCinema = true;                      
+            }
+
+            if ($changeCinema)
             {
                 $cinema = new Cinema(                
                     $name,
@@ -78,6 +89,11 @@
                 $cinema->setId($id);
 
                 $this->cinemaDAO->Update($cinema);
+            }
+            else
+            {
+                # TODO: hacer que sea un cartel de error mas agradable 
+                echo "Invalid cinema name. The name of the cinema already exists.";                
             }
             
             $this->ShowListView();

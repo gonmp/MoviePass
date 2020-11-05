@@ -10,7 +10,7 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Name</label>
-                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="name" value="" class="form-control" minlength="2" maxlength="50" required>
+                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="name" value="" class="form-control" minlength="1" maxlength="50" required>
                         </div>
                     </div>
 
@@ -24,13 +24,13 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Address</label>
-                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="address" value="" class="form-control" minlength="10" maxlength="100" required>
+                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="address" value="" class="form-control" minlength="1" maxlength="100" required>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Ticket value</label>
-                            <input type="number" name="ticketValue" value="" class="form-control" min="1" max="1000" required>
+                            <input type="number" name="ticketValue" value="" class="form-control" min="1" max="5000" required>
                         </div>
                     </div>
                     

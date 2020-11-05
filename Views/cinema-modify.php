@@ -19,7 +19,7 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Capacity</label>
-                            <input type="number" name="totalCapacity" value="<?php echo $cinema->getTotalCapacity();?>" class="form-control"  min="1" max="500" required>
+                            <input type="number" name="totalCapacity" value="<?php echo $cinema->getTotalCapacity();?>" class="form-control"  min="1" max="5000" required>
                         </div>
                     </div>
                     
@@ -32,7 +32,7 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label for="">Ticket value</label>
-                            <input type="number" name="ticketValue" value="<?php echo $cinema->getTicketValue();?>" class="form-control" min="1" max="500" required>
+                            <input type="number" name="ticketValue" value="<?php echo $cinema->getTicketValue();?>" class="form-control" min="1" max="5000" required>
                         </div>
                     </div>
                     <div class="col-lg-4">
