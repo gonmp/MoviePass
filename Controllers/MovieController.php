@@ -20,7 +20,7 @@
 
         public function ShowSearchMovieView()
         {
-            $genresList = $this->genreDAO->GetAllGenres();
+            $genresList = $this->genreDAO->GetAll();
 
             //var_dump($genresList);
 
@@ -50,6 +50,11 @@
             $_SESSION['error'] = 'Forced logout by using URL to navigate';
 
             require_once(VIEWS_PATH."login.php");            
+        }
+
+        public function test(){
+
+            $this->genreDAO->getGenresFromAPI();
         }
     }
 ?>

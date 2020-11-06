@@ -5,12 +5,13 @@
 
     interface IGenreDAO
     {
-        function AddGenre(Genre $genre);
-        function GetNewGenreId();
-        function GetGenreById ($idGenre);
-        function ModifyGenre($idGenre, $nameGenre);
-        function GetAllGenres();
+        function Add(Genre $genre);
+        function GetGenreById($idGenre);
+        function GetAll();
+        function Update(Genre $genre);
+        function Delete($idGenre);
         function GetGenresFromAPI();
+        function UpdateAllGenres($objectTODecode);
         
     }
 ?>
