@@ -61,3 +61,6 @@ CREATE TABLE IF NOT EXISTS movieshow(
     CONSTRAINT fk_movieshow_cinemas FOREIGN KEY (cinemaId) REFERENCES cinemas(id) ON DELETE CASCADE,
     CONSTRAINT unq_movie_cinema_date UNIQUE (movieId, cinemaId, showDate)
 )Engine=InnoDB;
+
+ALTER TABLE movieshow
+MODIFY COLUMN showDate datetime;
