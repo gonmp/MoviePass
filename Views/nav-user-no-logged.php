@@ -14,8 +14,10 @@
     if ($_SESSION['error'] != null)
     {    
         ?>
-        <div class="float-left mx-1">
-            <p class="text-warning"><?php echo $_SESSION['error'];?></p>
+        <div class="row float-left">
+            <div class="col">
+                <p class="mb-0 text-warning"><?php echo $_SESSION['error'];?></p>            
+            </div>
         </div>
         <?php    
     }?>

@@ -8,7 +8,6 @@
 
     class MovieController
     {
-
         private $movieDAO;
         private $genreDAO;
 

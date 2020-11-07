@@ -8,7 +8,10 @@
             $_SESSION['error'] = null;
             $_SESSION['actualView'] = 'ShowSearchMovieView';
             
-            header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');
+            # header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');
+            
+            # TEST ADMIN
+            header('location:' . FRONT_ROOT . '/AdminManager/ShowIndexAdmin');
         }   
         
         public function Logout ()

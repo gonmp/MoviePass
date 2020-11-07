@@ -9,16 +9,20 @@
      }     */     
 ?>
 
-<nav class="container-fluid p-0 m-0">     
-     <div class="row py-1">          
-          <!-- moviepass logo -->
-          <div class="col p-1 mx-3">
+<nav class="container-fluid">     
+     
+     <!-- fila principal -->
+     <div class="row"> 
+
+          <!-- primera columna: moviepass logo -->
+          <div class="col p-1">
                <a href="<?php echo FRONT_ROOT ?>Home/Index">
                     <img src="<?php echo FRONT_ROOT ."/". VIEWS_PATH?>/img/moviepass_logo.png" alt="moviepass logo" class="img-fluid border border-dark rounded" style="width: 9rem">
                </a>
           </div>
 
-          <div class="col-5 py-1">               
+          <!-- segunda columna: segun estado del usuario -->
+          <div class="col-5 py-1 mx-0">               
                <?php                
 
                if ($_SESSION['userLogged'])
@@ -48,8 +52,8 @@
                ?>
           </div>
      </div>
-
-     <?php
+     
+     <?php /*
      if (isset($_SESSION['adminLogged']))
      {
           if ($_SESSION['adminLogged'] == true)
@@ -66,7 +70,8 @@
           
           <?php
           }
-     }?>  
+     } */?> 
+
 </nav>     
 
 
