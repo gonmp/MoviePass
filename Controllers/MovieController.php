@@ -52,9 +52,5 @@
             require_once(VIEWS_PATH."login.php");            
         }
 
-        public function test(){
-
-            $this->genreDAO->getGenresFromAPI();
-        }
     }
 ?>

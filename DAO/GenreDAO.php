@@ -31,8 +31,9 @@
                 #El nombre ya existe en la base de datos
                 if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
                 {
-                    return -1;
-                } 
+                    var_dump($ex);
+                }
+                
             }            
         }
 
@@ -40,7 +41,7 @@
         {
             try
             {
-                $query = "SELECT id FROM " . $this->table . " WHERE id = :id;";
+                $query = "SELECT id, name FROM " . $this->table . " WHERE id = :id;";
                 
                 $this->connection = Connection::GetInstance();
                 
@@ -52,7 +53,7 @@
                 {
                     return null;
                 }
-                
+                                
                 $genre = new Genre($result[0]['id'], $result[0]['name']);
                 
                 return $genre;
@@ -90,34 +91,12 @@
             }
         }
 
-        public function Update(Genre $genre)
-        {
-            $query = 'UPDATE ' . $this->table . ' SET name = :name WHERE id = :id';
-            
-            $parameters = array(':name' => $genre->getNameGenre(), ':id' => $genre->getIdGenre());
-
-            $this->connection = Connection::GetInstance();
-
-            try
-            {
-                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
-                return $rowsAffected;
-            }
-            catch(\Exception $ex)
-            {
-                #El nombre ya existe en la base de datos
-                if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
-                {
-                    return -1;
-                }
-            }
-        }
-        
+                
         public function Delete($idGenre)
         {
             $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
                         
-            $parameters = array(':id' => $id);
+            $parameters = array(':id' => $idGenre);
 
             $this->connection = Connection::GetInstance();
 
@@ -134,6 +113,7 @@
 
         public function GetGenresFromAPI()
         {
+            $this->DeleteAll();
 
             $handle =curl_init();
             
@@ -149,7 +129,7 @@
             $objectTODecode=json_decode($result);
             var_dump($objectTODecode);
             $this->UpdateAllGenres($objectTODecode->genres);
-
+            
         }
 
         public function UpdateAllGenres($objectTODecode)
@@ -165,6 +145,25 @@
 
                 $this->Add($genre);
             } 
+        }
+
+        public function DeleteAll()
+        {
+            $query = 'DELETE FROM ' . $this->table;
+                        
+            $parameters = array();
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex; 
+            }
         }
 
         

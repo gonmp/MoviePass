@@ -7,8 +7,7 @@
     {
         function Add(Genre $genre);
         function GetGenreById($idGenre);
-        function GetAll();
-        function Update(Genre $genre);
+        function GetAll();        
         function Delete($idGenre);
         function GetGenresFromAPI();
         function UpdateAllGenres($objectTODecode);
