@@ -68,7 +68,7 @@
 
         public function AddMovieGenre(MovieGenre $movieGenre)
         {
-            $query = 'INSERT INTO ' . $this->tableMovieGenre . ' (movieId, genreId) VALUES (:movieId, :genreId);';
+            $query = 'INSERT INTO ' . $this->tableMovieGenre . '(movieId, genreId) VALUES (:movieId, :genreId);';
 
             $parameters = array(
                 ':movieId' => $movieGenre->getIdMovie(),
@@ -88,46 +88,15 @@
             }
         }
 
-        public function UpdateAllMovies($objectTODecode)
-        {
-            # obtiene todos los movies de un json y los pone en movieList
-
-            foreach($objectTODecode as $valuesArray)
-            {
-                $movie = new Movie(
-                    $valuesArray->id,
-                    $valuesArray->title,
-                    $valuesArray->popularity,
-                    $valuesArray->vote_count,
-                    $this->transformBoolean($valuesArray->video),
-                    $valuesArray->poster_path,
-                    $this->transformBoolean($valuesArray->adult),
-                    $valuesArray->backdrop_path,
-                    $valuesArray->original_language,
-                    $valuesArray->original_title,
-                    $valuesArray->vote_average,
-                    $this->transformBoolean($valuesArray->overview),
-                );
-               
-                foreach($valuesArray->genre_ids as $genreId){
-
-                    $movieGenre = new MovieGenre(
-
-                        $valuesArray->id,
-                        $genreId,
-                    );
-                    
-                    $this->AddMovieGenre($movieGenre);
-                }
-                
-                $this->Add($movie);
-            } 
-        }
 
         public function getMoviesFromAPI()
         {
             # obtiene el json con todos los movies de la API
     
+            #Borra la tabla
+
+            DeleteAll();
+            
             $handle =curl_init();
         
             curl_setopt($handle,CURLOPT_SSL_VERIFYPEER, false);
@@ -140,11 +109,10 @@
      
             #Paso el JSON a array
             $objectTODecode=json_decode($result);
-            var_dump($objectTODecode);
-            $this->UpdataAllMovies($objectTODecode->results);  
+            $this->UpdateAllMovies($objectTODecode->results);  
         }
-        /*
-        public function GetMovieByTitle ($title)
+        
+        public function Get($id)
         {
             try
             {
@@ -187,7 +155,7 @@
                 throw $ex;
             }
         }
-        */
+        
         public function GetAll()
         {
             $this->movieList = array();
@@ -231,39 +199,6 @@
             }
         } 
         
-        public function Update(Movie $movie)
-        {
-            $query = 'UPDATE ' . $this->table . ' SET popularity = :popularity, vote_count = :vote_count, video = :video, poster_path = :poster_path, adult = :adult, bachdrop_path = :bachdrop_path, original_language = :original_language, original_title = :original_title, title = :title, vote_average = :vote_average, overview = :overview, release_date = :release_date) VALUES (:popularity, :vote_count, :video, :poster_path, :id, :adult, :bachdrop_path, :original_lenguage, :original_title, :title, :vote_average. :overview, :release_date WHERE id = :id;';
-            $parameters = array(
-                ':popularity' => $movie->getPopularity(),
-                ':vote_count'  => $movie->getVote_count(),
-                ':video' => $movie->getVideo(),
-                ':poster_path' => $movie->getPoster_path(),
-                ':id' => $movie->getId(),
-                ':adult' => $movie->getAdult(),
-                ':backdrop_path' => $movie->getBackdrop_path(),
-                ':original_language' => $movie->getOriginal_language(),
-                ':original_title' => $movie->getOriginal_title(),
-                ':title' => $movie->getTitle(),
-                ':vote_average' => $movie->getVoe_average(),
-                ':overview' => $movie->getOverview(),
-                ':release_date' => $movie->getRelease_date()
-            );
-
-            $this->connection = Connection::GetInstance();
-
-            try
-            {
-                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
-                return $rowAffected;
-            }
-            catch(\Exception $ex)
-            {
-                # TODO: implementar un mejor manejo de excepciones
-                return -1;
-            }
-        }
-
         public function Delete($id)
         {
             $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id;';
@@ -284,212 +219,28 @@
             }
         }
 
-        private function SaveDataMovie()
-       {
-            # salva los movies en Json
- 
-            $arrayToEncode = array();
-
-            foreach($this->movieList as $movie)
-            {                
-                $valuesArray["popularity"] = $movie->getPopularity();
-                $valuesArray["vote_count"] = $movie->getvote_count();
-                $valuesArray["video"] = $movie->getVideo();
-                $valuesArray["poster_path"] = $movie->getposter_path();
-                $valuesArray["id"] = $movie->getId();
-                $valuesArray["adult"] = $movie->getAdult();
-                $valuesArray["backdrop_path"] = $movie->getbackdrop_path();
-                $valuesArray["original_language"] = $movie->getoriginal_language();
-                $valuesArray["original_title"] = $movie->getoriginal_title();
-                $valuesArray["title"] = $movie->getTitle();
-                $valuesArray["vote_average"] = $movie->getvote_average();
-                $valuesArray["overview"] = $movie->getOverview();
-                $valuesArray["release_date"] = $movie->getrelease_date();
-        
-                array_push($arrayToEncode, $valuesArray);
-                $this->Add($valuesArray);
-            }
-
-            $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
-            
-            file_put_contents('Data/movies.json', $jsonContent);
-        }
-
-        private function SaveDataMovieGenre()
+        public function DeleteAll()
         {
-            # salva los moviesGenre 
+            $query = 'DELETE FROM ' . $this->table;
 
-            $this->getMoviesFromAPI();
+            $parameters = array();
 
-            $this->movieList = array();
+            $this->connection = Connection::GetInstance();
 
-            if(file_exists('Data/movies.json'))
+            try
             {
-                $jsonContent = file_get_contents('Data/movies.json');
-                
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-
-                foreach($objectTODecode["results"] as $valuesArray)
-                {
-                    $movie = new Movie(
-                        $valuesArray["popularity"],
-                        $valuesArray["vote_count"],
-                        $valuesArray["video"],
-                        $valuesArray["poster_path"],
-                        $valuesArray["id"],
-                        $valuesArray["adult"],
-                        $valuesArray["backdrop_path"],
-                        $valuesArray["original_language"],
-                        $valuesArray["original_title"],
-                        $valuesArray["title"],
-                        $valuesArray["vote_average"],
-                        $valuesArray["overview"],
-                        $valuesArray["release_date"]
-                    );
-
-                    #Recorro el arreglo de generos
-                    foreach ( $valuesArray["genre_ids"] as $id)
-                    {
-                        #guardo el id de genero
-                        $arrayIds["idGenre"]=$id;
-                        $arrayIds["idMovie"]=$valuesArray["id"];
-                        
-                        #Guardo en el arreglo los valores id pelicula e id genero
-                        array_push($this->idList, $arrayIds);
-                    }
-                    array_push($this->movieList, $movie);
-                }
-                $this->SaveDataMovie();  
-                $jsonContent = json_encode($this->idList, JSON_PRETTY_PRINT);
-            
-                #Salva los movieGenre
-                file_put_contents('Data/movieGenreIds.json', $jsonContent);
+                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowAffected;
+            }
+            catch(\Exception $ex)
+            {
+                # TODO: mejorar el manejo de excepciones con un cartel en pantalla
+                return -1;
             }
         }
 
-        
-
-        public function GetMoviesByGenre($genreId) //RetrieveDataMovieGenre
+        public function transformBoolean($bool)
         {
-        
-           $moviesGenre = array();
-
-           if(file_exists('Data/movieGenreIds.json'))
-            {
-                $jsonContent = file_get_contents('Data/movieGenreIds.json');
-
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-
-                $this->idList = array();
-
-                foreach($objectTODecode as $id)
-                {
-                    $arrayIds=$id;
-                    
-                     #Guardo en el arreglo los valores id pelicula e id genero
-
-                     array_push($this->idList, $arrayIds);       
-                }
-
-                foreach($objectTODecode as $id)
-                {
-                    if($id["idGenre"] == $genreId)
-                    {
-                        $movie = $this->GetmovieById($id["idMovie"]);
-
-                        $valuesArray["popularity"] = $movie->getPopularity();
-                        $valuesArray["vote_count"] = $movie->getvote_count();
-                        $valuesArray["video"] = $movie->getVideo();
-                        $valuesArray["poster_path"] = $movie->getposter_path();
-                        $valuesArray["id"] = $movie->getId();
-                        $valuesArray["adult"] = $movie->getAdult();
-                        $valuesArray["backdrop_path"] = $movie->getbackdrop_path();
-                        $valuesArray["original_language"] = $movie->getoriginal_language();
-                        $valuesArray["original_title"] = $movie->getoriginal_title();
-                        $valuesArray["title"] = $movie->getTitle();
-                        $valuesArray["vote_average"] = $movie->getvote_average();
-                        $valuesArray["overview"] = $movie->getOverview();
-                        
-                        $arrayGenre = array();
-
-                        foreach($this->idList as $movieGenreIds){
-
-                            if($movieGenreIds['idMovie']==$valuesArray["id"]){
-
-                                array_push($arrayGenre, $this->genreDAO->GetGenreById($movieGenreIds["idGenre"]));
-                                
-                            }                   
-                        }
-                
-                        $valuesArray["genre"] =$arrayGenre;
-
-                        array_push($moviesGenre, $valuesArray);
-                    }
-                }                
-            }
-            return $moviesGenre;           
-        }
-        
-        public function GetAllMoviesGenre()
-        {
-            $this->RetrieveDataMovie();
-           
-            $this->idList = array();
-
-            if(file_exists('Data/movieGenreIds.json'))
-            {
-                $jsonContent = file_get_contents('Data/movieGenreIds.json');
-
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-
-                foreach($objectTODecode as $id)
-                {
-                    $arrayIds=$id;
-                        
-                    #Guardo en el arreglo los valores id pelicula e id genero
-                
-                    array_push($this->idList, $arrayIds);    
-                }   
-            }
-        
-            foreach($this->movieList as $movie)
-            {
-                $valuesArray["popularity"] = $movie->getPopularity();
-                $valuesArray["vote_count"] = $movie->getvote_count();
-                $valuesArray["video"] = $movie->getVideo();
-                $valuesArray["poster_path"] = $movie->getposter_path();
-                $valuesArray["id"] = $movie->getId();
-                $valuesArray["adult"] = $movie->getAdult();
-                $valuesArray["backdrop_path"] = $movie->getbackdrop_path();
-                $valuesArray["original_language"] = $movie->getoriginal_language();
-                $valuesArray["original_title"] = $movie->getoriginal_title();
-                $valuesArray["title"] = $movie->getTitle();
-                $valuesArray["vote_average"] = $movie->getvote_average();
-                $valuesArray["overview"] = $movie->getOverview();
-                $valuesArray["release_date"] = $movie->getrelease_date();
-
-                $arrayGenre = array();
-
-                foreach($this->idList as $movieGenreIds)
-                {
-                    if($movieGenreIds['idMovie']==$valuesArray["id"])
-                    {
-                        array_push($arrayGenre, $this->genreDAO->GetGenreById($movieGenreIds["idGenre"]));
-                    }
-                }
-                
-                $valuesArray["genre"] =$arrayGenre;
-
-                array_push($this->movieGenre, $valuesArray);
-            }
-        
-            return $this->movieGenre;
-        }
-
-        
-
-        public function transformBoolean($bool){
-
             if($bool)
             {
 
@@ -499,60 +250,6 @@
             {
                 return 0;
             }
-        }
-        
-        public function GetNewId()
-        {
-            # devuelve el ID correspondiente a la nueva movie
-
-            $this->RetrieveDataMovie();
-            $newId = 0;
-
-            foreach($this->movieList as $movie)
-            {
-                if ($movie->getId() > $newId)
-                {
-                    $newId = $movie->getId();
-                }
-            }
-            return ($newId + 1);   
-        }
-
-        public function Modify($popularity, $vote_count, $video, $poster_path, $id, $adult, $backdrop_path, $original_language, $original_title, $title, $vote_average, $overview, $release_date)
-        {
-            # modifica la movie del id con los datos actualizados
-
-            $this->RetrieveDataMovie();           
-
-            $movie = $this->GetmovieById($id);
-           
-            $movie->setPopularity($popularity);
-            $movie->setvote_count($vote_count);
-            $movie->setVideo($video);
-            $movie->setposter_path($poster_path);
-            $movie->setAdult($adult);
-            $movie->setbackdrop_path($backdrop_path);
-            $movie->setoriginal_language($original_language);
-            $movie->setOriginalTitle($original_title);
-            $movie->setTitle($title);
-            $movie->setvote_average($vote_average);
-            $movie->setOverview($overview);
-            $movie->setrelease_date($release_date);            
-
-            $this->SaveDataMovie();
-        }
-    
-        public function GetmovieById ($id)
-        {            
-            # devuelve el movie correspondiente al paramatro id
-
-            $this->RetrieveDataMovie();            
-
-            foreach($this->movieList as $movie)
-            {
-                if ($movie->GetId() == $id) 
-                return $movie;
-            }            
         }
     }
 ?>
