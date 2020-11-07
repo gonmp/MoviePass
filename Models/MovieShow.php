@@ -6,26 +6,25 @@
     {
 
         private $idShow;
-        private $idMovie;
-        private $idCinema;
+        private $movie;
+        private $cinema;
         private $dateShow;
 
-        public function __construct($idShow, $idMovie, $idCinema, $showDate)
+        public function __construct($movie, $cinema, $showDate)
         {
-            $this->setIdShow($idShow);
-            $this->setIdMovie($idMovie);
-            $this->setIdCinema($idCinema);
+            $this->setMovie($movie);
+            $this->setCinema($cinema);
             $this->setDateShow($dateShow);
         }
 
         public function setIdShow($idShow) {$this->idShow = $idShow;}
-        public function setIdMovie($idMovie) {$this->idMovie = $idMovie;}
-        public function setIdCinema($idCinema) {$this->idCinema = $idCinema;}
+        public function setMovie($movie) {$this->movie = $movie;}
+        public function setCinema($cinema) {$this->cinema = $cinema;}
         public function setDateShow($dateShow) {$this->dateShow = $dateShow;}
 
         public function getIdShow() {return $this->idShow;}
-        public function getIdMovie() {return $this->idMovie;}
-        public function getIdCinema() {return $this->idCinema;}
+        public function getMovie() {return $this->movie;}
+        public function getCinema() {return $this->cinema;}
         public function getDateShow() {return $this->dateShow;}
     }
 ?>
