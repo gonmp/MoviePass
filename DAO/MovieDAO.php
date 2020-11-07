@@ -25,329 +25,78 @@
         private $idList = array();
         private $genreDAO;
         private $movieGenre = array();
-
+        private $connection;
+        private $table = "movies";
+        private $tableMovieGenre = "moviesgenres";
+        
         public function __construct ()
         {
             $this->genreDAO= new GenreDAO();
         }
-        
-        public function GetNewId()
+
+        public function Add(Movie $movie)
         {
-            # devuelve el ID correspondiente a la nueva movie
+            $query = 'INSERT INTO ' . $this->table . ' (id, title, popularity, vote_count, video, poster_path, adult, backdrop_path, original_language, original_title, vote_average, overview) VALUES (:id, :title, :popularity, :vote_count, :video, :poster_path, :adult, :backdrop_path, :original_language, :original_title, :vote_average, :overview);';
 
-            $this->RetrieveDataMovie();
-            $newId = 0;
+            $parameters = array(
+                ':id' => $movie->getId(),
+                ':title' => $movie->getTitle(),
+                ':popularity' => $movie->getPopularity(),
+                ':vote_count'  => $movie->getVote_count(),
+                ':video' => $movie->getVideo(),
+                ':poster_path' => $movie->getPoster_path(),
+                ':adult' => $movie->getAdult(),
+                ':backdrop_path' => $movie->getBackdrop_path(),
+                ':original_language' => $movie->getOriginal_language(),
+                ':original_title' => $movie->getOriginal_title(),
+                ':vote_average' => $movie->getVote_average(),
+                ':overview' => $movie->getOverview()
+            );
 
-            foreach($this->movieList as $movie)
+            $this->connection = Connection::GetInstance();
+
+            try
             {
-                if ($movie->getId() > $newId)
-                {
-                    $newId = $movie->getId();
-                }
+                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowAffected;
             }
-            return ($newId + 1);   
-        }
-
-        public function Add(movie $movie)
-        {
-            # agrega una movie
-            
-            $this->RetrieveDataMovie();
-
-            $movie->setId($this->GetNewId());
-            
-            array_push($this->movieList, $movie);
-
-            $this->SaveDataMovie();
-        }
-
-        public function Modify($popularity, $vote_count, $video, $poster_path, $id, $adult, $backdrop_path, $original_language, $original_title, $title, $vote_average, $overview, $release_date)
-        {
-            # modifica la movie del id con los datos actualizados
-
-            $this->RetrieveDataMovie();           
-
-            $movie = $this->GetmovieById($id);
-           
-            $movie->setPopularity($popularity);
-            $movie->setvote_count($vote_count);
-            $movie->setVideo($video);
-            $movie->setposter_path($poster_path);
-            $movie->setAdult($adult);
-            $movie->setbackdrop_path($backdrop_path);
-            $movie->setoriginal_language($original_language);
-            $movie->setOriginalTitle($original_title);
-            $movie->setTitle($title);
-            $movie->setvote_average($vote_average);
-            $movie->setOverview($overview);
-            $movie->setrelease_date($release_date);            
-
-            $this->SaveDataMovie();
-        }
-    
-        public function GetmovieById ($id)
-        {            
-            # devuelve el movie correspondiente al paramatro id
-
-            $this->RetrieveDataMovie();            
-
-            foreach($this->movieList as $movie)
+            catch(\Exception $ex)
             {
-                if ($movie->GetId() == $id) 
-                return $movie;
-            }            
-        }
-
-        public function GetAll()
-        {
-            # devuelve todos los movies de la lista
-
-            $this->RetrieveDataMovie();
-            
-
-            return $this->movieList;
-        }        
-
-        private function SaveDataMovie()
-        {
-            # salva los movies en Json
-
-            $arrayToEncode = array();
-
-            foreach($this->movieList as $movie)
-            {                
-                $valuesArray["popularity"] = $movie->getPopularity();
-                $valuesArray["vote_count"] = $movie->getvote_count();
-                $valuesArray["video"] = $movie->getVideo();
-                $valuesArray["poster_path"] = $movie->getposter_path();
-                $valuesArray["id"] = $movie->getId();
-                $valuesArray["adult"] = $movie->getAdult();
-                $valuesArray["backdrop_path"] = $movie->getbackdrop_path();
-                $valuesArray["original_language"] = $movie->getoriginal_language();
-                $valuesArray["original_title"] = $movie->getoriginal_title();
-                $valuesArray["title"] = $movie->getTitle();
-                $valuesArray["vote_average"] = $movie->getvote_average();
-                $valuesArray["overview"] = $movie->getOverview();
-                $valuesArray["release_date"] = $movie->getrelease_date();
-        
-                array_push($arrayToEncode, $valuesArray);
-            }
-
-            $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
-            
-            file_put_contents('Data/movies.json', $jsonContent);
-        }
-
-        private function SaveDataMovieGenre()
-        {
-            # salva los moviesGenre 
-
-            $this->getMoviesFromAPI();
-
-            $this->movieList = array();
-
-            if(file_exists('Data/movies.json'))
-            {
-                $jsonContent = file_get_contents('Data/movies.json');
-                
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-
-                foreach($objectTODecode["results"] as $valuesArray)
-                {
-                    $movie = new Movie(
-                        $valuesArray["popularity"],
-                        $valuesArray["vote_count"],
-                        $valuesArray["video"],
-                        $valuesArray["poster_path"],
-                        $valuesArray["id"],
-                        $valuesArray["adult"],
-                        $valuesArray["backdrop_path"],
-                        $valuesArray["original_language"],
-                        $valuesArray["original_title"],
-                        $valuesArray["title"],
-                        $valuesArray["vote_average"],
-                        $valuesArray["overview"],
-                        $valuesArray["release_date"]
-                    );
-
-                    #Recorro el arreglo de generos
-                    foreach ( $valuesArray["genre_ids"] as $id)
-                    {
-                        #guardo el id de genero
-                        $arrayIds["idGenre"]=$id;
-                        $arrayIds["idMovie"]=$valuesArray["id"];
-                        
-                        #Guardo en el arreglo los valores id pelicula e id genero
-                        array_push($this->idList, $arrayIds);
-                    }
-                    array_push($this->movieList, $movie);
-                }
-                $this->SaveDataMovie();  
-                $jsonContent = json_encode($this->idList, JSON_PRETTY_PRINT);
-            
-                #Salva los movieGenre
-                file_put_contents('Data/movieGenreIds.json', $jsonContent);
+                return -1;
             }
         }
 
-        private function RetrieveDataMovie()
+        public function AddMovieGenre(MovieGenre $movieGenre)
         {
-            # obtiene todos los movies de un json y los pone en movieList
+            $query = 'INSERT INTO ' . $this->tableMovieGenre . '(movieId, genreId) VALUES (:movieId, :genreId);';
 
-            $this->movieList = array();
+            $parameters = array(
+                ':movieId' => $movieGenre->getIdMovie(),
+                ':genreId' => $movieGenre->getIdGenre(),
+            );
 
-            if(file_exists('Data/movies.json'))
+            $this->connection = Connection::GetInstance();
+
+            try
             {
-                $jsonContent = file_get_contents('Data/movies.json');
-
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-        
-                foreach($objectTODecode as $valuesArray)
-                {
-                    $movie = new movie(
-                        $valuesArray["popularity"],
-                        $valuesArray["vote_count"],
-                        $valuesArray["video"],
-                        $valuesArray["poster_path"],
-                        $valuesArray["id"],
-                        $valuesArray["adult"],
-                        $valuesArray["backdrop_path"],
-                        $valuesArray["original_language"],
-                        $valuesArray["original_title"],
-                        $valuesArray["title"],
-                        $valuesArray["vote_average"],
-                        $valuesArray["overview"],
-                        $valuesArray["release_date"]
-                    );
-
-                    array_push($this->movieList, $movie);
-                }
+                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowAffected;
+            }
+            catch(\Exception $ex)
+            {
+                return -1;
             }
         }
 
-        public function GetMoviesByGenre($genreId) //RetrieveDataMovieGenre
+
+        public function UpdateDatabaseFromAPI()
         {
-        
-           $moviesGenre = array();
-
-           if(file_exists('Data/movieGenreIds.json'))
-            {
-                $jsonContent = file_get_contents('Data/movieGenreIds.json');
-
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-
-                $this->idList = array();
-
-                foreach($objectTODecode as $id)
-                {
-                    $arrayIds=$id;
-                    
-                     #Guardo en el arreglo los valores id pelicula e id genero
-
-                     array_push($this->idList, $arrayIds);       
-                }
-
-                foreach($objectTODecode as $id)
-                {
-                    if($id["idGenre"] == $genreId)
-                    {
-                        $movie = $this->GetmovieById($id["idMovie"]);
-
-                        $valuesArray["popularity"] = $movie->getPopularity();
-                        $valuesArray["vote_count"] = $movie->getvote_count();
-                        $valuesArray["video"] = $movie->getVideo();
-                        $valuesArray["poster_path"] = $movie->getposter_path();
-                        $valuesArray["id"] = $movie->getId();
-                        $valuesArray["adult"] = $movie->getAdult();
-                        $valuesArray["backdrop_path"] = $movie->getbackdrop_path();
-                        $valuesArray["original_language"] = $movie->getoriginal_language();
-                        $valuesArray["original_title"] = $movie->getoriginal_title();
-                        $valuesArray["title"] = $movie->getTitle();
-                        $valuesArray["vote_average"] = $movie->getvote_average();
-                        $valuesArray["overview"] = $movie->getOverview();
-                        $valuesArray["release_date"] = $movie->getrelease_date();
-
-                        $arrayGenre = array();
-
-                        foreach($this->idList as $movieGenreIds){
-
-                            if($movieGenreIds['idMovie']==$valuesArray["id"]){
-
-                                array_push($arrayGenre, $this->genreDAO->GetGenreById($movieGenreIds["idGenre"]));
-                                
-                            }                   
-                        }
-                
-                        $valuesArray["genre"] =$arrayGenre;
-
-                        array_push($moviesGenre, $valuesArray);
-                    }
-                }                
-            }
-            return $moviesGenre;           
-        }
-        
-        public function GetAllMoviesGenre()
-        {
-            $this->RetrieveDataMovie();
-           
-            $this->idList = array();
-
-            if(file_exists('Data/movieGenreIds.json'))
-            {
-                $jsonContent = file_get_contents('Data/movieGenreIds.json');
-
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
-
-                foreach($objectTODecode as $id)
-                {
-                    $arrayIds=$id;
-                        
-                    #Guardo en el arreglo los valores id pelicula e id genero
-                
-                    array_push($this->idList, $arrayIds);    
-                }   
-            }
-        
-            foreach($this->movieList as $movie)
-            {
-                $valuesArray["popularity"] = $movie->getPopularity();
-                $valuesArray["vote_count"] = $movie->getvote_count();
-                $valuesArray["video"] = $movie->getVideo();
-                $valuesArray["poster_path"] = $movie->getposter_path();
-                $valuesArray["id"] = $movie->getId();
-                $valuesArray["adult"] = $movie->getAdult();
-                $valuesArray["backdrop_path"] = $movie->getbackdrop_path();
-                $valuesArray["original_language"] = $movie->getoriginal_language();
-                $valuesArray["original_title"] = $movie->getoriginal_title();
-                $valuesArray["title"] = $movie->getTitle();
-                $valuesArray["vote_average"] = $movie->getvote_average();
-                $valuesArray["overview"] = $movie->getOverview();
-                $valuesArray["release_date"] = $movie->getrelease_date();
-
-                $arrayGenre = array();
-
-                foreach($this->idList as $movieGenreIds)
-                {
-                    if($movieGenreIds['idMovie']==$valuesArray["id"])
-                    {
-                        array_push($arrayGenre, $this->genreDAO->GetGenreById($movieGenreIds["idGenre"]));
-                    }
-                }
-                
-                $valuesArray["genre"] =$arrayGenre;
-
-                array_push($this->movieGenre, $valuesArray);
-            }
-        
-            return $this->movieGenre;
-        }
-
-        private function getMoviesFromAPI()
-        {
-     
             # obtiene el json con todos los movies de la API
     
+            #Borra la tabla
+
+            $this->DeleteAll();
+            
             $handle =curl_init();
         
             curl_setopt($handle,CURLOPT_SSL_VERIFYPEER, false);
@@ -360,12 +109,233 @@
      
             #Paso el JSON a array
             $objectTODecode=json_decode($result);
-    
-            #Paso el array a JSON para que se vea PRETTY
-            $jsonContent = json_encode($objectTODecode, JSON_PRETTY_PRINT);
+
+            $affectedRowsGenres = $this->genreDAO->GetGenresFromAPI();
+
+            $affectedRows = $this->UpdateAllMovies($objectTODecode->results); 
             
-            #Guardo el json en un archivo
-            file_put_contents('Data/movies.json', $jsonContent);      
+            return $affectedRows;
+        }
+
+        private function UpdateAllMovies($objectTODecode)
+        {
+            # obtiene todos los movies de un json y los pone en movieList
+            $contador = 0;
+            foreach($objectTODecode as $valuesArray)
+            {
+                $movie = new Movie(
+                    $valuesArray->id,
+                    $valuesArray->title,
+                    $valuesArray->popularity,
+                    $valuesArray->vote_count,
+                    $this->transformBoolean2Int($valuesArray->video),
+                    $valuesArray->poster_path,
+                    $this->transformBoolean2Int($valuesArray->adult),
+                    $valuesArray->backdrop_path,
+                    $valuesArray->original_language,
+                    $valuesArray->original_title,
+                    $valuesArray->vote_average,
+                    $this->transformBoolean2Int($valuesArray->overview)
+                );
+
+                $contador = $contador + $this->Add($movie);
+
+                foreach($valuesArray->genre_ids as $genreId)
+                {
+                    $movieGenre = new MovieGenre($valuesArray->id, $genreId);
+                    $this->AddMovieGenre($movieGenre);
+                }
+            } 
+
+            return $contador;
+        }
+        
+        public function GetMovieById($id)
+        {
+            try
+            {
+                
+                $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id WHERE movies.id = :id;";
+                $parameters = array(':id' => $id);
+                
+                $this->connection = Connection::GetInstance();
+
+                $result = $this->connection->Execute($query, $parameters);
+
+                if ($result[0][0] == null)
+                {
+                    # la pelicula no fue encontrada
+                    return null;
+                }
+
+                $movie = new Movie(
+                    $result[0]['id'],
+                    $result[0]['title'],
+                    $result[0]['popularity'],
+                    $result[0]['vote_count'],
+                    $result[0]['video'],
+                    $result[0]['poster_path'],
+                    $result[0]['adult'],
+                    $result[0]['backdrop_path'],
+                    $result[0]['original_language'],
+                    $result[0]['original_title'],
+                    $result[0]['vote_average'],
+                    $result[0]['overview']
+                );
+
+                $movie->setId($result[0][0]);
+                
+                if($result[0][14] != null)
+                {
+                    $genresArray = explode(",", $result[0][14]);
+
+                    $genres = array();
+                    foreach($genresArray as $genre)
+                    {
+                        $singleGenreArray = explode("/", $genre);
+                        $genreId = $singleGenreArray[0];
+                        $genreName = $singleGenreArray[1];
+                        $newGenre = new Genre($genreId, $genreName);
+                        array_push($genres, $newGenre);
+                    }
+
+                    $movie->setGenres($genres);
+                }
+                return $movie;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        }
+        
+        public function GetAll()
+        {
+            $this->movieList = array();
+
+            $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id GROUP BY movies.id;";
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query);
+
+                foreach($results as $result)
+                {
+                    $movie = new Movie(
+                        $result['id'],
+                    $result['title'],
+                    $result['popularity'],
+                    $result['vote_count'],
+                    $result['video'],
+                    $result['poster_path'],
+                    $result['adult'],
+                    $result['backdrop_path'],
+                    $result['original_language'],
+                    $result['original_title'],
+                    $result['vote_average'],
+                    $result['overview']
+                    );
+
+                    $movie->setId($result[0]);
+
+                    if($result[14] != null)
+                    {
+                        $genresArray = explode(",", $result[14]);
+
+                        $genres = array();
+
+                        foreach($genresArray as $genre)
+                        {
+                            $singleGenreArray = explode("/", $genre);
+                            $genreId = $singleGenreArray[0];
+                            $genreName = $singleGenreArray[1];
+                            $newGenre = new Genre($genreId, $genreName);
+                            array_push($genres, $newGenre);
+                        }
+
+                        $movie->setGenres($genres);
+                    }                    
+
+                    array_push($this->movieList, $movie);
+                }
+
+                return $this->movieList;
+            }            
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        } 
+        
+        public function Delete($id)
+        {
+            $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id;';
+
+            $parameters = array(':id' => $id);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowAffected;
+            }
+            catch(\Exception $ex)
+            {
+                # TODO: mejorar el manejo de excepciones con un cartel en pantalla
+                return -1;
+            }
+        }
+
+        private function DeleteAll()
+        {
+            $query = 'DELETE FROM ' . $this->table;
+
+            $parameters = array();
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowAffected;
+            }
+            catch(\Exception $ex)
+            {
+                # TODO: mejorar el manejo de excepciones con un cartel en pantalla
+                return -1;
+            }
+        }
+
+        public function transformBoolean2Int($bool)
+        {
+            if($bool)
+            {
+
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public function transformInt2Bool($int)
+        {
+            if($int == 0)
+            {
+                return false;
+            }
+            elseif($int == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return "Error al transformar booleano";
+            }
         }
     }
 ?>
