@@ -8,146 +8,170 @@
     class GenreDAO implements IGenreDAO
     {
 
+        private $connection;
         private $genreList = array();
+        private $table = "genres";
 
-
-        public function GetNewGenreId()
+        public function Add(Genre $genre)
         {
+            
+            $query = 'INSERT INTO ' . $this->table . ' (id, name) VALUES (:id, :name);';
 
-            $this->RetrieveData();
-            $newId = 0;
+            $parameters = array(':id' => $genre->getIdGenre(), ':name' => $genre->getNameGenre());
 
-            foreach($this->genreList as $genre)
+            $this->connection = Connection::GetInstance();
+
+            try
             {
-
-                if($genre->getGenreId() > $newId)
-                {
-
-                    $newId = $genre->getGenreId();
-                }
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
             }
-
-            return $newId + 1;
-        }
-
-        public function AddGenre(Genre $genre)
-        {
-            
-            $this->RetrieveData();
-
-            $genre->getGenreId($this->GetNewGenreId());
-            
-            array_push($this->genreList, $genre);
-
-            $this->SaveData();
-        }
-
-        public function GetGenreById ($idGenre)
-        {            
-
-            $this->RetrieveData();            
-
-            foreach($this->genreList as $genre)
+            catch(\Exception $ex)
             {
-
-                if ($genre->getIdGenre() == $idGenre) 
-                return $genre;
+                #El nombre ya existe en la base de datos
+                if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
+                {
+                    return -1;
+                }
+                
             }            
         }
 
-        public function ModifyGenre($idGenre, $nameGenre)
+        public function GetGenreById($idGenre)
         {
+            try
+            {
+                $query = "SELECT id, name FROM " . $this->table . " WHERE id = :id;";
+                
+                $this->connection = Connection::GetInstance();
+                
+                $parameters = array(':id' => $idGenre);
+                
+                $result = $this->connection->Execute($query, $parameters);
 
-            $this->RetrieveData();           
-
-            $genre = $this->getGenreById($idGenre);
-
-            $genre->setNameGenre($nameGenre);            
-
-            $this->SaveData();
+                if($result == null)
+                {
+                    return null;
+                }
+                                
+                $genre = new Genre($result[0]['id'], $result[0]['name']);
+                
+                return $genre;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }   
         }
 
-        public function GetAllGenres()
+        public function GetAll()
         {
+            $this->genreList = array();
 
-            $this->RetrieveData();                      
+            $query = "SELECT id, name FROM " . $this->table;
 
-            return $this->genreList;
-        }   
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query);
+
+                foreach($results as $result)
+                {
+                    $genre = new Genre($result['id'], $result['name']);
+                    array_push($this->genreList, $genre);
+                }
+
+                return $this->genreList;
+            }
+            
+            catch(\Exception $ex)
+            {
+                throw $ex;                
+            }
+        }
+
+                
+        public function Delete($idGenre)
+        {
+            $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
+                        
+            $parameters = array(':id' => $idGenre);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex; 
+            }
+        }
 
         public function GetGenresFromAPI()
         {
+            $this->DeleteAll();
 
-            # obtiene el json con todos los genres de la API
-
-            //  Initiate curl session
             $handle =curl_init();
-            // Will return the response, if false it prints the response
+            
             curl_setopt($handle,CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
-            // Set the url
-            curl_setopt($handle, CURLOPT_URL,"https://api.themoviedb.org/3/genre/movie/list?api_key=32629d64c451c1bd620ae0ad25053beb&language=en-US");
-
-            // Execute the session and store the contents in $result y lo muestra
+            
+            curl_setopt($handle, CURLOPT_URL,"https://api.themoviedb.org/3/genre/movie/list?api_key=32629d64c451c1bd620ae0ad25053beb&language=en-US%22");
 
             $result=curl_exec($handle);
-            // Closing the session
+            
             curl_close($handle);
 
-            #Paso el JSON a array
-            $arrayToDecode=json_decode($result);
+            $objectTODecode=json_decode($result);
 
-            #Paso el array a JSON para que se vea PRETTY
-            $jsonContent = json_encode($arrayToDecode, JSON_PRETTY_PRINT);
+            $affectedRows = $this->UpdateAllGenres($objectTODecode->genres);
 
-            #Guardo el json en un archivo
-            file_put_contents('Data/genres.json', $jsonContent);
-
-        }
-        
-
-        private function SaveData()
-        {
-
-            $arrayToEncode = array();
-
-            foreach($this->genreList as $genre)
-            {                
-                $valuesArray["idGenre"] = $genre->getIdGenre();
-                $valuesArray["nameGenre"] = $genre->getNameGenre();
-                
-                array_push($arrayToEncode, $valuesArray);
-            }
-
-            $jsonContent = json_encode($arrayToEncode, JSON_PRETTY_PRINT);
+            return $affectedRows;
             
-            file_put_contents('Data/genres.json', $jsonContent);
         }
 
-        private function RetrieveData()
+        public function UpdateAllGenres($objectTODecode)
         {
-            
-            $this->genreList = array();
+            # obtiene todos los genres de un json y los pone en genreList
+            $contador = 0;
 
-            if(file_exists('Data/genres.json'))
+            foreach($objectTODecode as $valuesArray)
             {
-                $jsonContent = file_get_contents('Data/genres.json');
+                $genre = new Genre(
+                    $valuesArray->id,
+                    $valuesArray->name
+                );
 
-                $objectTODecode = ($jsonContent) ? json_decode($jsonContent, true) : array();
+                $contador = $contador + $this->Add($genre);
+            }
 
-                foreach($objectTODecode["genres"] as $valuesArray)
-               
-                {
-                    $genre = new Genre(
-                        $valuesArray["id"],
-                        $valuesArray["name"]
-                    );
+            return $contador;
+        }
 
-                    array_push($this->genreList, $genre);
-                }
-                
+        public function DeleteAll()
+        {
+            $query = 'DELETE FROM ' . $this->table;
+                        
+            $parameters = array();
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex; 
             }
         }
+
+        
     }
 
 ?>

@@ -19,7 +19,7 @@
 
         public function ShowSearchMovieView()
         {
-            $genresList = $this->genreDAO->GetAllGenres();
+            $genresList = $this->genreDAO->GetAll();
 
             //var_dump($genresList);
 
@@ -50,5 +50,6 @@
 
             require_once(VIEWS_PATH."login.php");            
         }
+
     }
 ?>
