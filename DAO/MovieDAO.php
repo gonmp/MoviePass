@@ -89,7 +89,7 @@
         }
 
 
-        public function updateDatabaseFromAPI()
+        public function UpdateDatabaseFromAPI()
         {
             # obtiene el json con todos los movies de la API
     
@@ -110,14 +110,14 @@
             #Paso el JSON a array
             $objectTODecode=json_decode($result);
 
-            //*****TODO: FALTA ACTUALIZAR LA LISTA DE GÉNEROS!!!******
+            $affectedRowsGenres = $this->genreDAO->GetGenresFromAPI();
 
             $affectedRows = $this->UpdateAllMovies($objectTODecode->results); 
             
             return $affectedRows;
         }
 
-        public function UpdateAllMovies($objectTODecode)
+        private function UpdateAllMovies($objectTODecode)
         {
             # obtiene todos los movies de un json y los pone en movieList
             $contador = 0;
@@ -214,15 +214,12 @@
             $this->movieList = array();
 
             $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id GROUP BY movies.id;";
-            //var_dump($query);
 
             $this->connection = Connection::GetInstance();
 
             try
             {
                 $results = $this->connection->Execute($query);
-
-                //var_dump($results);
 
                 foreach($results as $result)
                 {
@@ -292,7 +289,7 @@
             }
         }
 
-        public function DeleteAll()
+        private function DeleteAll()
         {
             $query = 'DELETE FROM ' . $this->table;
 

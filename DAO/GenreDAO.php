@@ -31,7 +31,7 @@
                 #El nombre ya existe en la base de datos
                 if($ex->errorInfo[0] == '23000' && $ex->errorInfo[1] == '1062')
                 {
-                    var_dump($ex);
+                    return -1;
                 }
                 
             }            
@@ -127,24 +127,29 @@
             curl_close($handle);
 
             $objectTODecode=json_decode($result);
-            var_dump($objectTODecode);
-            $this->UpdateAllGenres($objectTODecode->genres);
+
+            $affectedRows = $this->UpdateAllGenres($objectTODecode->genres);
+
+            return $affectedRows;
             
         }
 
         public function UpdateAllGenres($objectTODecode)
         {
             # obtiene todos los genres de un json y los pone en genreList
+            $contador = 0;
 
             foreach($objectTODecode as $valuesArray)
             {
                 $genre = new Genre(
                     $valuesArray->id,
-                    $valuesArray->name,
+                    $valuesArray->name
                 );
 
-                $this->Add($genre);
-            } 
+                $contador = $contador + $this->Add($genre);
+            }
+
+            return $contador;
         }
 
         public function DeleteAll()
