@@ -1,18 +1,53 @@
 <?php     
-     if (!isset($_SESSION['validLogin']))
+   /*  if (!isset($_SESSION['validLogin']))
      {
           header("location:GoHome");
      }
      else if (!$_SESSION['validLogin'])
      {
           header("location:GoHome");
-     }     
+     }     */     
 ?>
 
-<nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
-     <span class="navbar-text">
-          <a class="nav-link" href="<?php echo FRONT_ROOT ?>Home/Index"><strong>HOME</strong> </a>
-     </span>
+<nav class="container-fluid p-0 m-0">     
+     <div class="row py-1">          
+          <!-- moviepass logo -->
+          <div class="col p-1 mx-3">
+               <a href="<?php echo FRONT_ROOT ?>Home/Index">
+                    <img src="<?php echo FRONT_ROOT ."/". VIEWS_PATH?>/img/moviepass_logo.png" alt="moviepass logo" class="img-fluid border border-dark rounded" style="width: 9rem">
+               </a>
+          </div>
+
+          <div class="col-5 py-1">               
+               <?php                
+
+               if ($_SESSION['userLogged'])
+               {
+                    if ($_SESSION['userLogged']->GetAdmin())
+                    {
+                         # admin
+                    }
+                    else
+                    {
+                         # cliente
+                         require_once('nav-user-logged.php');
+                    }                    
+               }
+               else
+               {
+                    if ($_SESSION['actualView'] == "register")
+                    {
+                         require_once('nav-register.php');                         
+                    }
+                    else
+                    {
+                         require_once('nav-user-no-logged.php');                    
+                    }                    
+               }
+               
+               ?>
+          </div>
+     </div>
 
      <?php
      if (isset($_SESSION['adminLogged']))

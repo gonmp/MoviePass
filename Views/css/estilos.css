@@ -1,3 +1,30 @@
+html, body {
+     height: 100%;
+}
+
+:root {
+     --black: rgb(35, 35, 37);
+     --dark-x: rgb(31, 31, 31);
+}
+
+
+body {
+     background-color: black;
+}
+
+.bg-black {
+     background-color: var(--black);
+}
+
+.bg-dark-x {
+     background-color: var(--dark-x);     
+     color: white;
+}
+
+
+
+
+/*
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600');
 
 html, body {
@@ -27,3 +54,4 @@ body {
      width: 500px;
      border: 2px solid rgba(0, 0, 0, 0.2);
 }
+*/
