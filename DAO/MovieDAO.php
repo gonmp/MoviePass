@@ -62,7 +62,7 @@
             }
             catch(\Exception $ex)
             {
-                var_dump($ex);
+                return -1;
             }
         }
 
@@ -84,12 +84,12 @@
             }
             catch(\Exception $ex)
             {
-                var_dump($ex);
+                return -1;
             }
         }
 
 
-        public function getMoviesFromAPI()
+        public function updateDatabaseFromAPI()
         {
             # obtiene el json con todos los movies de la API
     
@@ -109,14 +109,18 @@
      
             #Paso el JSON a array
             $objectTODecode=json_decode($result);
-            var_dump($objectTODecode->results);
-            $this->UpdateAllMovies($objectTODecode->results);  
+
+            //*****TODO: FALTA ACTUALIZAR LA LISTA DE GÉNEROS!!!******
+
+            $affectedRows = $this->UpdateAllMovies($objectTODecode->results); 
+            
+            return $affectedRows;
         }
 
         public function UpdateAllMovies($objectTODecode)
         {
             # obtiene todos los movies de un json y los pone en movieList
-
+            $contador = 0;
             foreach($objectTODecode as $valuesArray)
             {
                 $movie = new Movie(
@@ -124,26 +128,26 @@
                     $valuesArray->title,
                     $valuesArray->popularity,
                     $valuesArray->vote_count,
-                    $this->transformBoolean($valuesArray->video),
+                    $this->transformBoolean2Int($valuesArray->video),
                     $valuesArray->poster_path,
-                    $this->transformBoolean($valuesArray->adult),
+                    $this->transformBoolean2Int($valuesArray->adult),
                     $valuesArray->backdrop_path,
                     $valuesArray->original_language,
                     $valuesArray->original_title,
                     $valuesArray->vote_average,
-                    $this->transformBoolean($valuesArray->overview)
+                    $this->transformBoolean2Int($valuesArray->overview)
                 );
 
-                $this->Add($movie);
+                $contador = $contador + $this->Add($movie);
 
                 foreach($valuesArray->genre_ids as $genreId)
                 {
                     $movieGenre = new MovieGenre($valuesArray->id, $genreId);
                     $this->AddMovieGenre($movieGenre);
                 }
-
-                
             } 
+
+            return $contador;
         }
         
         public function GetMovieById($id)
@@ -158,48 +162,45 @@
 
                 $result = $this->connection->Execute($query, $parameters);
 
-                if ($result == null)
+                if ($result[0][0] == null)
                 {
                     # la pelicula no fue encontrada
                     return null;
                 }
 
-                var_dump($result);
-
                 $movie = new Movie(
+                    $result[0]['id'],
+                    $result[0]['title'],
                     $result[0]['popularity'],
                     $result[0]['vote_count'],
                     $result[0]['video'],
                     $result[0]['poster_path'],
-                    $result[0]['id'],
                     $result[0]['adult'],
                     $result[0]['backdrop_path'],
                     $result[0]['original_language'],
                     $result[0]['original_title'],
-                    $result[0]['title'],
                     $result[0]['vote_average'],
                     $result[0]['overview']
                 );
 
                 $movie->setId($result[0][0]);
                 
-                $genresArray = explode(",", $result[0][14]);
-
-                $genres = array();
-
-                foreach($genresArray as $genre)
+                if($result[0][14] != null)
                 {
-                    $singleGenreArray = explode("/", $genre);
-                    $genreId = $singleGenreArray[0];
-                    $genreName = $singleGenreArray[1];
-                    $newGenre = new Genre($genreId, $genreName);
-                    array_push($genres, $newGenre);
+                    $genresArray = explode(",", $result[0][14]);
+
+                    $genres = array();
+                    foreach($genresArray as $genre)
+                    {
+                        $singleGenreArray = explode("/", $genre);
+                        $genreId = $singleGenreArray[0];
+                        $genreName = $singleGenreArray[1];
+                        $newGenre = new Genre($genreId, $genreName);
+                        array_push($genres, $newGenre);
+                    }
+
+                    $movie->setGenres($genres);
                 }
-
-                $movie->setGenres($genres);
-
-                var_dump($movie);
-
                 return $movie;
             }
             catch(\Exception $ex)
@@ -226,41 +227,42 @@
                 foreach($results as $result)
                 {
                     $movie = new Movie(
-                        $result['popularity'],
-                        $result['vote_count'],
-                        $result['video'],
-                        $result['poster_path'],
                         $result['id'],
-                        $result['adult'],
-                        $result['backdrop_path'],
-                        $result['original_language'],
-                        $result['original_title'],
-                        $result['title'],
-                        $result['vote_average'],
-                        $result['overview']
+                    $result['title'],
+                    $result['popularity'],
+                    $result['vote_count'],
+                    $result['video'],
+                    $result['poster_path'],
+                    $result['adult'],
+                    $result['backdrop_path'],
+                    $result['original_language'],
+                    $result['original_title'],
+                    $result['vote_average'],
+                    $result['overview']
                     );
 
                     $movie->setId($result[0]);
 
-                    $genresArray = explode(",", $result[14]);
-
-                    $genres = array();
-
-                    foreach($genresArray as $genre)
+                    if($result[14] != null)
                     {
-                        $singleGenreArray = explode("/", $genre);
-                        $genreId = $singleGenreArray[0];
-                        $genreName = $singleGenreArray[1];
-                        $newGenre = new Genre($genreId, $genreName);
-                        array_push($genres, $newGenre);
-                    }
+                        $genresArray = explode(",", $result[14]);
 
-                    $movie->setGenres($genres);                    
+                        $genres = array();
+
+                        foreach($genresArray as $genre)
+                        {
+                            $singleGenreArray = explode("/", $genre);
+                            $genreId = $singleGenreArray[0];
+                            $genreName = $singleGenreArray[1];
+                            $newGenre = new Genre($genreId, $genreName);
+                            array_push($genres, $newGenre);
+                        }
+
+                        $movie->setGenres($genres);
+                    }                    
 
                     array_push($this->movieList, $movie);
                 }
-
-                var_dump($this->movieList);
 
                 return $this->movieList;
             }            

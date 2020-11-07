@@ -17,7 +17,7 @@ class Movie
     private $overview;
     private $genres;
     
-    public function __construct ($id, $title, $popularity, $vote_count, $video, $poster_path,  $adult, $backdrop_path, $original_language, $original_title, 
+    public function __construct ($id, $title, $popularity, $vote_count, $video, $poster_path, $adult, $backdrop_path, $original_language, $original_title, 
       $vote_average, $overview)
     {
         $this->setId($id);
