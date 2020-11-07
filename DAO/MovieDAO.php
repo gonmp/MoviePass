@@ -95,7 +95,7 @@
     
             #Borra la tabla
 
-            DeleteAll();
+            $this->DeleteAll();
             
             $handle =curl_init();
         
@@ -109,16 +109,50 @@
      
             #Paso el JSON a array
             $objectTODecode=json_decode($result);
+            var_dump($objectTODecode->results);
             $this->UpdateAllMovies($objectTODecode->results);  
         }
+
+        public function UpdateAllMovies($objectTODecode)
+        {
+            # obtiene todos los movies de un json y los pone en movieList
+
+            foreach($objectTODecode as $valuesArray)
+            {
+                $movie = new Movie(
+                    $valuesArray->id,
+                    $valuesArray->title,
+                    $valuesArray->popularity,
+                    $valuesArray->vote_count,
+                    $this->transformBoolean($valuesArray->video),
+                    $valuesArray->poster_path,
+                    $this->transformBoolean($valuesArray->adult),
+                    $valuesArray->backdrop_path,
+                    $valuesArray->original_language,
+                    $valuesArray->original_title,
+                    $valuesArray->vote_average,
+                    $this->transformBoolean($valuesArray->overview)
+                );
+
+                $this->Add($movie);
+
+                foreach($valuesArray->genre_ids as $genreId)
+                {
+                    $movieGenre = new MovieGenre($valuesArray->id, $genreId);
+                    $this->AddMovieGenre($movieGenre);
+                }
+
+                
+            } 
+        }
         
-        public function Get($id)
+        public function GetMovieById($id)
         {
             try
             {
                 
-                $query = 'SELECT * FROM ' . $this->table . ' WHERE title = :title;';
-                $parameters = array(':title' => $title);
+                $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id WHERE movies.id = :id;";
+                $parameters = array(':id' => $id);
                 
                 $this->connection = Connection::GetInstance();
 
@@ -129,6 +163,8 @@
                     # la pelicula no fue encontrada
                     return null;
                 }
+
+                var_dump($result);
 
                 $movie = new Movie(
                     $result[0]['popularity'],
@@ -142,11 +178,27 @@
                     $result[0]['original_title'],
                     $result[0]['title'],
                     $result[0]['vote_average'],
-                    $result[0]['overview'],
-                    $result[0]['release_date'],
+                    $result[0]['overview']
                 );
 
-                $movie->setId($result[0]['id']);
+                $movie->setId($result[0][0]);
+                
+                $genresArray = explode(",", $result[0][14]);
+
+                $genres = array();
+
+                foreach($genresArray as $genre)
+                {
+                    $singleGenreArray = explode("/", $genre);
+                    $genreId = $singleGenreArray[0];
+                    $genreName = $singleGenreArray[1];
+                    $newGenre = new Genre($genreId, $genreName);
+                    array_push($genres, $newGenre);
+                }
+
+                $movie->setGenres($genres);
+
+                var_dump($movie);
 
                 return $movie;
             }
@@ -160,13 +212,16 @@
         {
             $this->movieList = array();
 
-            $query = 'SELECT * FROM ' . $this->table;
+            $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id GROUP BY movies.id;";
+            //var_dump($query);
 
             $this->connection = Connection::GetInstance();
 
             try
             {
                 $results = $this->connection->Execute($query);
+
+                //var_dump($results);
 
                 foreach($results as $result)
                 {
@@ -182,14 +237,30 @@
                         $result['original_title'],
                         $result['title'],
                         $result['vote_average'],
-                        $result['overview'],
-                        $result['release_date'],
+                        $result['overview']
                     );
 
-                    $movie->setId($result['id']);
+                    $movie->setId($result[0]);
+
+                    $genresArray = explode(",", $result[14]);
+
+                    $genres = array();
+
+                    foreach($genresArray as $genre)
+                    {
+                        $singleGenreArray = explode("/", $genre);
+                        $genreId = $singleGenreArray[0];
+                        $genreName = $singleGenreArray[1];
+                        $newGenre = new Genre($genreId, $genreName);
+                        array_push($genres, $newGenre);
+                    }
+
+                    $movie->setGenres($genres);                    
 
                     array_push($this->movieList, $movie);
                 }
+
+                var_dump($this->movieList);
 
                 return $this->movieList;
             }            
@@ -239,7 +310,7 @@
             }
         }
 
-        public function transformBoolean($bool)
+        public function transformBoolean2Int($bool)
         {
             if($bool)
             {
@@ -249,6 +320,22 @@
             else
             {
                 return 0;
+            }
+        }
+
+        public function transformInt2Bool($int)
+        {
+            if($int == 0)
+            {
+                return false;
+            }
+            elseif($int == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return "Error al transformar booleano";
             }
         }
     }
