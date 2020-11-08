@@ -137,8 +137,10 @@
                     $valuesArray->vote_average,
                     $valuesArray->overview
                 );
+                
+                $this->Add($movie);
 
-                $contador = $contador + $this->Add($movie);
+                $contador = $contador + 1;
 
                 foreach($valuesArray->genre_ids as $genreId)
                 {
