@@ -8,10 +8,10 @@
 
         <form action="<?php echo FRONT_ROOT ?>Cinema/Add" method="post">           
             
-            <div class="row px-1 pb-3">
+            <div class="row px-0 pb-3 m-0">
 
                 <!-- nombre -->                
-                <div class="col m-1">
+                <div class="col m-1 px-2">
                     <label for="" class="text-primary">name</label>
                     <input type="text" pattern="[A-Za-z0-9 ]+" title="only letters and numbers" name="name" value="" class="form-control" minlength="1" maxlength="50" required>
                 </div>
@@ -37,7 +37,7 @@
                 <!-- boton agregar cine -->
                 <div class="col-2 p-0 ml-3">  
                     <label for="" class="px-1 mt-1 text-primary d-block">add cinema</label>
-                    <button type="submit" class="btn btn-success my-0 px-2">add this cinema</button>
+                    <button type="submit" class="btn btn-success my-0 px-2">add new cinema</button>
                 </div>
             </div>
             

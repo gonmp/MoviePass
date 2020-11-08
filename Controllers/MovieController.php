@@ -17,26 +17,42 @@
             $this->genreDAO = new GenreDAO();
         }
 
+        public function ShowMovieDetails($movieId)
+        {
+            $movie = $this->movieDAO->GetMovieById($movieId);
+
+            require_once(VIEWS_PATH.'movie-details.php');
+        }
+
         public function ShowSearchMovieView()
         {
-            $genresList = $this->genreDAO->GetAll();
-
-            //var_dump($genresList);
+            $genresList = $this->genreDAO->GetAll();                    
 
             require_once(VIEWS_PATH."user-movie-form.php");
+            $this->ShowMoviesPremiere();
+        }
+
+        public function ShowMoviesPremiere()
+        {            
+            # mostrar solo estrenos 
+
+            $list = $this->movieDAO->GetAll(); //$this->movieDAO->GetMoviesByGenre($_POST['categoryId']);                
+            
+            require_once(VIEWS_PATH."user-movie-results.php");
         }
 
         public function ShowResultMovieView($categoryId = null)
         {
             if (!$categoryId)
             {
-                $this->GoHome();
+                //$this->GoHome();
             }
             else
             {
                 $genresList = $this->genreDAO->GetAll();
                 $list = $this->movieDAO->GetMoviesByGenre($_POST['categoryId']);
                 
+                require_once(VIEWS_PATH."user-movie-form.php");
                 require_once(VIEWS_PATH."user-movie-results.php");
             }            
         }

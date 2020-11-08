@@ -61,7 +61,7 @@
                 return $rowAffected;
             }
             catch(\Exception $ex)
-            {
+            {                
                 return -1;
             }
         }
@@ -108,11 +108,11 @@
             curl_close($handle);
      
             #Paso el JSON a array
-            $objectTODecode=json_decode($result);
+            $objectTODecode=json_decode($result);            
 
             $affectedRowsGenres = $this->genreDAO->GetGenresFromAPI();
 
-            $affectedRows = $this->UpdateAllMovies($objectTODecode->results); 
+            $affectedRows = $this->UpdateAllMovies($objectTODecode->results);             
             
             return $affectedRows;
         }

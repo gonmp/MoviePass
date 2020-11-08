@@ -42,7 +42,7 @@
                     <!-- boton agregar cine -->
                     <div class="d-inline float-left">
                         <label for="" class="px-1 text-primary d-block">modify</label>
-                        <button type="submit" class="btn btn-warning my-1 px-2">modify this cinema</button>
+                        <button type="submit" class="btn btn-warning my-1 px-2">modify cinema</button>
                     </div>                    
                     
                     <!-- boton cancelar -->

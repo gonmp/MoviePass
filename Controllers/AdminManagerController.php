@@ -33,17 +33,26 @@
 
         public function ShowAddCinemaView()
         {
+            $_SESSION['errorCinema'] = null;
+            $_SESSION['error'] = null;
+
             $this->cinemaController->ShowAddView();
         }
 
-        public function ShowUpdateCinemaView($name = null)
+        public function ShowUpdateView($name = null)
         {
+            $_SESSION['errorCinema'] = null;
             $this->cinemaController->ShowUpdateView($name);
         }
 
         public function UpdateDataBase()
         {
-            $this->movieDAO->UpdateDataBaseFromAPI();
+            $this->movieDAO->UpdateDatabaseFromAPI();
+        }
+
+        public function ShowMovieList()
+        {
+            header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');
         }
     }
 ?>

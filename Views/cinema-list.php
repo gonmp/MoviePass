@@ -24,7 +24,7 @@
                                         <td><?php echo $cinema->getAddress(); ?></td>
                                         <td><?php echo $cinema->getTicketValue(); ?></td>
                                         
-                                        <td><a href="<?php echo FRONT_ROOT?>AdminManager/ShowUpdateCinemaView?name=<?php echo $cinema->getName();?>" class="btn btn-sm btn-outline-warning">Modify this cinema</button></td>                                             
+                                        <td><a href="<?php echo FRONT_ROOT?>AdminManager/ShowUpdateView?name=<?php echo $cinema->getName();?>" class="btn btn-sm btn-outline-warning">Modify this cinema</button></td>                                             
                                    </tr>                                   
                               <?php
                               }
