@@ -34,7 +34,7 @@
             }
             else
             {
-                $genresList = $this->genreDAO->GetAllGenres();
+                $genresList = $this->genreDAO->GetAll();
                 $list = $this->movieDAO->GetMoviesByGenre($_POST['categoryId']);
                 
                 require_once(VIEWS_PATH."user-movie-results.php");

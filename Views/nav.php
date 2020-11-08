@@ -30,6 +30,8 @@
                     if ($_SESSION['userLogged']->GetAdmin())
                     {
                          # admin
+                         require_once('nav-admin-logged.php');
+                         
                     }
                     else
                     {

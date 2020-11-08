@@ -313,7 +313,6 @@
         {
             if($bool)
             {
-
                 return 1;
             }
             else

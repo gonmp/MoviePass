@@ -12,8 +12,7 @@
 
     <?php 
     if ($_SESSION['error'] != null)
-    {    
-        ?>
+    {?>
         <div class="row float-left">
             <div class="col">
                 <p class="mb-0 text-warning"><?php echo $_SESSION['error'];?></p>            

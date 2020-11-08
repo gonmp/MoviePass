@@ -69,12 +69,17 @@
                 if($user->GetAdmin())
                 {   
                     $cinemaController = new CinemaController();
-                    $cinemaController->ShowListView();
+                    
+                    header('location:' . FRONT_ROOT . '/AdminManager/ShowIndexAdmin');
+
+                    #$cinemaController->ShowListView();
                 }
                 else
                 {   
                     $movieController = new MovieController();
-                    $movieController->ShowSearchMovieView();
+                    
+                    header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');
+                    #$movieController->ShowSearchMovieView();
                 }                
             }
             else
