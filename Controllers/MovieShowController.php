@@ -40,8 +40,11 @@
             require_once(VIEWS_PATH."movie-show-add.php");
         }
 
-        public function Add ($movie = null, $date = null, $cine = null)
+        public function Add($movieId = null, $cinemaId = null, $date = null)
         {
+            $movie = $this->GetMovieById($movieId);
+            $cine = $this->GetCinemaById($cinemaId);
+
             $movieShow = new MovieShow($movie, $date, $cine);
 
             $rowAffected = $this->movieShowDAO->Add($movieShow);
@@ -53,6 +56,28 @@
             else
             {
                 $_SESSION['error'] = null;
+            }
+        }
+
+        private function GetMovieById($movieId)
+        {
+            foreach($this->movieList as $movie)
+            {
+                if ($movieId == $movie->getId())
+                {
+                    return $movie;
+                }
+            }            
+        }
+
+        private function GetCinemaById($cinemaId)
+        {
+            foreach($this->cinemaList as $cinema)
+            {
+                if ($cinemaId == $cinema->getId())
+                {
+                    return $cinema;
+                }
             }
         }
     }

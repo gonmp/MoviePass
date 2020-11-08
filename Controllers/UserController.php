@@ -82,12 +82,7 @@
                 $_SESSION['error'] = "wrong username or password";
                 header('location:' . FRONT_ROOT . 'Movie/ShowSearchMovieView');
             }            
-        }
-
-        private function Error ($errorMessage)
-        {            
-            
-        }
+        }       
 
         public function GoHome()
         {            

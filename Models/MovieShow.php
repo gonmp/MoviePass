@@ -4,13 +4,12 @@
 
     class MovieShow
     {
-
         private $idShow;
         private $movie;
         private $cinema;
         private $dateShow;
 
-        public function __construct($movie, $cinema, $showDate)
+        public function __construct($movie, $cinema, $dateShow)
         {
             $this->setMovie($movie);
             $this->setCinema($cinema);

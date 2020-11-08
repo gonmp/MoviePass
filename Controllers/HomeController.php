@@ -6,6 +6,7 @@
         public function Index($message = null)
         {   
             $_SESSION['error'] = null;
+            $_SESSION['cinemaError'] = null;
             $_SESSION['actualView'] = 'ShowSearchMovieView';
             
             # header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');

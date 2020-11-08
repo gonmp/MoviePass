@@ -47,31 +47,11 @@
                     {
                          require_once('nav-user-no-logged.php');                    
                     }                    
-               }
-               
+               }               
                ?>
           </div>
      </div>
-     
-     <?php /*
-     if (isset($_SESSION['adminLogged']))
-     {
-          if ($_SESSION['adminLogged'] == true)
-          {
-          ?>                     
-               <ul class="navbar-nav ml-auto">
-               <li class="nav-item">
-                    <a class="nav-link" href="<?php echo FRONT_ROOT ?>Cinema/ShowAddView">Add Cinema</a>
-               </li>
-               <li class="nav-item">
-                    <a class="nav-link" href="<?php echo FRONT_ROOT ?>Cinema/ShowListView">List Cinema</a>
-               </li>          
-          </ul>        
-          
-          <?php
-          }
-     } */?> 
-
 </nav>     
+<hr class="hr-style mt-1">
 
 

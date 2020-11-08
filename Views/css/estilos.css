@@ -21,6 +21,13 @@ body {
      color: white;
 }
 
+.hr-style {
+    border: 1px #9c0000 solid;
+}
+
+.hr-style-dash {
+     border: 1px #003dad dotted;     
+}
 
 
 

@@ -17,7 +17,11 @@
 
                         <!-- opciones de peliculas desde la base de datos -->
                         <?php 
-
+                            foreach($this->movieList as $movie)
+                            {
+                                ?><option name="movieId" value="<?php $movie->getId() ?>"><?php echo $movie->getTitle()?></option>                            
+                            <?php
+                            }                      
                         ?>
                     </select>
                 </div>
@@ -30,7 +34,7 @@
                         <?php 
                             foreach($this->cinemaList as $cinema)
                             {
-                                ?><option value="<?php $cinema ?>"><?php echo $cinema->GetName()?></option>                            
+                                ?><option value="<?php $cinema->GetId() ?>"><?php echo $cinema->GetName()?></option>                            
                             <?php
                             }                      
                         ?>
