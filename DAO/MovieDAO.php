@@ -135,7 +135,7 @@
                     $valuesArray->original_language,
                     $valuesArray->original_title,
                     $valuesArray->vote_average,
-                    $this->transformBoolean2Int($valuesArray->overview)
+                    $valuesArray->overview
                 );
 
                 $contador = $contador + $this->Add($movie);
