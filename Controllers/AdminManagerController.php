@@ -46,7 +46,4 @@
             $this->movieDAO->UpdateDataBaseFromAPI();
         }
     }
-
-
-
 ?>
