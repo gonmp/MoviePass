@@ -229,7 +229,7 @@
             }
         }
 
-        public function GetAllByMovieId($movieId)
+        public function GetAllByMovieId($movieId, $startDateTime, $endDateTime)
         {
             $query = "SELECT movieshow.id,
             movies.id,
@@ -257,10 +257,10 @@
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
             LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
-            WHERE movies.id = :id
+            WHERE movies.id = :id AND movieshow.showDate BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
-            $parameters = array(':id' => $movieId);
+            $parameters = array(':id' => $movieId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
 
             $this->connection = Connection::GetInstance();
 
@@ -333,7 +333,7 @@
             }
         }
 
-        public function GetAllByGenreId($genreId)
+        public function GetAllByGenreId($genreId, $startDateTime, $endDateTime)
         {
             $query = "SELECT movieshow.id,
             movies.id,
@@ -361,10 +361,10 @@
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
             LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
-            WHERE genres.id = :id
+            WHERE genres.id = :id AND movieshow.showDate BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
-            $parameters = array(':id' => $genreId);
+            $parameters = array(':id' => $genreId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
 
             $this->connection = Connection::GetInstance();
 
@@ -437,7 +437,7 @@
             }
         }
 
-        public function GetAllByCinemaId($cinemaId)
+        public function GetAllByCinemaId($cinemaId, $startDateTime, $endDateTime)
         {
             $query = "SELECT movieshow.id,
             movies.id,
@@ -465,10 +465,10 @@
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
             LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
-            WHERE cinemas.id = :id
+            WHERE cinemas.id = :id AND movieshow.showDate BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
-            $parameters = array(':id' => $cinemaId);
+            $parameters = array(':id' => $cinemaId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
 
             $this->connection = Connection::GetInstance();
 
