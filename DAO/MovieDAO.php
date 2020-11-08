@@ -149,13 +149,113 @@
 
             return $contador;
         }
+
+        public function GetMoviesByGenre($genreId)
+        {
+            $this->movieList = array();
+
+            $query = "SELECT movies.id,
+            movies.title,
+            movies.popularity,
+            movies.vote_count,
+            movies.video,
+            movies.poster_path,
+            movies.adult,
+            movies.backdrop_path,
+            movies.original_language,
+            movies.original_title,
+            movies.vote_average,
+            movies.overview,
+            genres.id,
+            genres.name,
+            GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' )
+            FROM " . $this->table . "
+            LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
+            LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
+            WHERE genres.id = :id
+            GROUP BY movies.id;";
+
+            $parameters = array(':id' => $genreId);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query, $parameters);
+
+                foreach($results as $result)
+                {
+                    $movie = new Movie(
+                    $result['id'],
+                    $result['title'],
+                    $result['popularity'],
+                    $result['vote_count'],
+                    $result['video'],
+                    $result['poster_path'],
+                    $result['adult'],
+                    $result['backdrop_path'],
+                    $result['original_language'],
+                    $result['original_title'],
+                    $result['vote_average'],
+                    $result['overview']
+                    );
+
+                    $movie->setId($result[0]);
+
+                    if($result[14] != null)
+                    {
+                        $genresArray = explode(",", $result[14]);
+
+                        $genres = array();
+
+                        foreach($genresArray as $genre)
+                        {
+                            $singleGenreArray = explode("/", $genre);
+                            $genreId = $singleGenreArray[0];
+                            $genreName = $singleGenreArray[1];
+                            $newGenre = new Genre($genreId, $genreName);
+                            array_push($genres, $newGenre);
+                        }
+
+                        $movie->setGenres($genres);
+                    }                    
+
+                    array_push($this->movieList, $movie);
+                }
+
+                return $this->movieList;
+            }            
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        }
         
         public function GetMovieById($id)
         {
             try
             {
                 
-                $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id WHERE movies.id = :id;";
+                $query = "SELECT movies.id,
+                movies.title,
+                movies.popularity,
+                movies.vote_count,
+                movies.video,
+                movies.poster_path,
+                movies.adult,
+                movies.backdrop_path,
+                movies.original_language,
+                movies.original_title,
+                movies.vote_average,
+                movies.overview,
+                genres.id,
+                genres.name,
+                GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' )
+                FROM " . $this->table . "
+                LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
+                LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
+                WHERE movies.id = :id;";
+
                 $parameters = array(':id' => $id);
                 
                 $this->connection = Connection::GetInstance();
@@ -224,7 +324,7 @@
                 foreach($results as $result)
                 {
                     $movie = new Movie(
-                        $result['id'],
+                    $result['id'],
                     $result['title'],
                     $result['popularity'],
                     $result['vote_count'],
@@ -267,7 +367,7 @@
             {
                 throw $ex;
             }
-        } 
+        }
         
         public function Delete($id)
         {
