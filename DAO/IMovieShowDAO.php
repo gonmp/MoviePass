@@ -9,9 +9,9 @@
     {
         function GetAll();
         function GetAllBetweenDates($startDateTime, $endDateTime);
-        function GetAllByMovieId($movieId);
-        function GetAllByGenreId($genreId);
-        function GetAllByCinemaId($cinemaId);
+        function GetAllByMovieId($movieId, $startDateTime, $endDateTime);
+        function GetAllByGenreId($genreId, $startDateTime, $endDateTime);
+        function GetAllByCinemaId($cinemaId, $startDateTime, $endDateTime);
         function Get($id);
         function Add(MovieShow $movieShow);
         function Update(MovieShow $movieShow);
