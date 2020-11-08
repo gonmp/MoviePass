@@ -69,7 +69,43 @@
             {
                 throw $ex;
             }
-        }        
+        }
+        
+        public function GetCinemaById ($id)
+        {
+            try
+            {
+                
+                $query = 'SELECT * FROM ' . $this->table . ' WHERE id = :id;';
+                $parameters = array(':id' => $id);
+                
+                $this->connection = Connection::GetInstance();
+
+                $result = $this->connection->Execute($query, $parameters);
+
+                if ($result == null)
+                {
+                    # el cine no fue encontrado
+                    return null;
+                }
+
+                $cinema = new Cinema(
+                    $result[0]['name'],
+                    $result[0]['totalCapacity'],
+                    $result[0]['address'],
+                    $result[0]['ticketValue'],
+                    $result[0]['enable']
+                );
+
+                $cinema->setId($result[0]['id']);
+
+                return $cinema;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        }
 
         public function GetAll()
         {
@@ -90,7 +126,7 @@
                         $result['totalCapacity'],
                         $result['address'],
                         $result['ticketValue'],
-                        $result['enable'],
+                        $result['enable']
                     );
 
                     $cinema->setId($result['id']);
