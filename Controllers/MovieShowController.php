@@ -44,12 +44,23 @@
 
         public function Add($movieId, $cinemaId, $movieShowDate, $movieShowTime)
         {
-            $movie = $this->GetMovieById($movieId);
-            $cine = $this->GetCinemaById($cinemaId);            
-
-            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;
-
+            $movieShowTime = $this->TimeToDateTime($movieShowTime);
+            
+            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;            
             $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));
+            
+            if (!$this->ValidateMovieShow($movieId, $cinemaId, $date))
+            {
+                $this->ShowAddMovieShow();
+
+                $_SESSION['errorMovieShow'] = "error";
+                $this->ShowAddMovieShow();
+
+                return;
+            }            
+            
+            $movie = $this->GetMovieById($movieId);
+            $cine = $this->GetCinemaById($cinemaId);          
 
             $movieShow = new MovieShow($movie, $cine, $date);            
 
@@ -65,6 +76,51 @@
             }
 
             $this->ShowAddMovieShow();
+        }
+
+        private function ValidateMovieShow($movieId, $cinemaId, $movieShowDateTime)
+        {
+            $validate = true;
+
+            $movieShowList = $this->movieShowDAO->GetAllByCinemaId($cinemaId, $movieShowDateTime, $movieShowDateTime);
+            
+            if ($movieShowList != null)
+            {   
+                foreach($movieShowList as $movieShow)
+                {
+                    if ($movieShow->getMovie()->getId() == $movieId)
+                    {
+                        $validate = false;
+                        break;
+                    }
+                }                            
+            }
+
+            return $validate;
+        }
+
+        private function TimeToDateTime($movieShowTime)
+        {
+            switch($movieShowTime)
+            {
+                case 9:
+                    $movieShowTime = "9:00:00";
+                break;                
+
+                case 13:
+                    $movieShowTime = "13:00:00";
+                break;                
+
+                case 17:
+                    $movieShowTime = "17:00:00";
+                break;                
+
+                case 21:
+                    $movieShowTime = "21:00:00";
+                break;                
+            }    
+            
+            return $movieShowTime;
         }
 
         public function ShowMovieShowUpdate($movieShowId)
