@@ -12,5 +12,6 @@
         function UpdateDatabaseFromAPI();
         function GetMovieById($id);
         function GetAll();
+        public function GetMoviesByGenre($genreId);
     }
 ?>
