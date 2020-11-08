@@ -90,7 +90,7 @@
 
         public function Update(Movie $movie)
         {
-            $query = 'UPDATE ' . $this->table . ' (title, popularity, vote_count, video, poster_path, adult, backdrop_path, original_language, original_title, vote_average, overview) VALUES (:title, :popularity, :vote_count, :video, :poster_path, :adult, :backdrop_path, :original_language, :original_title, :vote_average, :overview) WHERE id = :id;';
+            $query = 'UPDATE ' . $this->table . ' SET title = :title, popularity = :popularity, vote_count = :vote_count, video = :video, poster_path = :poster_path, adult = :adult, backdrop_path = :backdrop_path, original_language = :original_language, original_title = :original_title, vote_average = :vote_average, overview = :overview  WHERE id = :id;';
             
             # var_dump($query);
 
