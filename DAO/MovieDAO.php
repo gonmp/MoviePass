@@ -88,6 +88,62 @@
             }
         }
 
+        public function Update(Movie $movie)
+        {
+            $query = 'UPDATE ' . $this->table . ' (title, popularity, vote_count, video, poster_path, adult, backdrop_path, original_language, original_title, vote_average, overview) VALUES (:title, :popularity, :vote_count, :video, :poster_path, :adult, :backdrop_path, :original_language, :original_title, :vote_average, :overview) WHERE id = :id;';
+            
+            # var_dump($query);
+
+            $parameters = array(
+                ':id' => $movie->getId(),
+                ':title' => $movie->getTitle(),
+                ':popularity' => $movie->getPopularity(),
+                ':vote_count'  => $movie->getVote_count(),
+                ':video' => $movie->getVideo(),
+                ':poster_path' => $movie->getPoster_path(),
+                ':adult' => $movie->getAdult(),
+                ':backdrop_path' => $movie->getBackdrop_path(),
+                ':original_language' => $movie->getOriginal_language(),
+                ':original_title' => $movie->getOriginal_title(),
+                ':vote_average' => $movie->getVote_average(),
+                ':overview' => $movie->getOverview()
+            );
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowsAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowsAffected;
+            }
+            catch(\Exception $ex)
+            {
+                return -1;
+            }
+        }
+
+        public function UpdateMovieGenre(MovieGenre $movieGenre)
+        {
+            $query = 'INSERT INTO ' . $this->tableMovieGenre . '(movieId, genreId) VALUES (:movieId, :genreId);';
+
+            $parameters = array(
+                ':movieId' => $movieGenre->getIdMovie(),
+                ':genreId' => $movieGenre->getIdGenre(),
+            );
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                return $rowAffected;
+            }
+            catch(\Exception $ex)
+            {
+                return -1;
+            }
+        }
+
 
         public function UpdateDatabaseFromAPI()
         {
@@ -95,7 +151,7 @@
     
             #Borra la tabla
 
-            $this->DeleteAll();
+            $affectedRowsGenres = $this->genreDAO->GetGenresFromAPI();
             
             $handle =curl_init();
         
@@ -109,8 +165,6 @@
      
             #Paso el JSON a array
             $objectTODecode=json_decode($result);
-
-            $affectedRowsGenres = $this->genreDAO->GetGenresFromAPI();
 
             $affectedRows = $this->UpdateAllMovies($objectTODecode->results); 
             
@@ -137,9 +191,18 @@
                     $valuesArray->vote_average,
                     $valuesArray->overview
                 );
-                
-                $this->Add($movie);
 
+                $movieDatabase = $this->GetMovieById($movie->getId());
+
+                if($movieDatabase == null)
+                {
+                    $this->Add($movie);
+                }
+                else
+                {
+                    $this->Update($movie);
+                }               
+                
                 $contador = $contador + 1;
 
                 foreach($valuesArray->genre_ids as $genreId)
