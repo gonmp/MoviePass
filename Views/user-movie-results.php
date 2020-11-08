@@ -19,10 +19,10 @@
                               {                                   
                                    ?>
                                         <tr>
-                                             <td><?php echo $movie["title"]; ?></td>
-                                             <td><?php echo $movie["original_language"]; ?></td>
-                                             <td><?php echo $movie["overview"]; ?></td>
-                                             <td><?php foreach($movie["genre"] as $genre) { echo $genre->GetNameGenre() . " ";} ?></td>                                            
+                                             <td><?php echo $movie->getTitle(); ?></td>
+                                             <td><?php echo $movie->getoriginal_title(); ?></td>
+                                             <td><?php echo $movie->getOverview() ?></td>
+                                             <td><?php foreach($movie->getGenres() as $genre) { echo $genre->GetNameGenre() . " ";} ?></td>-->
                                         </tr>
                                    <?php
                               }
