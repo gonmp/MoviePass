@@ -64,3 +64,15 @@ CREATE TABLE IF NOT EXISTS movieshow(
 
 ALTER TABLE movieshow
 MODIFY COLUMN showDate datetime;
+
+DROP TABLE moviesgenres;
+
+CREATE TABLE IF NOT EXISTS moviesgenres(
+    movieId int NOT NULL,
+    genreId int NOT NULL,
+    CONSTRAINT fk_moviesgenres_movies FOREIGN KEY (movieId) REFERENCES movies(id) ON DELETE CASCADE,
+    CONSTRAINT fk_moviesgenres_genres FOREIGN KEY (genreId) REFERENCES genres(id) ON DELETE CASCADE,
+    CONSTRAINT unq_moviesgenres UNIQUE (movieId, genreId)
+)Engine=InnoDB;
+
+ALTER TABLE movies MODIFY COLUMN overview varchar(1000);
