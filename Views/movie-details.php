@@ -39,6 +39,11 @@
             <div class="m-0 mt-3 float-left">
                 <a href="#" class="btn btn-sm btn-outline-danger text-white">buy ticket</a>
             </div>
+
+            <!-- boton volver a lista de peliculas -->
+            <div class="m-2 ml-4 mt-3 float-left">
+                <a href="<?php echo FRONT_ROOT?>/Movie/ShowSearchMovieView" class="btn btn-sm btn-outline-primary text-white">back to movie list</a>
+            </div>
         </div>
 
     <!-- cines donde se esta proyectando -->

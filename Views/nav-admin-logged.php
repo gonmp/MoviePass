@@ -2,6 +2,9 @@
     
     <!-- logout -->
     <a href="<?php echo FRONT_ROOT ?>Home/Logout" class="mx-2 float-right btn btn-outline-danger btn-sm text-white">log out</a>
+
+    <!-- actualizar base de datos -->
+    <a href="<?php echo FRONT_ROOT ?>AdminManager/UpdateDataBase" class="float-right btn btn-success btn-sm text-white">UPDATE DATABASE</a>    
     
     <!-- manu del admin -->
     <div class="mx-2 dropdown float-right">               

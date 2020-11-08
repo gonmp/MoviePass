@@ -42,6 +42,7 @@
         public function UpdateDataBase()
         {
             $this->movieDAO->UpdateDatabaseFromAPI();
+            $this->ShowMovieList();
         }
 
         public function ShowMovieList()
