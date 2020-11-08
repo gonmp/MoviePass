@@ -2,24 +2,31 @@
     namespace Controllers;
 
     use DAO\MovieDAO as MovieDAO;
-    use Models\Movie as Movie;
     use DAO\GenreDAO as GenreDAO;
+    use DAO\MovieShowDAO as MovieShowDAO;
+    
+    use Models\Movie as Movie;
     use Models\Genre as Genre;
+    use Models\MovieShow as MovieShow;    
 
     class MovieController
     {
         private $movieDAO;
         private $genreDAO;
+        private $movieShowDAO;
 
         public function __construct()
         {
             $this->movieDAO = new MovieDAO();
             $this->genreDAO = new GenreDAO();
+            $this->movieShowDAO = new MovieShowDAO();
         }
 
         public function ShowMovieDetails($movieId)
         {
             $movie = $this->movieDAO->GetMovieById($movieId);
+
+            $movieShowList = $this->movieShowDAO->GetAllByMovieId($movieId);
 
             require_once(VIEWS_PATH.'movie-details.php');
         }

@@ -28,7 +28,7 @@
                 <!-- seleccionar fecha -->
                 <div class="col-2 m-1">                    
                     <label for="" class="px-1 text-primary d-block">select date</label>
-                    <input type="date" class="my-1">
+                    <input type="date" id="date" min="" max="" class="my-1">
                 </div>                
                                 
                 <!-- boton buscar pelicula -->

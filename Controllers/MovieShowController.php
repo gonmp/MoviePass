@@ -15,48 +15,80 @@
     {
         private $movieList;
         private $movieDAO;
-
         private $cinemaList;
         private $cinemaDAO;       
+        private $movieShowDAO;                      
 
-        #$this->movieShowDAO;                      
-
-        public function __construct ()
+        public function __construct()
         {
             $this->movieDAO = new MovieDAO();            
             $this->movieList = $this->movieDAO->GetAll();
 
             $this->cinemaDAO = new CinemaDAO();
             $this->cinemaList = $this->cinemaDAO->GetAll();
+
+            $this->movieShowDAO = new MovieShowDAO();
+        }        
+
+        public function ShowAddMovieShow()
+        {   
+            require_once(VIEWS_PATH."movie-show-add.php");      
+            $this->ShowMovieShowList();      
         }
 
-        public function ShowIndexMovieShow ()
+        public function ShowMovieShowList()
         {
-            
+            $movieShowList = $this->movieShowDAO->GetAll();
+            require_once(VIEWS_PATH."movie-show-list.php");
         }
 
-        public function ShowAddMovieShow ()
-        {            
-            require_once(VIEWS_PATH."movie-show-add.php");
-        }
-
-        public function Add($movieId = null, $cinemaId = null, $date = null)
+        public function Add($movieId, $cinemaId, $movieShowDate, $movieShowTime)
         {
             $movie = $this->GetMovieById($movieId);
-            $cine = $this->GetCinemaById($cinemaId);
+            $cine = $this->GetCinemaById($cinemaId);            
 
-            $movieShow = new MovieShow($movie, $date, $cine);
+            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;
+
+            $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));
+
+            $movieShow = new MovieShow($movie, $cine, $date);            
 
             $rowAffected = $this->movieShowDAO->Add($movieShow);
 
             if ($rowAffected == -1)
-            {
+            {                
                 $_SESSION['error'] = 'error in add movie show';
             }
             else
             {
                 $_SESSION['error'] = null;
             }
+
+            $this->ShowAddMovieShow();
+        }
+
+        public function ShowMovieShowUpdate($movieShowId)
+        {
+            $movieShow = $this->movieShowDAO->Get($movieShowId);
+
+            require_once(VIEWS_PATH . 'movie-show-update.php');
+            $this->ShowMovieShowList();
+        }
+
+        public function Update($id, $movieId, $cinemaId, $movieShowDate, $movieShowTime)
+        {
+            $movie = $this->GetMovieById($movieId);
+            $cinema = $this->GetCinemaById($cinemaId);            
+
+            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;
+            $showDate = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));
+
+            $movieShow = new MovieShow($movie, $cinema, $showDate);
+            $movieShow->setId($id);
+
+            $this->movieShowDAO->Update($movieShow);
+
+            $this->ShowAddMovieShow();            
         }
 
         private function GetMovieById($movieId)

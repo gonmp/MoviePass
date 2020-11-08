@@ -11,8 +11,7 @@
         </div>
 
         <!-- detalles -->
-        <div class="col-5">                        
-        
+        <div class="col-5">                                
             <!-- titulo -->
             <div class="w-75 text-justify">
                 <p class="h4 mr-4 d-inline text-danger">Title: </p>                
@@ -34,17 +33,43 @@
             <div class="mt-3 w-75 text-justify">
                 <p class="h5 mr-3 d-inline text-danger">Overview: </p>
                 <span class="h7 d-inline text-white m-0 mb-2"><?php echo $movie->getOverview();?></span>    
-            </div>
+            </div>            
 
-            <!-- cines donde se esta proyectando -->
-            <div class="mt-3 w-75 text-justify">
-                <p class="h5 mr-3 d-inline text-danger">Cinemas where you can see it</p>
-                
-                <p class="text-primary">Cinema 1: <span class="text-white"> 12/05 - 12:30</span><span class="btn btn-sm btn-outline-danger text-white">buy a ticket</span></p>
-                <p class="text-primary">Cinema 2: <span class="text-white"> 12/05 - 22:45</span><span class="btn btn-sm btn-outline-danger text-white">buy a ticket</span></p>
-                <p class="text-primary">Cinema 3: <span class="text-white"> 12/05 - 11:00</span><span class="btn btn-sm btn-outline-danger text-white">buy a ticket</span></p>                                
+            <!-- boton comprar -->
+            <div class="m-0 mt-3 float-left">
+                <a href="#" class="btn btn-sm btn-outline-danger text-white">buy ticket</a>
             </div>
+        </div>
 
+    <!-- cines donde se esta proyectando -->
+    <div class="mx-3 mt-2 w-100 text-justify">
+            <p class="h2 mr-3 d-inline text-danger">Cinemas where you can see it</p>                
+            
+            <table class="mt-3 table table-sm">
+                <thead class="">
+                    <tr>
+                        <th scope="col" class="text-primary">cinema</th>                        
+                        <th scope="col" class="text-primary">address</th> 
+                        <th scope="col" class="text-primary">date</th>
+                        <th scope="col" class="text-primary">time</th>
+                        <th scope="col" class="text-primary">ticket value</th>
+                    </tr>
+                </thead>
+                <tbody class="text-white">
+                    <?php
+                    foreach($movieShowList as $movieShow)
+                    {?>
+                        <tr>
+                            <th class="text-danger"><?php echo $movieShow->getCinema()->getName();?></td>
+                            <td><?php echo $movieShow->getCinema()->getAddress();?></td>
+                            <td><?php echo $movieShow->getShowDate()->format('d-m-Y');?></td>
+                            <td><?php echo $movieShow->getShowDate()->format('H : i');?></td>
+                            <td><?php echo $movieShow->getCinema()->getTicketValue();?></td>                            
+                        </tr>                        
+                    <?php
+                    }?>                        
+                </tbody>
+            </table>
         </div>
     </div>
 </div>   

@@ -4,12 +4,13 @@
 <main>
     <section id="cinemaModify">
         
-        <h1 class="text-danger px-2 pt-4">Modify Cinema</h1>
+        <h1 class="text-danger px-2 pt-4">Modify Cinema: <span class="text-white"><?php echo $cinema->getId();?></span></h1>
 
         <form action="<?php echo FRONT_ROOT ?>Cinema/Update" method="post">           
             
             <div class="row px-1 pb-3">
-                
+
+                <!-- id -->                
                 <input type="hidden" name="id" value="<?php echo $cinema->getId();?>"/>
 
                 <!-- nombre -->                

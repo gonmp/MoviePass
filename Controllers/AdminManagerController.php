@@ -38,13 +38,7 @@
 
             $this->cinemaController->ShowAddView();
         }
-
-        public function ShowUpdateView($name = null)
-        {
-            $_SESSION['errorCinema'] = null;
-            $this->cinemaController->ShowUpdateView($name);
-        }
-
+        
         public function UpdateDataBase()
         {
             $this->movieDAO->UpdateDatabaseFromAPI();
