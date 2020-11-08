@@ -91,6 +91,13 @@
             $this->ShowAddMovieShow();            
         }
 
+        public function Delete($movieShowId)
+        {
+            $this->movieShowDAO->Delete($movieShowId);
+            
+            $this->ShowAddMovieShow();   
+        }
+
         private function GetMovieById($movieId)
         {
             foreach($this->movieList as $movie)

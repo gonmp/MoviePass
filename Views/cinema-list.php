@@ -10,6 +10,7 @@
                               <th scope="col" class="text-primary">Address</th>
                               <th scope="col" class="text-primary">Ticket value</th>    
                               <th scope="col"></th>                     
+                              <th scope="col"></th>                     
                          </tr>
                     </thead>
                     <tbody>
@@ -22,8 +23,12 @@
                                         <td><?php echo $cinema->getTotalCapacity(); ?></td>
                                         <td><?php echo $cinema->getAddress(); ?></td>
                                         <td><?php echo $cinema->getTicketValue(); ?></td>
-                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>Cinema/ShowUpdateView?name=<?php echo $cinema->getName();?>" class="btn btn-sm btn-outline-warning">Modify</button></td>                                             
+
+                                        <!-- boton modificar -->                                        
+                                        <td><a href="<?php echo FRONT_ROOT?>Cinema/ShowUpdateView?name=<?php echo $cinema->getName();?>" class="btn btn-sm btn-outline-warning text-white">Modify</button></td>                                             
+
+                                        <!-- boton modificar -->                                        
+                                        <td><a href="<?php echo FRONT_ROOT?>Cinema/Delete?cinemaId=<?php echo $cinema->getId();?>" class="btn btn-sm btn-outline-danger text-white">Delete</button></td>                                             
                                    </tr>                                   
                               <?php
                               }

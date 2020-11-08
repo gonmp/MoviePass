@@ -47,7 +47,7 @@
 
         public function ShowMovieList()
         {
-            header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');
+            header('location:' . FRONT_ROOT . '/Movie/ShowAllMoviesPremieres');
         }
     }
 ?>

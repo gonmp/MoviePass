@@ -9,7 +9,7 @@
             $_SESSION['cinemaError'] = null;
             $_SESSION['actualView'] = 'ShowSearchMovieView';
             
-            header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');                        
+            header('location:' . FRONT_ROOT . '/Movie/ShowAllMoviesPremieres');                        
         }   
         
         public function Logout ()

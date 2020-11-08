@@ -102,9 +102,14 @@
                 $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';  
 
                 $this->ShowUpdateView($name);
-            }
-            
-        }        
+            }            
+        }    
+        
+        public function Delete($cinemaId)
+        {
+            $this->cinemaDAO->Delete($cinemaId);            
+            $this->ShowAddView();
+        }
 
         public function GoHome()
         {

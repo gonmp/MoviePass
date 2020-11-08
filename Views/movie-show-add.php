@@ -50,7 +50,7 @@
 
                 <!-- seleccionar horario -->
                 <div class="col-1 p-0 m-1 ml-5">                    
-                    <label for="" class="px-1 text-primary d-block">select date</label>                    
+                    <label for="" class="px-1 text-primary d-block">select time</label>                    
                     <input required type="time" name="movieShowTime" id="date" min="" max="" class="my-1">                    
                 </div>                
                                 

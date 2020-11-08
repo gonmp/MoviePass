@@ -73,14 +73,14 @@
                 else
                 {   
                     $movieController = new MovieController();
-                }                
-                header('location:' . FRONT_ROOT . '/Movie/ShowSearchMovieView');
+                }                                
             }
             else
             {                   
                 $_SESSION['error'] = "wrong username or password";
-                header('location:' . FRONT_ROOT . 'Movie/ShowSearchMovieView');
             }            
+            
+            header('location:' . FRONT_ROOT . 'Movie/ShowAllMoviesPremieres');
         }       
 
         public function GoHome()

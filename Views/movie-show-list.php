@@ -10,6 +10,7 @@
                               <th scope="col" class="text-primary">Date</th>
                               <th scope="col" class="text-primary">Time</th>
                               <th scope="col"></th>                     
+                              <th scope="col"></th>    
                          </tr>
                     </thead>
                     <tbody>
@@ -24,7 +25,10 @@
                                         <td><?php echo $movieShow->getShowDate()->format('H : i') . ' hs'; ?></td>
 
                                         <!-- boton modificar -->                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning">Modify</button></td>                                                                                     
+                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning text-white">Modify</button></td>                                                                                     
+
+                                        <!-- boton modificar -->                                        
+                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/Delete?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-danger text-white">Delete</button></td>                                             
                                    </tr>                                   
                               <?php
                               }
