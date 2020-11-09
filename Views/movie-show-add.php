@@ -58,9 +58,7 @@
                         <option value="13" selected>13 hs</option>                        
                         <option value="17" selected>17 hs</option>                        
                         <option value="21" selected>21 hs</option>                        
-                    </select>                   
-
-                    <!-- <input required type="time" name="movieShowTime" id="date" min="" max="" class="my-1"> -->
+                    </select>                                   
                 </div>                
                                 
                 <!-- boton agregar movie show -->

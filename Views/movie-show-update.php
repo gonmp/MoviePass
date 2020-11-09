@@ -61,8 +61,15 @@
 
                 <!-- seleccionar horario -->
                 <div class="col-1 p-0 m-1 ml-5">                    
-                    <label for="" class="px-1 text-primary d-block">time</label>                    
-                    <input required type="time" name="movieShowTime" id="date" min="" max="" class="my-1">                    
+                    <label for="" class="px-1 text-primary d-block">select time</label>                    
+                    <select name="movioShowTime" class="custom-select">                                                      
+                        
+                        <!-- opciones de tiempo -->
+                        <option value="9" selected>9 hs</option>                        
+                        <option value="13" selected>13 hs</option>                        
+                        <option value="17" selected>17 hs</option>                        
+                        <option value="21" selected>21 hs</option>                        
+                    </select>                                   
                 </div>                
                                 
                 <!-- boton update movie show -->
