@@ -13,16 +13,18 @@
             $this->cinemaDAO = new CinemaDAO();
         }        
 
-        public function ShowModifyView($name)
+        public function ShowUpdateView($name)
         {
             $cinema = $this->cinemaDAO->GetCinemaByName($name);            
-
             require_once(VIEWS_PATH."cinema-modify.php");
+
+            $this->ShowListView();
         }
 
         public function ShowAddView()
         {
             require_once(VIEWS_PATH."cinema-add.php");
+            $this->ShowListView();
         }
 
         public function ShowListView()
@@ -30,7 +32,7 @@
             $cinemaList = $this->cinemaDAO->GetAll();
 
             require_once(VIEWS_PATH."cinema-list.php");
-        }
+        }        
 
         # MP : 
         #   . saque el getID del dao y del constructor de cinema. Lo hace la base de datos ahora.
@@ -45,18 +47,19 @@
             if ($cinemaExist)
             {
                 # TODO: hacer que sea un cartel de error mas agradable 
-                echo "Invalid cinema name. The name of the cinema already exists.";
+                $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';
             }
             else
             {
+                $_SESSION['cinemaError'] = null;
                 $cinema = new Cinema($name, $totalCapacity, $address, $ticketValue, true);            
                 $this->cinemaDAO->Add($cinema);
             }
 
-            $this->ShowAddView();
+            header('location:' . FRONT_ROOT . '/AdminManager/ShowAddCinemaView');
         }
 
-        public function Update($id, $name, $totalCapacity, $address, $ticketValue, $enable)
+        public function Update($id, $name, $totalCapacity, $address, $ticketValue)
         {   
             # solo realiza el update si el nombre del cine no existe en la base de datos
             # tambien se fija que el nombre no sea el nombre del propio cinema, para eso compara los id
@@ -83,21 +86,30 @@
                     $totalCapacity,
                     $address,
                     $ticketValue,
-                    $enable
+                    true
                 );
 
                 $cinema->setId($id);
 
                 $this->cinemaDAO->Update($cinema);
+
+                $_SESSION['cinemaError'] = null;
+
+                $this->ShowAddView();
             }
             else
             {
-                # TODO: hacer que sea un cartel de error mas agradable 
-                echo "Invalid cinema name. The name of the cinema already exists.";                
-            }
-            
-            $this->ShowListView();
-        }        
+                $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';  
+
+                $this->ShowUpdateView($name);
+            }            
+        }    
+        
+        public function Delete($cinemaId)
+        {
+            $this->cinemaDAO->Delete($cinemaId);            
+            $this->ShowAddView();
+        }
 
         public function GoHome()
         {

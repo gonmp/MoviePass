@@ -1,4 +1,4 @@
-<?php
+<?php/*
 if (!isset($_SESSION['userLogged']))                      
 {
     header('location:GoHome');
@@ -10,5 +10,5 @@ else if (!$_SESSION['userLogged'])
 else
 {
     require_once('nav.php');
-}
+}*/
 ?>

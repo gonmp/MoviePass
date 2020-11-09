@@ -4,12 +4,20 @@
     class HomeController
     {
         public function Index($message = null)
-        {            
-            $_SESSION['adminLogged'] = false;            
-            $_SESSION['userLogged'] = false;      
-            $_SESSION['error'] = $message;
+        {   
+            $_SESSION['error'] = null;
+            $_SESSION['cinemaError'] = null;
+            $_SESSION['errorMovieShow'] = null;
+            $_SESSION['actualView'] = 'ShowSearchMovieView';
             
-            require_once(VIEWS_PATH."login.php");
-        }                        
+            header('location:' . FRONT_ROOT . '/Movie/ShowAllMoviesPremieres');                        
+        }   
+        
+        public function Logout ()
+        {            
+            $_SESSION['userLogged'] = false;
+
+            $this->Index();
+        }
     }
 ?>

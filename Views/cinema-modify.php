@@ -1,54 +1,71 @@
 <?php
-    require_once('checkAdmin.php');
+    require_once('nav.php');
 ?>
-<main class="py-5">
-    <section id="Modify Cinema" class="mb-5">
-        <div class="container">
-            <h2 class="mb-4">Modify Cinema<h2>
-            <form action="<?php echo FRONT_ROOT ?>Cinema/Update" method="post" class="bg-light-alpha p-5">
-                <div class="row">                         
-                    <div class="col-lg-4">
-                        <div class="form-group">             
-                            <input type="hidden" name="id" value="<?php echo $cinema->getId();?>"  />
+<main>
+    <section id="cinemaModify">
+        
+        <h1 class="text-danger px-2 pt-4">Modify Cinema: <span class="text-white"><?php echo $cinema->getId();?></span></h1>
 
-                            <label for="">Name</label>                            
-                            <input type="text" pattern="[A-Za -z0-9]+" title="Only letters and numbers" name="name" value="<?php echo $cinema->getName();?>" class="form-control" minlength="1" maxlength="50" required>
-                        </div>
-                    </div>
+        <form action="<?php echo FRONT_ROOT ?>Cinema/Update" method="post">           
+            
+            <div class="row px-1 pb-3">
 
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Capacity</label>
-                            <input type="number" name="totalCapacity" value="<?php echo $cinema->getTotalCapacity();?>" class="form-control"  min="1" max="5000" required>
-                        </div>
-                    </div>
+                <!-- id -->                
+                <input type="hidden" name="id" value="<?php echo $cinema->getId();?>"/>
+
+                <!-- nombre -->                
+                <div class="col m-1">
+                    <label for="" class="text-primary">name</label>                                                              
+                    <input type="text" pattern="[A-Za-z0-9 ]+" title="only letters and numbers" name="name" value="<?php echo $cinema->getName();?>" class="form-control" minlength="1" maxlength="50" required>
+                </div>
+        
+                <!-- capacidad -->                
+                <div class="col-1 m-1">
+                    <label for="" class="text-primary">capacity</label>
+                    <input type="number" name="totalCapacity" value="<?php echo $cinema->getTotalCapacity();?>" class="form-control" min="1" max="5000" required>
+                </div>
+
+                <!-- direccion -->
+                <div class="col m-1">
+                    <label for="" class="text-primary">address</label>
+                    <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="address" value="<?php echo $cinema->getAddress();?>" class="form-control" minlength="1" maxlength="100" required>
+                </div>  
+
+                <!-- valor de la entrada -->
+                <div class="col-1 m-1 mr-4">
+                    <label for="" class="text-primary">ticket value</label>
+                    <input type="number" name="ticketValue" value="<?php echo $cinema->getTicketValue();?>" class="form-control" min="1" max="5000" required>
+                </div>   
+                
+                
+                <!-- botones -->
+                <div class="col-3 p-0">                  
+                    <!-- boton agregar cine -->
+                    <div class="d-inline float-left">
+                        <label for="" class="px-1 text-primary d-block">modify</label>
+                        <button type="submit" class="btn btn-warning my-1 px-2">modify cinema</button>
+                    </div>                    
                     
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Address</label>
-                            <input type="text" pattern="[A-Za -z0-9]+" title="Only letters and numbers" name="address" value="<?php echo $cinema->getAddress();?>" class="form-control" minlength="1" maxlength="100" required>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Ticket value</label>
-                            <input type="number" name="ticketValue" value="<?php echo $cinema->getTicketValue();?>" class="form-control" min="1" max="5000" required>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="Enabled">Enabled</label>
-                            <input id="Enabled" type="radio" name="enable" value="1" required>
-                            
-                            <label for="Disabled">Disabled</label>
-                            <input id="Disabled" type="radio" name="enable" value="0" required>
-                        </div>
+                    <!-- boton cancelar -->
+                    <div class="d-inline float-left mx-2">
+                        <label for="" class="px-1 text-danger d-block">go back</label>
+                        <a href="<?php echo FRONT_ROOT . '/AdminManager/ShowIndexAdmin' ?>" class="btn btn-danger my-1 px-2">cancel operation</a>
                     </div>
                 </div>
-                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Save</button>
-            </form>
-        </div>
+
+            </div>
+            
+
+            <!-- error -->
+            <?php
+            if ($_SESSION['cinemaError'] != null)
+            {?>            
+                <div class="row">
+                    <p class="ml-4 text-warning"><?php echo $_SESSION['cinemaError']?></p>
+                </div>            
+            <?php
+            }?>                    
+
+        </form>
     </section>
 </main>
-    
-

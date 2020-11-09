@@ -4,7 +4,6 @@
 
     class MovieShow
     {
-
         private $idShow;
         private $movie;
         private $cinema;
@@ -25,6 +24,6 @@
         public function getId() {return $this->idShow;}
         public function getMovie() {return $this->movie;}
         public function getCinema() {return $this->cinema;}
-        public function getShowDate() {return $this->showDate;}
+        public function getShowDate() {return $this->showDate;}        
     }
 ?>

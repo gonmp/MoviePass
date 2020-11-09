@@ -1,44 +1,57 @@
 <?php
-    require_once('checkAdmin.php');
+    require_once('nav.php');
 ?>
-<main class="py-5">
-    <section id="Add Cinema" class="mb-5">
-        <div class="container">
-            <h2 class="mb-4">Add Cinema<h2>
-            <form action="<?php echo FRONT_ROOT ?>Cinema/Add" method="post" class="bg-light-alpha p-5">
-                <div class="row">                         
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Name</label>
-                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="name" value="" class="form-control" minlength="1" maxlength="50" required>
-                        </div>
-                    </div>
+<main>
+    <section id="cinemaAdd">
+        
+        <h1 class="text-danger px-2 pt-4">Add Cinema</h1>
 
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Capacity</label>
-                            <input type="number" name="totalCapacity" value="" class="form-control" min="1" max="5000" required>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Address</label>
-                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="address" value="" class="form-control" minlength="1" maxlength="100" required>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Ticket value</label>
-                            <input type="number" name="ticketValue" value="" class="form-control" min="1" max="5000" required>
-                        </div>
-                    </div>
-                    
+        <form action="<?php echo FRONT_ROOT ?>Cinema/Add" method="post">           
+            
+            <div class="row px-0 pb-3 m-0">
+
+                <!-- nombre -->                
+                <div class="col m-1 px-2">
+                    <label for="" class="text-primary">name</label>
+                    <input placeholder="cinema name" type="text" pattern="[A-Za-z0-9 ]+" title="only letters and numbers" name="name" value="" class="form-control" minlength="1" maxlength="50" required>
                 </div>
-                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Add cinema</button>
-            </form>
-        </div>
+        
+                <!-- capacidad -->                
+                <div class="col-1 m-1">
+                    <label for="" class="text-primary">capacity</label>
+                    <input placeholder="0" type="number" name="totalCapacity" value="" class="form-control" min="1" max="5000" required>
+                </div>
+
+                <!-- direccion -->
+                <div class="col m-1">
+                    <label for="" class="text-primary">address</label>
+                    <input placeholder="cinema address" type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="address" value="" class="form-control" minlength="1" maxlength="100" required>
+                </div>  
+
+                <!-- valor de la entrada -->
+                <div class="col-1 m-1 mr-3">
+                    <label for="" class="text-primary">ticket value</label>
+                    <input placeholder="0" type="number" name="ticketValue" value="" class="form-control" min="1" max="5000" required>
+                </div>   
+
+                <!-- boton agregar cine -->
+                <div class="col-2 p-0 ml-3">  
+                    <label for="" class="px-1 mt-1 text-primary d-block">add new cinema</label>
+                    <button type="submit" class="btn btn-success my-0 px-5">ADD</button>
+                </div>                
+            </div>
+            
+
+            <!-- error -->
+            <?php
+            if ($_SESSION['cinemaError'] != null)
+            {?>            
+                <div class="row">
+                    <p class="ml-4 text-warning"><?php echo $_SESSION['cinemaError']?></p>
+                </div>            
+            <?php
+            }?>                    
+
+        </form>
     </section>
 </main>
-    
-

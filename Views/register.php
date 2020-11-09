@@ -1,34 +1,53 @@
-<nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
-    <span class="navbar-text">
-        <a class="nav-link" href="<?php echo FRONT_ROOT ?>Home/Index"><strong>HOME</strong> </a>
-    </span>
-</nav>
+<?php
+    require_once('nav.php');
+?>
 
-<main class="py-5">
-    <section id="Add Cinema" class="mb-5">
+<main class="">
+    <section id="register" class="">
         <div class="container">
-            <h2 class="mb-4">Register User<h2>
-            
-            
+            <form action="<?php echo FRONT_ROOT ?>User/Add" method="post" class="p-3">
+                
+                <div class="row">
+                    <div class="col-4">
+                        <label for="" class="text-danger h2">user name</label>                                        
+                        <input type="text" name="userName" class="text-white form-control border-primary bg-dark" required value="" minlength="1" maxlength="10" placeholder="enter your user name here" pattern="[A-Za-z0-9 ]+" title="only letters and numbers">
+                        
+                        <?php 
+                            if(isset($_SESSION['error']))
+                            {?>                            
+                                <p class="text-warning py-0 mx-1"><?= $_SESSION['error'] ?></p>                            
+                            <?php 
+                            }
+                            else
+                            {
+                                ?><p class="py-1"></p><?php
+                            }
+                        ?> 
 
-            <form action="<?php echo FRONT_ROOT ?>User/Add" method="post" class="bg-light-alpha p-5">
-                <div class="row">                         
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">User</label>
-                            <input type="text" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers" name="userName" value="" class="form-control" minlength="5" maxlength="10" required>
-                        </div>
                     </div>
+                </div>
+                            
+                <div class="row">
+                    <div class="col-4">
+                        <label for="" class="mt-3 text-danger h2">password</label>                    
+                        <input type="password" name="password" class="text-white form-control border-primary bg-dark" required value="" minlength="1" maxlength="10" placeholder="write your password here">
+                    </div>                           
+                </div>    
 
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Password</label>
-                            <input type="password" name="password" value="" class="form-control" minlength="5" maxlength="10" required>
-                        </div>
-                    </div>
-                </div>                
-                <button type="submit" name="button" class="btn btn-dark ml-auto d-block">Register</button>
-            </form>
+                <div class="row">
+                    <div class="col-4 mt-4">
+                        <button type="submit" name="button" class="btn btn-lg btn-success float-right">Register</button>                
+                        <a href="<?php echo FRONT_ROOT ?>Home/Index"  class="mx-3 btn btn-sm btn-danger float-right">Cancel</a>                
+                    </div>       
+                </div>       
+                
+
+            </form>            
+
+            <div>
+                
+            </div>
+
         </div>
     </section>
 </main>

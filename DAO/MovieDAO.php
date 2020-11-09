@@ -61,7 +61,7 @@
                 return $rowAffected;
             }
             catch(\Exception $ex)
-            {
+            {                
                 return -1;
             }
         }
@@ -478,7 +478,6 @@
         {
             if($bool)
             {
-
                 return 1;
             }
             else

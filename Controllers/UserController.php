@@ -21,24 +21,33 @@
             $user = new User($userName, $password, $admin);
             $rowsAffected = $this->userDAO->Add($user);
             if ($rowsAffected == -1)
-            {
-                $this->Error("Username is already in use");
+            {                
+                $_SESSION["error"] = "username is already in use";
+                $this->ShowRegisterView();
             }
             else
             {
                 $_SESSION["error"] = null;
-                
-                $this->ShowLoginView();
+                $_SESSION['userLogged'] = $user;
+
+                header('location:' . FRONT_ROOT . 'Home/Index');
             }            
         }
 
         public function ShowLoginView ()
         {
+            $_SESSION['actualView'] = 'login';
             require_once(VIEWS_PATH."login.php");
         }
 
         public function ShowRegisterView ()
         {
+            if ($_SESSION['actualView'] != 'register')
+            {
+                $_SESSION['error'] = null;
+            }
+            
+            $_SESSION['actualView'] = 'register';            
             require_once(VIEWS_PATH."register.php");
         }        
 
@@ -46,50 +55,38 @@
         {  
             if (!$name || !$password)
             {
-                $this->Error('Forced logout by using URL for navigate');
+                #$this->Error('Forced logout by using URL for navigate');
             }
 
             $user = $this->userDAO->GetUserByName($name);
+            
             # chekear si es un usuario valido
             if($user != null && $user->GetPassword() == $password)
             {
+                $_SESSION['userLogged'] = $user;
+
                 # chekear si es admin
                 if($user->GetAdmin())
-                {
-                    $_SESSION["validLogin"] = true;
-                    $_SESSION['adminLogged'] = true;
+                {   
                     $cinemaController = new CinemaController();
-                    $cinemaController->ShowListView();
                 }
                 else
-                {
-                    $_SESSION["validLogin"] = true;
-                    $_SESSION["userLogged"] = true;                                         
-
+                {   
                     $movieController = new MovieController();
-                    $movieController->ShowSearchMovieView();
-                }
+                }                                
             }
             else
-            {   
-                # enviarlo a login e informarle del error
-                $this->Error("Wrong username or password");
+            {                   
+                $_SESSION['error'] = "wrong username or password";
             }            
-        }
-
-        private function Error ($errorMessage)
-        {            
-            $_SESSION["error"] = $errorMessage;
-
-            $this->GoHome();
-        }
+            
+            header('location:' . FRONT_ROOT . 'Movie/ShowAllMoviesPremieres');
+        }       
 
         public function GoHome()
-        {
-            $_SESSION['adminLogged'] = null;            
+        {            
             $_SESSION['userLogged'] = null; 
-
-            require_once(VIEWS_PATH."login.php");            
+            header('location:' . FRONT_ROOT . 'Home/Index');
         }
     }
 ?>
