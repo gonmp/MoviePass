@@ -153,7 +153,10 @@
 
             $rowsAffectedTotal = 0;
 
-            for($i = 1; $i <= $numberPages; $i++)
+            # TODO: implementar para proxima entrega, si nos dan el ok, esta caracteristica
+            $pagesRequest = 40;
+
+            for($i = 1; $i <= $pagesRequest; $i++)
             {
                 $rowsAffected = $this->UpdateDatabasePage($i);
 
