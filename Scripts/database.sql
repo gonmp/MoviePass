@@ -75,4 +75,4 @@ CREATE TABLE IF NOT EXISTS moviesgenres(
     CONSTRAINT unq_moviesgenres UNIQUE (movieId, genreId)
 )Engine=InnoDB;
 
-ALTER TABLE movies MODIFY COLUMN overview varchar(1000);
+ALTER TABLE movies MODIFY COLUMN overview varchar(2000);
