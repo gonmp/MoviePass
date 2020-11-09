@@ -62,8 +62,7 @@
             }
             catch(\Exception $ex)
             {
-                var_dump($ex);
-                //return -1;
+                return -1;
             }
         }
 
@@ -119,8 +118,7 @@
             }
             catch(\Exception $ex)
             {
-                var_dump($ex);
-                //return -1;
+                return -1;
             }
         }
 
