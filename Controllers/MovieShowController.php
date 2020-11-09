@@ -76,24 +76,36 @@
             }
 
             $this->ShowAddMovieShow();
-        }
+        }        
 
         private function ValidateMovieShow($movieId, $cinemaId, $movieShowDateTime)
         {
             $validate = true;
 
-            $movieShowList = $this->movieShowDAO->GetAllByCinemaId($cinemaId, $movieShowDateTime, $movieShowDateTime);
+            # ver si la pelicula es proyectada en otro cine el dia de la funcion
+            $movieShowList = $this->movieShowDAO->GetAllByMovieId($movieId, $movieShowDateTime, $movieShowDateTime);
             
             if ($movieShowList != null)
-            {   
-                foreach($movieShowList as $movieShow)
-                {
-                    if ($movieShow->getMovie()->getId() == $movieId)
+            {
+                $validate = false;
+            }
+            
+            # ver si el cine tiene otra funcion en el mismo horario
+            else
+            {
+                $movieShowList = $this->movieShowDAO->GetAllByCinemaId($cinemaId, $movieShowDateTime, $movieShowDateTime);
+            
+                if ($movieShowList != null)
+                {   
+                    foreach($movieShowList as $movieShow)
                     {
-                        $validate = false;
-                        break;
-                    }
-                }                            
+                        if ($movieShow->getMovie()->getId() == $movieId)
+                        {
+                            $validate = false;
+                            break;
+                        }
+                    }                            
+                }
             }
 
             return $validate;

@@ -1,3 +1,7 @@
+<?php
+    require_once('checkAdmin.php');
+?>
+
 <main class="">
      <section id="movieShowList" class="">
           <div class="container-fluid mt-4">               

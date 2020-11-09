@@ -1,5 +1,5 @@
 <?php
-    require_once('nav.php');
+    require_once('checkAdmin.php');
 ?>
 <main>
     <section id="movieShowAdd">
@@ -45,7 +45,7 @@
                 <!-- seleccionar fecha -->
                 <div class="col-1 p-0 m-1">                    
                     <label for="" class="px-1 text-primary d-block">select date</label>                    
-                    <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1">                    
+                    <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1 mdate">                    
                 </div>                
 
                 <!-- seleccionar horario -->

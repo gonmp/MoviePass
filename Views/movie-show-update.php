@@ -1,5 +1,5 @@
 <?php
-    require_once('nav.php');
+    require_once('checkAdmin.php');
 ?>
 <main>
     <section id="movieShowUpdate">
@@ -32,6 +32,7 @@
                         ?>                        
                     </select>
                 </div>
+                
                 <!-- seleccionar cine -->
                 <div class="col-3 m-1">                    
                     <label for="" class="px-1 text-primary d-block">cinema</label>                    

@@ -27,13 +27,13 @@
                 <!-- seleccionar fecha de inicio -->
                 <div class="col m-1">                    
                     <label for="" class="px-1 text-primary">from date</label>
-                    <input required type="date" name="startDate" id="date" min="" max="" class="my-1">
+                    <input required type="date" name="startDate" id="date" min="" max="" class="my-1 mdate">
                 </div>                
 
                 <!-- seleccionar fecha de final -->
                 <div class="col m-1">                    
                     <label for="" class="px-1 text-primary">to date</label>
-                    <input required type="date" name="endDate" id="date" min="" max="" class="my-1">
+                    <input required type="date" value="" name="endDate" id="dateTo" min="" max="" class="my-1 mdate">
                 </div>                
                                 
                 <!-- boton buscar pelicula -->

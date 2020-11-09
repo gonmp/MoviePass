@@ -69,6 +69,7 @@
                 if($user->GetAdmin())
                 {   
                     $cinemaController = new CinemaController();
+                    $_SESSION['adminLogged'] = true;
                 }
                 else
                 {   
@@ -81,12 +82,6 @@
             }            
             
             header('location:' . FRONT_ROOT . 'Movie/ShowAllMoviesPremieres');
-        }       
-
-        public function GoHome()
-        {            
-            $_SESSION['userLogged'] = null; 
-            header('location:' . FRONT_ROOT . 'Home/Index');
-        }
+        }               
     }
 ?>

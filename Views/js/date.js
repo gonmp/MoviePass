@@ -1,3 +1,6 @@
+let today = new Date();
+let todayDate = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
 let minDate = new Date();
 
 let minDay = minDate.getDate();
@@ -19,5 +22,10 @@ let maxYear = minYear + 1;
 minDate = minYear + '-' + minMonth + '-' + minDay;
 let maxDate = maxYear + '-' + maxMonth + '-' + maxDay;
 
-document.getElementById('date').setAttribute('min', minDate);
-document.getElementById('date').setAttribute('max', maxDate);
+let allDates = document.getElementsByClassName('mdate');
+
+Array.from(allDates).forEach(e => {
+  e.setAttribute('value', todayDate);  
+  e.setAttribute('min', minDate);
+  e.setAttribute('max', maxDate);
+})

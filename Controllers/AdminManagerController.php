@@ -41,8 +41,15 @@
         
         public function UpdateDataBase()
         {
-            $this->movieDAO->UpdateDatabaseFromAPI();
-            $this->ShowMovieList();
+            if (!isset($_SESSION['adminLogged']) || $_SESSION['adminLogged'] == false)
+            {
+                header('location:' . FRONT_ROOT . '/Home/Logout');        
+            }
+            else
+            {
+                $this->movieDAO->UpdateDatabaseFromAPI();
+                $this->ShowMovieList();
+            }
         }
 
         public function ShowMovieList()

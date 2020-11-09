@@ -1,3 +1,7 @@
+<?php
+    require_once('checkAdmin.php');
+?>
+
 <div class="float-right mt-1 mx-0">
     
     <!-- logout -->
