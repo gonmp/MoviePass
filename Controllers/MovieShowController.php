@@ -44,12 +44,11 @@
 
         public function Add($movieId, $cinemaId, $movieShowDate, $movieShowTime)
         {
-            $movieShowTime = $this->TimeToDateTime($movieShowTime);
+            # TODO: modularizar en la version final            
+
+            $movieShowTime = $this->TimeToDateTime($movieShowTime);            
             
-            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;            
-            $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));
-            
-            if (!$this->ValidateMovieShow($movieId, $cinemaId, $date))
+            if (!$this->ValidateMovieShow($movieId, $cinemaId, $movieShowDate, $movieShowTime))
             {
                 $this->ShowAddMovieShow();
 
@@ -57,10 +56,13 @@
                 $this->ShowAddMovieShow();
 
                 return;
-            }            
+            }
             
             $movie = $this->GetMovieById($movieId);
-            $cine = $this->GetCinemaById($cinemaId);          
+            $cine = $this->GetCinemaById($cinemaId);                      
+
+            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;                                
+            $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));            
 
             $movieShow = new MovieShow($movie, $cine, $date);            
 
@@ -78,37 +80,47 @@
             $this->ShowAddMovieShow();
         }        
 
-        private function ValidateMovieShow($movieId, $cinemaId, $movieShowDateTime)
+        private function ValidateMovieShow($movieId, $cinemaId, $movieShowDate, $movieShowTime)
         {
-            $validate = true;
+            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;                    
+            
+            $date = date_create($movieShowDate, timezone_open('America/Argentina/Buenos_Aires'));
+            $dateTime = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));
 
-            # ver si la pelicula es proyectada en otro cine el dia de la funcion
-            $movieShowList = $this->movieShowDAO->GetAllByMovieId($movieId, $movieShowDateTime, $movieShowDateTime);
-            
-            if ($movieShowList != null)
-            {
-                $validate = false;
-            }
-            
-            # ver si el cine tiene otra funcion en el mismo horario
-            else
-            {
-                $movieShowList = $this->movieShowDAO->GetAllByCinemaId($cinemaId, $movieShowDateTime, $movieShowDateTime);
-            
-                if ($movieShowList != null)
-                {   
-                    foreach($movieShowList as $movieShow)
-                    {
-                        if ($movieShow->getMovie()->getId() == $movieId)
-                        {
-                            $validate = false;
-                            break;
-                        }
-                    }                            
-                }
-            }
+            $validate = 
+                $this->ValidateMovie($movieId, $cinemaId, $date) ? 
+                $this->ValidateCinema($cinemaId, $dateTime) :
+                false;            
 
             return $validate;
+        }
+
+        private function ValidateMovie($movieId, $cinemaId, $date)
+        {
+            $movieShowList = $this->movieShowDAO->GetAllByMovieIdOnlyDate($movieId, $date, $date);
+
+            if ($movieShowList == null)
+            {
+                return true;
+            }
+            else
+            {
+                foreach($movieShowList as $movieShow)
+                {
+                    if ($movieShow->getCinema()->getId() == $cinemaId)
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        private function ValidateCinema($cinemaId, $dateTime)
+        {   
+            # un cine no puede coincidir sus horarios           
+
+            $movieShowList = $this->movieShowDAO->GetAllByCinemaId($cinemaId, $dateTime, $dateTime);                            
+            return ($movieShowList == null);            
         }
 
         private function TimeToDateTime($movieShowTime)
