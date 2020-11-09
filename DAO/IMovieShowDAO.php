@@ -12,6 +12,7 @@
         function GetAllByMovieId($movieId, $startDateTime, $endDateTime);
         function GetAllByGenreId($genreId, $startDateTime, $endDateTime);
         function GetAllByCinemaId($cinemaId, $startDateTime, $endDateTime);
+        function GetAllByMovieIdOnlyDate($movieId, $startDateTime, $endDateTime);
         function Get($id);
         function Add(MovieShow $movieShow);
         function Update(MovieShow $movieShow);

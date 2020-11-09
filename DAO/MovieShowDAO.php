@@ -333,6 +333,110 @@
             }
         }
 
+        public function GetAllByMovieIdOnlyDate($movieId, $startDateTime, $endDateTime)
+        {
+            $query = "SELECT movieshow.id,
+            movies.id,
+            movies.title,
+            movies.popularity,
+            movies.vote_count,
+            movies.video,
+            movies.poster_path,
+            movies.adult,
+            movies.backdrop_path,
+            movies.original_language,
+            movies.original_title,
+            movies.vote_average,
+            movies.overview,
+            GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            cinemas.id,
+            cinemas.name,
+            cinemas.totalCapacity,
+            cinemas.address,
+            cinemas.ticketValue,
+            cinemas.enable,
+            movieshow.showDate
+            FROM movieshow
+            LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
+            LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
+            LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
+            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
+            WHERE movies.id = :id AND DATE(movieshow.showDate) BETWEEN :startDateTime  AND :endDateTime
+            GROUP BY movieshow.id;";
+
+            $parameters = array(':id' => $movieId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query, $parameters);
+
+                $this->movieShowList = array();
+
+                foreach($results as $result)
+                {
+                    $movie = new Movie(
+                        $result[1],
+                        $result['title'],
+                        $result['popularity'],
+                        $result['vote_count'],
+                        $result['video'],
+                        $result['poster_path'],
+                        $result['adult'],
+                        $result['backdrop_path'],
+                        $result['original_language'],
+                        $result['original_title'],
+                        $result['vote_average'],
+                        $result['overview']
+                        );
+
+                    if($result[13] != null)
+                    {
+                        $genresArray = explode(",", $result[13]);
+
+                        $genres = array();
+                        foreach($genresArray as $genre)
+                        {
+                            $singleGenreArray = explode("/", $genre);
+                            $genreId = $singleGenreArray[0];
+                            $genreName = $singleGenreArray[1];
+                            $newGenre = new Genre($genreId, $genreName);
+                            array_push($genres, $newGenre);
+                        }
+
+                        $movie->setGenres($genres);
+                    }
+
+                    $cinema = new Cinema(
+                        $result['name'],
+                        $result['totalCapacity'],
+                        $result['address'],
+                        $result['ticketValue'],
+                        $result['enable']
+                    );
+
+                    $cinema->setId($result[14]);
+
+                    $showDate = date_create($result['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
+
+                    $movieShow = new MovieShow($movie, $cinema, $showDate);
+
+                    $movieShow->SetId($result[0]);
+
+                    array_push($this->movieShowList, $movieShow);
+
+                }
+
+                return $this->movieShowList;
+
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        }
+
         public function GetAllByGenreId($genreId, $startDateTime, $endDateTime)
         {
             $query = "SELECT movieshow.id,
