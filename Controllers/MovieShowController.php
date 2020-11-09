@@ -157,12 +157,9 @@
 
         public function Update($id, $movieId, $cinemaId, $movieShowDate, $movieShowTime)
         {
-            $movieShowTime = $this->TimeToDateTime($movieShowTime);
+            $movieShowTime = $this->TimeToDateTime($movieShowTime);            
 
-            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;
-            $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));
-
-            if (!$this->ValidateMovieShow($movieId, $cinemaId, $date))
+            if (!$this->ValidateMovieShow($movieId, $cinemaId, $movieShowDate, $movieShowTime))
             {
                 $this->ShowAddMovieShow();
 
@@ -173,9 +170,12 @@
             }   
 
             $movie = $this->GetMovieById($movieId);
-            $cinema = $this->GetCinemaById($cinemaId);            
+            $cine = $this->GetCinemaById($cinemaId);  
 
-            $movieShow = new MovieShow($movie, $cinema, $date);
+            $movieShowDateTime = $movieShowDate . ' ' . $movieShowTime;
+            $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));
+
+            $movieShow = new MovieShow($movie, $cine, $date);
             $movieShow->setId($id);
 
             $this->movieShowDAO->Update($movieShow);
