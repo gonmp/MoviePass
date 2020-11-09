@@ -1,5 +1,4 @@
-<?php
- 
+<?php 
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
@@ -13,7 +12,17 @@
 		
 	Autoload::start();
 
-	session_start();
+	session_start();			
+	
+	if(!isset($_SESSION['userLogged']))
+	{
+		$_SESSION['userLogged'] = null;	
+	}
+
+	if(!isset($_SESSION['actualView']))
+	{
+		$_SESSION['actualView'] = 'home';
+	}
 
 	require_once(VIEWS_PATH."header.php");
 

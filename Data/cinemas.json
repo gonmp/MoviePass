@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "name": "El Matias123",
+        "totalCapacity": "345",
+        "address": "fdsfdsmpreviva 123",
+        "ticketValue": "30",
+        "enabled": false
+    },
+    {
+        "id": 2,
+        "name": "matiasmatias",
+        "totalCapacity": "123",
+        "address": "21",
+        "ticketValue": "12",
+        "enabled": true
+    },
+    {
+        "id": 3,
+        "name": "czxxcz",
+        "totalCapacity": "cxcxxc",
+        "address": "zcxxczxcz",
+        "ticketValue": "cxxczxzc",
+        "enabled": true
+    },
+    {
+        "id": 4,
+        "name": "matias331221",
+        "totalCapacity": "3232",
+        "address": "b",
+        "ticketValue": "321",
+        "enabled": true
+    },
+    {
+        "id": 5,
+        "name": "ds",
+        "totalCapacity": "1",
+        "address": "sdaaaaaaaaaaaaaaaa",
+        "ticketValue": "1",
+        "enabled": true
+    },
+    {
+        "id": 6,
+        "name": "Ambassador",
+        "totalCapacity": "300",
+        "address": "LaRioja5990",
+        "ticketValue": "340",
+        "enabled": true
+    }
+]
