@@ -62,7 +62,8 @@
             }
             catch(\Exception $ex)
             {
-                return -1;
+                var_dump($ex);
+                //return -1;
             }
         }
 
@@ -118,7 +119,8 @@
             }
             catch(\Exception $ex)
             {
-                return -1;
+                var_dump($ex);
+                //return -1;
             }
         }
 
@@ -147,6 +149,48 @@
 
         public function UpdateDatabaseFromAPI()
         {
+            $affectedRowsGenres = $this->genreDAO->GetGenresFromAPI();
+
+            $numberPages = $this->GetMoviesPagesFromAPI();
+
+            $rowsAffectedTotal = 0;
+
+            for($i = 1; $i <= $numberPages; $i++)
+            {
+                $rowsAffected = $this->UpdateDatabasePage($i);
+
+                $rowsAffectedTotal = $rowsAffectedTotal + $rowsAffected;
+            }
+
+            return $rowsAffected;
+        }
+
+
+        public function UpdateDatabasePage($numberPage)
+        {
+            # obtiene el json con todos los movies de la API
+    
+            #Borra la tabla
+            $handle =curl_init();
+        
+            curl_setopt($handle,CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($handle, CURLOPT_URL,"https://api.themoviedb.org/3/movie/now_playing?api_key=32629d64c451c1bd620ae0ad25053beb&language=en-US&page=" . $numberPage);
+     
+            $result=curl_exec($handle);
+            
+            curl_close($handle);
+     
+            #Paso el JSON a array
+            $objectTODecode=json_decode($result);
+
+            $affectedRows = $this->UpdateAllMovies($objectTODecode->results); 
+            
+            return $affectedRows;
+        }
+
+        public function GetMoviesPagesFromAPI()
+        {
             # obtiene el json con todos los movies de la API
     
             #Borra la tabla
@@ -166,9 +210,9 @@
             #Paso el JSON a array
             $objectTODecode=json_decode($result);
 
-            $affectedRows = $this->UpdateAllMovies($objectTODecode->results); 
+            $totalPages = $objectTODecode->total_pages; 
             
-            return $affectedRows;
+            return $totalPages;
         }
 
         private function UpdateAllMovies($objectTODecode)
@@ -352,6 +396,8 @@
                 
                 if($result[0][14] != null)
                 {
+                    $genresArray = array();
+
                     $genresArray = explode(",", $result[0][14]);
 
                     $genres = array();
