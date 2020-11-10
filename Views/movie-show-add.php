@@ -43,7 +43,7 @@
                 </div>
 
                 <!-- seleccionar fecha -->
-                <div class="col-1 p-0 m-1">                    
+                <div class="col-1 p-0 m-1 mr-3">                    
                     <label for="" class="px-1 text-primary d-block">select date</label>                    
                     <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1 mdate">                    
                 </div>                

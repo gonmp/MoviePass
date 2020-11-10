@@ -1,5 +1,7 @@
 <?php 
     namespace Controllers;
+
+    use Controllers\HomeController as HomeController;  
     
     use Models\MovieShow as MovieShow;
     use DAO\MovieShowDAO as MovieShowDAO;
@@ -44,6 +46,12 @@
 
         public function Add($movieId, $cinemaId, $movieShowDate, $movieShowTime)
         {
+            if (HomeController::CheckAdmin() != true) 
+            {
+                HomeController::ForceLogout();
+                return;
+            }
+
             # TODO: modularizar en la version final            
 
             $movieShowTime = $this->TimeToDateTime($movieShowTime);            
@@ -157,6 +165,12 @@
 
         public function Update($id, $movieId, $cinemaId, $movieShowDate, $movieShowTime)
         {
+            if (HomeController::CheckAdmin() != true) 
+            {
+                HomeController::ForceLogout();
+                return;
+            }
+
             $movieShowTime = $this->TimeToDateTime($movieShowTime);            
 
             if (!$this->ValidateMovieShow($movieId, $cinemaId, $movieShowDate, $movieShowTime))
@@ -185,6 +199,12 @@
 
         public function Delete($movieShowId)
         {
+            if (HomeController::CheckAdmin() != true) 
+            {
+                HomeController::ForceLogout();
+                return;
+            }
+
             $this->movieShowDAO->Delete($movieShowId);
             
             $this->ShowAddMovieShow();   

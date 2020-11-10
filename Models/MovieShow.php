@@ -25,5 +25,11 @@
         public function getMovie() {return $this->movie;}
         public function getCinema() {return $this->cinema;}
         public function getShowDate() {return $this->showDate;}        
+
+        public function getShowDateNumber()
+        {
+            $theDate = $this->showDate->format("H");
+            return $theDate;
+        }
     }
 ?>

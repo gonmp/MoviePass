@@ -3,6 +3,7 @@
 
     use DAO\CinemaDAO as cinemaDAO;
     use Models\Cinema as Cinema;
+    use Controllers\HomeController as HomeController;    
 
     class CinemaController
     {        
@@ -40,75 +41,95 @@
 
         public function Add($name, $totalCapacity, $address, $ticketValue)
         {   
-            $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);            
-
-            # TODO: modularizar esto de ver si el cine existe
-
-            if ($cinemaExist)
+            if (HomeController::CheckAdmin() == true) 
             {
-                # TODO: hacer que sea un cartel de error mas agradable 
-                $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';
-            }
+                $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);            
+
+                # TODO: modularizar esto de ver si el cine existe
+
+                if ($cinemaExist)
+                {
+                    # TODO: hacer que sea un cartel de error mas agradable 
+                    $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';
+                }
+                else
+                {
+                    $_SESSION['cinemaError'] = null;
+                    $cinema = new Cinema($name, $totalCapacity, $address, $ticketValue, true);            
+                    $this->cinemaDAO->Add($cinema);
+                }
+
+                 header('location:' . FRONT_ROOT . '/AdminManager/ShowAddCinemaView');
+            }            
             else
             {
-                $_SESSION['cinemaError'] = null;
-                $cinema = new Cinema($name, $totalCapacity, $address, $ticketValue, true);            
-                $this->cinemaDAO->Add($cinema);
-            }
-
-            header('location:' . FRONT_ROOT . '/AdminManager/ShowAddCinemaView');
+                HomeController::ForceLogout();
+            }            
         }
 
         public function Update($id, $name, $totalCapacity, $address, $ticketValue)
         {   
-            # solo realiza el update si el nombre del cine no existe en la base de datos
-            # tambien se fija que el nombre no sea el nombre del propio cinema, para eso compara los id
-
-            $changeCinema = false;
-
-            $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);        
-            if ($cinemaExist)
+            if (HomeController::CheckAdmin() == true) 
             {
-                if ($cinemaExist->getId() == $id)
-                {                 
-                    $changeCinema = true;                                          
-                }                                
-            }
-            else
-            {
-                $changeCinema = true;                      
-            }
+                # solo realiza el update si el nombre del cine no existe en la base de datos
+                # tambien se fija que el nombre no sea el nombre del propio cinema, para eso compara los id
 
-            if ($changeCinema)
-            {
-                $cinema = new Cinema(                
-                    $name,
-                    $totalCapacity,
-                    $address,
-                    $ticketValue,
-                    true
-                );
+                $changeCinema = false;
 
-                $cinema->setId($id);
+                $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);        
+                if ($cinemaExist)
+                {
+                    if ($cinemaExist->getId() == $id)
+                    {                 
+                        $changeCinema = true;                                          
+                    }                                
+                }
+                else
+                {
+                    $changeCinema = true;                      
+                }
 
-                $this->cinemaDAO->Update($cinema);
+                if ($changeCinema)
+                {
+                    $cinema = new Cinema(                
+                        $name,
+                        $totalCapacity,
+                        $address,
+                        $ticketValue,
+                        true
+                    );
 
-                $_SESSION['cinemaError'] = null;
+                    $cinema->setId($id);
 
-                $this->ShowAddView();
-            }
-            else
-            {
-                $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';  
+                    $this->cinemaDAO->Update($cinema);
 
-                $this->ShowUpdateView($name);
+                    $_SESSION['cinemaError'] = null;
+
+                    $this->ShowAddView();
+                }
+                else
+                {
+                    $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';  
+                    $this->ShowUpdateView($name);
+                }      
             }            
+            else
+            {
+                HomeController::ForceLogout();
+            }
         }    
         
         public function Delete($cinemaId)
         {
-            $this->cinemaDAO->Delete($cinemaId);            
-            $this->ShowAddView();
+            if (HomeController::CheckAdmin() == true) 
+            {
+                $this->cinemaDAO->Delete($cinemaId);            
+                $this->ShowAddView();
+            }            
+            else
+            {
+                HomeController::ForceLogout();
+            }
         }
     }
 ?>

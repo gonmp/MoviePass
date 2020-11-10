@@ -1,5 +1,5 @@
 <?php
-    require_once('checkAdmin.php');
+    require_once('checkAdmin.php');    
 ?>
 <main>
     <section id="movieShowUpdate">
@@ -55,9 +55,10 @@
                 </div>
 
                 <!-- seleccionar fecha -->
-                <div class="col-2 p-0 m-1 ">                    
-                    <label for="" class="px-1 text-primary d-block">date</label>                    
-                    <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1">                    
+                <div class="col-2 p-0 m-1">                    
+                    <label for="" class="px-1 text-primary d-block">date</label>                   
+                    <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1"
+                    value= <?php echo date_format($movieShow->getShowDate(),"Y-m-d");?>>
                 </div>                
 
                 <!-- seleccionar horario -->
@@ -66,10 +67,10 @@
                     <select name="movioShowTime" class="custom-select">                                                      
                         
                         <!-- opciones de tiempo -->
-                        <option value="9" selected>9 hs</option>                        
-                        <option value="13" selected>13 hs</option>                        
-                        <option value="17" selected>17 hs</option>                        
-                        <option value="21" selected>21 hs</option>                        
+                        <option value="9"  <?php if ($movieShow->getShowDateNumber() == "09") {echo "selected";}?>>9 hs</option>
+                        <option value="13" <?php if ($movieShow->getShowDateNumber() == "13") {echo "selected";}?>>13 hs</option>                        
+                        <option value="17" <?php if ($movieShow->getShowDateNumber() == "17") {echo "selected";}?>>17 hs</option>                        
+                        <option value="21" <?php if ($movieShow->getShowDateNumber() == "21") {echo "selected";}?>>21 hs</option>                        
                     </select>                                   
                 </div>                
                                 
@@ -90,8 +91,3 @@
     </section>
 </main>
 <script src="<?php echo JS_PATH ?>date.js"></script>
-
-
-
-
-

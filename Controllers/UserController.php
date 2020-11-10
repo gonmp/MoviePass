@@ -4,7 +4,7 @@
     use DAO\UserDAO as UserDAO;    
     use Models\User as User;
     use Controllers\CinemaController as CinemaController;
-    use Controllers\MovieController as MovieController;
+    use Controllers\MovieController as MovieController;    
 
     class UserController
     {        
