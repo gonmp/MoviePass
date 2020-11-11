@@ -76,3 +76,33 @@ CREATE TABLE IF NOT EXISTS moviesgenres(
 )Engine=InnoDB;
 
 ALTER TABLE movies MODIFY COLUMN overview varchar(2000);
+
+CREATE TABLE IF NOT EXISTS rooms(
+    id INT AUTO_INCREMENT NOT NULL,
+    cinemaId INT NOT NULL,
+    capacity INT NOT NULL,
+    ticketValue INT,
+    purchaseDate date,
+    constraint pk_roomId PRIMARY KEY (id),
+    constraint fk_cinemaId FOREIGN KEY (cinemaId) references cinemas(id) ON DELETE CASCADE
+)Engine=InnoDB;
+
+CREATE TABLE IF NOT EXISTS purchases(
+    id INT AUTO_INCREMENT NOT NULL,
+    userId INT NOT NULL,
+    total INT NOT NULL,
+    discount INT,
+    purchaseDate VARCHAR(100),
+    constraint pk_purchaseId PRIMARY KEY (id),
+    constraint fk_userId FOREIGN KEY (userId) references users(id) ON DELETE CASCADE
+)Engine=InnoDB;
+
+CREATE TABLE IF NOT EXISTS tickets
+(   id INT AUTO_INCREMENT NOT NULL,
+    idMovieShow INT NOT NULL,
+    qr VARCHAR(150),
+    purchaseId INT NOT NULL,
+    constraint pk_idTicket PRIMARY KEY (id),
+    constraint fk_purchaseId FOREIGN KEY (purchaseId) REFERENCES purchases(id) ON DELETE CASCADE,
+    constraint fk_idMovieShow FOREIGN KEY (idMovieShow) references movieshow(id) ON DELETE CASCADE
+)Engine=InnoDB;
