@@ -69,11 +69,7 @@
             {
                 HomeController::ForceLogout();
                 return;
-            }
-
-            # TODO: modularizar en la version final            
-
-            $movieShowTime = $this->TimeToDateTime($movieShowTime);            
+            }            
             
             if (!$this->ValidateMovieShow($movieId, $cinemaId, $movieShowDate, $movieShowTime))
             {
@@ -148,31 +144,7 @@
 
             $movieShowList = $this->movieShowDAO->GetAllByCinemaId($cinemaId, $dateTime, $dateTime);                            
             return ($movieShowList == null);            
-        }
-
-        private function TimeToDateTime($movieShowTime)
-        {
-            switch($movieShowTime)
-            {
-                case 9:
-                    $movieShowTime = "9:00:00";
-                break;                
-
-                case 13:
-                    $movieShowTime = "13:00:00";
-                break;                
-
-                case 17:
-                    $movieShowTime = "17:00:00";
-                break;                
-
-                case 21:
-                    $movieShowTime = "21:00:00";
-                break;                
-            }    
-            
-            return $movieShowTime;
-        }
+        }       
 
         public function ShowMovieShowUpdate($movieShowId)
         {

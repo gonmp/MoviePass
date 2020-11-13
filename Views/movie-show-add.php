@@ -43,23 +43,16 @@
                 </div>
 
                 <!-- seleccionar fecha -->
-                <div class="col-1 p-0 m-1 mr-3">                    
+                <div class="col-2 p-0 m-1 mr-3">                    
                     <label for="" class="px-1 text-primary d-block">select date</label>                    
-                    <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1 mdate">                    
-                </div>                
+                    <input required type="date" name="movieShowDate" min="" max="" class="my-1 mdate">                    
+                </div>                                
 
                 <!-- seleccionar horario -->
-                <div class="col-1 p-0 m-1 ml-5">                    
+                <div class="col-1 p-0 m-1 mr-3">                    
                     <label for="" class="px-1 text-primary d-block">select time</label>                    
-                    <select name="movioShowTime" class="custom-select">                                                      
-                        
-                        <!-- opciones de tiempo -->
-                        <option value="9" selected>9 hs</option>                        
-                        <option value="13" selected>13 hs</option>                        
-                        <option value="17" selected>17 hs</option>                        
-                        <option value="21" selected>21 hs</option>                        
-                    </select>                                   
-                </div>                
+                    <input required type="time" name="movieShowTime" value="<?php echo Scripts\Utils::GetTime();?>" min="<?php echo Scripts\Utils::GetTime();?>" max="18" class="my-1">                    
+                </div>                                
                                 
                 <!-- boton agregar movie show -->
                 <div class="col-2 p-0 m-0 ml-4">  
