@@ -41,7 +41,26 @@
         public function ShowMovieShowList()
         {
             $movieShowList = $this->movieShowDAO->GetAll();
+
+            $this->DeleteOldMovieShow($movieShowList);
+
             require_once(VIEWS_PATH."movie-show-list.php");
+        }
+
+        private function DeleteOldMovieShow($movieShowList)
+        {
+            date_default_timezone_set("America/Argentina/Buenos_Aires");
+            $dateNow = date_create(date("Y-m-d H:i"), timezone_open("America/Argentina/Buenos_Aires"));                       
+
+            foreach($movieShowList as $movieShow)
+            {
+                if($movieShow->getShowDate() < $dateNow)
+                {
+                    $this->movieShowDAO->delete($movieShow->getId());
+                }
+            }            
+            
+            $movieShowList = $this->movieShowDAO->GetAll();
         }
 
         public function Add($movieId, $cinemaId, $movieShowDate, $movieShowTime)
