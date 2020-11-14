@@ -41,7 +41,26 @@
         public function ShowMovieShowList()
         {
             $movieShowList = $this->movieShowDAO->GetAll();
+
+            $this->DeleteOldMovieShow($movieShowList);
+
             require_once(VIEWS_PATH."movie-show-list.php");
+        }
+
+        private function DeleteOldMovieShow($movieShowList)
+        {
+            date_default_timezone_set("America/Argentina/Buenos_Aires");
+            $dateNow = date_create(date("Y-m-d H:i"), timezone_open("America/Argentina/Buenos_Aires"));                       
+
+            foreach($movieShowList as $movieShow)
+            {
+                if($movieShow->getShowDate() < $dateNow)
+                {
+                    $this->movieShowDAO->delete($movieShow->getId());
+                }
+            }            
+            
+            $movieShowList = $this->movieShowDAO->GetAll();
         }
 
         public function Add($movieId, $cinemaId, $movieShowDate, $movieShowTime)
@@ -50,11 +69,7 @@
             {
                 HomeController::ForceLogout();
                 return;
-            }
-
-            # TODO: modularizar en la version final            
-
-            $movieShowTime = $this->TimeToDateTime($movieShowTime);            
+            }            
             
             if (!$this->ValidateMovieShow($movieId, $cinemaId, $movieShowDate, $movieShowTime))
             {
@@ -129,31 +144,7 @@
 
             $movieShowList = $this->movieShowDAO->GetAllByCinemaId($cinemaId, $dateTime, $dateTime);                            
             return ($movieShowList == null);            
-        }
-
-        private function TimeToDateTime($movieShowTime)
-        {
-            switch($movieShowTime)
-            {
-                case 9:
-                    $movieShowTime = "9:00:00";
-                break;                
-
-                case 13:
-                    $movieShowTime = "13:00:00";
-                break;                
-
-                case 17:
-                    $movieShowTime = "17:00:00";
-                break;                
-
-                case 21:
-                    $movieShowTime = "21:00:00";
-                break;                
-            }    
-            
-            return $movieShowTime;
-        }
+        }       
 
         public function ShowMovieShowUpdate($movieShowId)
         {
