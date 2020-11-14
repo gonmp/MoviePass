@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS movies (
     original_language varchar(100),
     original_title varchar(100),
     vote_average float,
-    overview varchar(500),
+    overview varchar(2000),
+    duration time,
     CONSTRAINT pk_movies PRIMARY KEY (id)
 )Engine=InnoDB;
 
@@ -28,7 +29,8 @@ CREATE TABLE IF NOT EXISTS moviesgenres(
     movieId int NOT NULL,
     genreId int NOT NULL,
     CONSTRAINT fk_moviesgenres_movies FOREIGN KEY (movieId) REFERENCES movies(id) ON DELETE CASCADE,
-    CONSTRAINT fk_moviesgenres_genres FOREIGN KEY (genreId) REFERENCES genres(id) ON DELETE CASCADE
+    CONSTRAINT fk_moviesgenres_genres FOREIGN KEY (genreId) REFERENCES genres(id) ON DELETE CASCADE,
+    CONSTRAINT unq_moviesgenres UNIQUE (movieId, genreId)
 )Engine=InnoDB;
 
 CREATE TABLE IF NOT EXISTS users(
@@ -51,71 +53,37 @@ CREATE TABLE IF NOT EXISTS cinemas(
     CONSTRAINT pk_cinemas PRIMARY KEY (id)
 )Engine=InnoDB;
 
-CREATE TABLE IF NOT EXISTS movieshow(
-    id int AUTO_INCREMENT,
-    movieId int,
-    cinemaId int,
-    showDate date,
-    CONSTRAINT pk_shows PRIMARY KEY (id),
-    CONSTRAINT fk_movieshow_movies FOREIGN KEY (movieId) REFERENCES movies(id) ON DELETE CASCADE,
-    CONSTRAINT fk_movieshow_cinemas FOREIGN KEY (cinemaId) REFERENCES cinemas(id) ON DELETE CASCADE,
-    CONSTRAINT unq_movie_cinema_date UNIQUE (movieId, cinemaId, showDate)
-)Engine=InnoDB;
-
-ALTER TABLE movieshow
-MODIFY COLUMN showDate datetime;
-
-DROP TABLE moviesgenres;
-
-CREATE TABLE IF NOT EXISTS moviesgenres(
-    movieId int NOT NULL,
-    genreId int NOT NULL,
-    CONSTRAINT fk_moviesgenres_movies FOREIGN KEY (movieId) REFERENCES movies(id) ON DELETE CASCADE,
-    CONSTRAINT fk_moviesgenres_genres FOREIGN KEY (genreId) REFERENCES genres(id) ON DELETE CASCADE,
-    CONSTRAINT unq_moviesgenres UNIQUE (movieId, genreId)
-)Engine=InnoDB;
-
-ALTER TABLE movies MODIFY COLUMN overview varchar(2000);
-
 CREATE TABLE IF NOT EXISTS rooms(
     id INT AUTO_INCREMENT NOT NULL,
     cinemaId INT NOT NULL,
     capacity INT NOT NULL,
     ticketValue INT,
-    purchaseDate datetime,
+    name varchar(100),
     constraint pk_roomId PRIMARY KEY (id),
-    constraint fk_cinemaId FOREIGN KEY (cinemaId) references cinemas(id) ON DELETE CASCADE
+    constraint fk_cinemaId FOREIGN KEY (cinemaId) references cinemas(id) ON DELETE CASCADE,
+    CONSTRAINT unq_cinemaId_name UNIQUE (cinemaId, name)
 )Engine=InnoDB;
 
-DROP PROCEDURE IF EXISTS `?`;
-DELIMITER //
-CREATE PROCEDURE `?`
-(
-)
-BEGIN
-  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
-  ALTER TABLE `rooms` DROP COLUMN `purchaseDate`;
-END //
-DELIMITER ;
-CALL `?`();
-DROP PROCEDURE `?`;
-
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-           WHERE TABLE_NAME  = 'rooms' AND COLUMN_NAME = 'name' ) 
-ALTER TABLE rooms ADD name varchar(100);
+CREATE TABLE IF NOT EXISTS movieshow(
+    id int AUTO_INCREMENT,
+    movieId int,
+    roomId int,
+    showDate datetime,
+    CONSTRAINT pk_shows PRIMARY KEY (id),
+    CONSTRAINT fk_movieshow_movies FOREIGN KEY (movieId) REFERENCES movies(id) ON DELETE CASCADE,
+    CONSTRAINT fk_movieshow_rooms FOREIGN KEY (roomId) REFERENCES rooms(id) ON DELETE CASCADE,
+    CONSTRAINT unq_movie_cinema_date UNIQUE (movieId, roomId, showDate)
+)Engine=InnoDB;
 
 CREATE TABLE IF NOT EXISTS purchases(
     id INT AUTO_INCREMENT NOT NULL,
     userId INT NOT NULL,
     total INT NOT NULL,
     discount INT,
-    purchaseDate VARCHAR(100),
+    purchaseDate datetime,
     constraint pk_purchaseId PRIMARY KEY (id),
     constraint fk_userId FOREIGN KEY (userId) references users(id) ON DELETE CASCADE
 )Engine=InnoDB;
-
-ALTER TABLE purchases
-MODIFY COLUMN purchaseDate datetime;
 
 CREATE TABLE IF NOT EXISTS tickets
 (   id INT AUTO_INCREMENT NOT NULL,
