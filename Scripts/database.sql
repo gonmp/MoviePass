@@ -82,10 +82,27 @@ CREATE TABLE IF NOT EXISTS rooms(
     cinemaId INT NOT NULL,
     capacity INT NOT NULL,
     ticketValue INT,
-    purchaseDate date,
+    purchaseDate datetime,
     constraint pk_roomId PRIMARY KEY (id),
     constraint fk_cinemaId FOREIGN KEY (cinemaId) references cinemas(id) ON DELETE CASCADE
 )Engine=InnoDB;
+
+DROP PROCEDURE IF EXISTS `?`;
+DELIMITER //
+CREATE PROCEDURE `?`
+(
+)
+BEGIN
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
+  ALTER TABLE `rooms` DROP COLUMN `purchaseDate`;
+END //
+DELIMITER ;
+CALL `?`();
+DROP PROCEDURE `?`;
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+           WHERE TABLE_NAME  = 'rooms' AND COLUMN_NAME = 'name' ) 
+ALTER TABLE rooms ADD name varchar(100);
 
 CREATE TABLE IF NOT EXISTS purchases(
     id INT AUTO_INCREMENT NOT NULL,
@@ -96,6 +113,9 @@ CREATE TABLE IF NOT EXISTS purchases(
     constraint pk_purchaseId PRIMARY KEY (id),
     constraint fk_userId FOREIGN KEY (userId) references users(id) ON DELETE CASCADE
 )Engine=InnoDB;
+
+ALTER TABLE purchases
+MODIFY COLUMN purchaseDate datetime;
 
 CREATE TABLE IF NOT EXISTS tickets
 (   id INT AUTO_INCREMENT NOT NULL,
