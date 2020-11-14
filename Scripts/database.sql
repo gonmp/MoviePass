@@ -45,10 +45,7 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS cinemas(
     id int AUTO_INCREMENT,
     name varchar(50) NOT NULL,
-    totalCapacity int,
     address varchar(50) NOT NULL,
-    ticketValue int,
-    enable boolean,
     CONSTRAINT unq_name_address UNIQUE (name, address),
     CONSTRAINT pk_cinemas PRIMARY KEY (id)
 )Engine=InnoDB;
