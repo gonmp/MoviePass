@@ -36,7 +36,7 @@
 
         public function Add(Movie $movie)
         {
-            $query = 'INSERT INTO ' . $this->table . ' (id, title, popularity, vote_count, video, poster_path, adult, backdrop_path, original_language, original_title, vote_average, overview) VALUES (:id, :title, :popularity, :vote_count, :video, :poster_path, :adult, :backdrop_path, :original_language, :original_title, :vote_average, :overview);';
+            $query = 'INSERT INTO ' . $this->table . ' (id, title, popularity, vote_count, video, poster_path, adult, backdrop_path, original_language, original_title, vote_average, overview, duration) VALUES (:id, :title, :popularity, :vote_count, :video, :poster_path, :adult, :backdrop_path, :original_language, :original_title, :vote_average, :overview, SEC_TO_TIME(:duration));';
 
             $parameters = array(
                 ':id' => $movie->getId(),
@@ -50,7 +50,8 @@
                 ':original_language' => $movie->getOriginal_language(),
                 ':original_title' => $movie->getOriginal_title(),
                 ':vote_average' => $movie->getVote_average(),
-                ':overview' => $movie->getOverview()
+                ':overview' => $movie->getOverview(),
+                ':duration' => $movie->getDuration()
             );
 
             $this->connection = Connection::GetInstance();
@@ -61,7 +62,8 @@
                 return $rowAffected;
             }
             catch(\Exception $ex)
-            {                
+            {       
+                var_dump($ex);         
                 return -1;
             }
         }
@@ -90,7 +92,7 @@
 
         public function Update(Movie $movie)
         {
-            $query = 'UPDATE ' . $this->table . ' SET title = :title, popularity = :popularity, vote_count = :vote_count, video = :video, poster_path = :poster_path, adult = :adult, backdrop_path = :backdrop_path, original_language = :original_language, original_title = :original_title, vote_average = :vote_average, overview = :overview  WHERE id = :id;';
+            $query = 'UPDATE ' . $this->table . ' SET title = :title, popularity = :popularity, vote_count = :vote_count, video = :video, poster_path = :poster_path, adult = :adult, backdrop_path = :backdrop_path, original_language = :original_language, original_title = :original_title, vote_average = :vote_average, overview = :overview, duration = SEC_TO_TIME(:duration)  WHERE id = :id;';
             
             # var_dump($query);
 
@@ -106,7 +108,8 @@
                 ':original_language' => $movie->getOriginal_language(),
                 ':original_title' => $movie->getOriginal_title(),
                 ':vote_average' => $movie->getVote_average(),
-                ':overview' => $movie->getOverview()
+                ':overview' => $movie->getOverview(),
+                ':duration' => $movie->getDuration()
             );
 
             $this->connection = Connection::GetInstance();
@@ -154,7 +157,7 @@
             $rowsAffectedTotal = 0;
 
             # TODO: implementar para proxima entrega, si nos dan el ok, esta caracteristica
-            $pagesRequest = 40;
+            $pagesRequest = 30;
 
             for($i = 1; $i <= $pagesRequest; $i++)
             {
@@ -216,12 +219,38 @@
             return $totalPages;
         }
 
+        public function GetMoviesDurationFromAPI($id)
+        {
+            # obtiene el json con todos los movies de la API
+    
+            #Borra la tabla
+            
+            $handle =curl_init();
+        
+            curl_setopt($handle,CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($handle, CURLOPT_URL,"https://api.themoviedb.org/3/movie/" . $id . "?api_key=32629d64c451c1bd620ae0ad25053beb&language=en-US&page=1%22%22");
+     
+            $result=curl_exec($handle);
+            
+            curl_close($handle);
+     
+            #Paso el JSON a array
+            $objectTODecode=json_decode($result);
+
+            $duration = $objectTODecode->runtime * 60; 
+            
+            return $duration;
+        }
+
         private function UpdateAllMovies($objectTODecode)
         {
             # obtiene todos los movies de un json y los pone en movieList
             $contador = 0;
             foreach($objectTODecode as $valuesArray)
             {
+                $runtime = $this->GetMoviesDurationFromAPI($valuesArray->id);
+                
                 $movie = new Movie(
                     $valuesArray->id,
                     $valuesArray->title,
@@ -234,7 +263,8 @@
                     $valuesArray->original_language,
                     $valuesArray->original_title,
                     $valuesArray->vote_average,
-                    $valuesArray->overview
+                    $valuesArray->overview,
+                    $runtime
                 );
 
                 $movieDatabase = $this->GetMovieById($movie->getId());
@@ -276,6 +306,7 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             genres.id,
             genres.name,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' )
@@ -307,14 +338,15 @@
                     $result['original_language'],
                     $result['original_title'],
                     $result['vote_average'],
-                    $result['overview']
+                    $result['overview'],
+                    $result['duration']
                     );
 
                     $movie->setId($result[0]);
 
-                    if($result[14] != null)
+                    if($result[15] != null)
                     {
-                        $genresArray = explode(",", $result[14]);
+                        $genresArray = explode(",", $result[15]);
 
                         $genres = array();
 
@@ -358,6 +390,7 @@
                 movies.original_title,
                 movies.vote_average,
                 movies.overview,
+                movies.duration,
                 genres.id,
                 genres.name,
                 GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' )
@@ -390,16 +423,17 @@
                     $result[0]['original_language'],
                     $result[0]['original_title'],
                     $result[0]['vote_average'],
-                    $result[0]['overview']
+                    $result[0]['overview'],
+                    $result[0]['duration']
                 );
 
                 $movie->setId($result[0][0]);
                 
-                if($result[0][14] != null)
+                if($result[0][15] != null)
                 {
                     $genresArray = array();
 
-                    $genresArray = explode(",", $result[0][14]);
+                    $genresArray = explode(",", $result[0][15]);
 
                     $genres = array();
                     foreach($genresArray as $genre)
@@ -425,7 +459,7 @@
         {
             $this->movieList = array();
 
-            $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id GROUP BY movies.id;";
+            $query = "SELECT movies.id, movies.title, movies.popularity, movies.vote_count, movies.video, movies.poster_path, movies.adult, movies.backdrop_path, movies.original_language, movies.original_title, movies.vote_average, movies.overview, movies.duration, genres.id, genres.name, GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ) FROM " . $this->table . " LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id GROUP BY movies.id;";
 
             $this->connection = Connection::GetInstance();
 
@@ -447,14 +481,15 @@
                     $result['original_language'],
                     $result['original_title'],
                     $result['vote_average'],
-                    $result['overview']
+                    $result['overview'],
+                    $result['duration']
                     );
 
                     $movie->setId($result[0]);
 
-                    if($result[14] != null)
+                    if($result[15] != null)
                     {
-                        $genresArray = explode(",", $result[14]);
+                        $genresArray = explode(",", $result[15]);
 
                         $genres = array();
 
