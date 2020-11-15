@@ -16,9 +16,10 @@ class Movie
     private $vote_average;
     private $overview;
     private $genres;
+    private $duration;
     
     public function __construct ($id, $title, $popularity, $vote_count, $video, $poster_path, $adult, $backdrop_path, $original_language, $original_title, 
-      $vote_average, $overview)
+      $vote_average, $overview, $duration)
     {
         $this->setId($id);
         $this->setPopularity($popularity);
@@ -32,6 +33,7 @@ class Movie
         $this->setTitle($title);
         $this->setvote_average($vote_average);
         $this->setOverview($overview);
+        $this->setDuration($duration);
         $this->genres = array();
     }
         
@@ -47,6 +49,7 @@ class Movie
     public function setTitle ($title) {$this->title = $title;}
     public function setvote_average ($vote_average) {$this->vote_average=$vote_average;} 
     public function setOverview($overview) {$this->overview= $overview;}
+    public function setDuration($duration) {$this->duration = $duration;}
     public function setGenres($genres) {$this->genres = $genres;}
     
     public function getPopularity () {return $this->popularity;}
@@ -61,6 +64,7 @@ class Movie
     public function getTitle () {return $this->title;}
     public function getvote_average () {return $this->vote_average;}
     public function getOverview () {return $this->overview;}
+    public function getDuration () {return $this->duration;}
     public function getGenres () {return $this->genres;}
  }
 
