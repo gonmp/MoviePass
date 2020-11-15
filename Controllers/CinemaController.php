@@ -1,18 +1,42 @@
 <?php
     namespace Controllers;
 
-    use DAO\CinemaDAO as cinemaDAO;
+    use DAO\CinemaDAO as CinemaDAO;
+    use DAO\RoomDAO as RoomDAO;
     use Models\Cinema as Cinema;
     use Controllers\HomeController as HomeController;    
 
     class CinemaController
     {        
         private $cinemaDAO;
+        private $roomDAO;
 
         public function __construct()
         {
             $this->cinemaDAO = new CinemaDAO();
+            $this->roomDAO = new RoomDAO();
         }        
+
+        // ********************** ROOMS **************************
+
+        public function ShowAddRoom($cinemaName)
+        {
+            $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);                        
+            
+            require_once(VIEWS_PATH."room-add.php");
+            
+            $this->ShowRoomList($cinemaName);
+        }
+        
+        public function ShowRoomList($cinemaName)
+        {
+            $cinema = $this->cinemaDAO->GetCinemaByName($name);            
+            $roomsList = $roomDAO->getRooms();
+
+            require_once(VIEWS_PATH."room-list.php");
+        }
+
+        // ********************** CINEMAS **************************
 
         public function ShowUpdateView($name)
         {

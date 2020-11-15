@@ -1,31 +1,15 @@
 <?php
-    require_once('checkAdmin.php');
+    //require_once('checkAdmin.php');
 ?>
 <main>
     <section id="roomAdd">
         
-        <h1 class="text-danger px-2 pt-4">Add Room</h1>
+        <h1 class="text-danger px-2 pt-4">Add Room to <?php echo $cinema->getName(); ?></h1>
 
-        <form action="<?php echo FRONT_ROOT ?>Room/Add" method="post">            
-            
+        <form action="<?php echo FRONT_ROOT ?>Room/Add" method="post">                        
             <div class="px-1 pb-3 row">
 
-                <!-- seleccionar cine -->
-                <div class="col-3 m-1">                    
-                    <label for="" class="px-1 text-primary d-block">select cinema</label>                    
-                    <select class="custom-select" name="cinemaName">
-                                                
-                        <!-- opciones de cines desde la base de datos -->
-                        <?php 
-                            foreach($this->cinemaList as $cinema)
-                            {
-                                ?><option value="<?php echo $cinema->GetName() ?>"><?php echo $cinema->GetName()?></option>                            
-                            <?php
-                            }                      
-                        ?>
-
-                    </select>
-                </div>
+                <input type="text" hidden name="cinemaName" value="<?php echo $cinema->getName();?>">
 
                 <!-- seleccionar capacidad  -->
                 <div class="col-2 p-0 m-1 mr-3">                    

@@ -43,9 +43,7 @@
                 
                 $this->connection = Connection::GetInstance();
 
-                $result = $this->connection->Execute($query, $parameters);
-
-                var_dump($result);
+                $result = $this->connection->Execute($query, $parameters);                
 
                 if ($result == null)
                 {

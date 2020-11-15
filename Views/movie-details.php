@@ -35,6 +35,12 @@
                 <span class="h7 d-inline text-white m-0 mb-2"><?php echo $movie->getOverview();?></span>    
             </div>            
 
+            <!-- duracion -->
+            <div class="mt-3 w-75 text-justify">
+                <p class="h5 mr-3 d-inline text-danger">Duration</p>
+                <span class="h7 d-inline text-white m-0 mb-2"><?php echo $movie->getDuration();?></span>    
+            </div>            
+
             <!-- boton comprar -->
             <div class="m-0 mt-3 float-left">
                 <a href="#" class="btn btn-sm btn-outline-danger text-white">buy ticket</a>

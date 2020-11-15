@@ -2,7 +2,8 @@
     namespace Controllers;
 
     use Controllers\HomeController as HomeController;             
-    //use DAO\RoomDAO as RoomDAO;
+    use DAO\RoomDAO as RoomDAO;
+    use Models\Room as Room;
     use DAO\CinemaDAO as CinemaDAO;
 
     class RoomController
@@ -13,7 +14,7 @@
         
         public function __construct()
         {
-            //$roomDAO = new RoomDAO();            
+            $this->roomDAO = new RoomDAO();            
             $this->cinemaDAO = new CinemaDAO();
         }        
 
@@ -31,13 +32,15 @@
 
         public function Add($cinemaName, $capacity, $ticketValue, $name)
         {
+            /*
             if (HomeController::CheckAdmin() != true) 
             {
                 HomeController::ForceLogout();
                 return;
-            }                       
+            } */                      
             
-            $cinema = $cinemaDAO->GetCinemaByName($cinemaName);            
+            $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);                        
+
             $room = new Room($capacity, $cinema, $ticketValue, $name);
 
             $rowAffected = $this->roomDAO->Add($room);
@@ -51,7 +54,7 @@
                 $_SESSION['error'] = null;
             }
 
-            $this->ShowAddRoom();
+            header('location:' . FRONT_ROOT . 'Cinema/ShowAddRoom?cinemaName?' . $cinemaName);
         }        
         
         public function ShowRoomUpdate($roomId)
