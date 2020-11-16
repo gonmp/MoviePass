@@ -6,11 +6,13 @@
     use Models\Room as Room;
     use DAO\CinemaDAO as CinemaDAO;
 
+    use Models\Cinema as Cinema;
+
     class RoomController
     {        
         private $roomDAO;
         private $cinemaDAO;
-        private $cinemaList;
+        private $cinemaList;        
         
         public function __construct()
         {
@@ -18,28 +20,44 @@
             $this->cinemaDAO = new CinemaDAO();
         }        
 
-        public function ShowAddRoom()
-        {   
-            if (HomeController::CheckAdmin() != true) 
-            {
-                HomeController::ForceLogout();
-                return;
-            }
 
-            $this->cinemaList = $this->cinemaDAO->GetALL();
-            require_once(VIEWS_PATH."room-add.php");            
-        }        
+        // *******************  VISTAS    ***********************
+
+        public function ShowAddRoom($cinemaName)
+        {
+            $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);
+            require_once(VIEWS_PATH."room-add.php");
+            
+            $this->ShowRoomList($cinemaName);
+        }
+
+        public function ShowRoomList($cinemaName)
+        {
+            $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);            
+            $roomsList = $cinema->getRooms();
+
+            require_once(VIEWS_PATH."room-list.php");
+        }
+
+        public function ShowUpdateView ($roomId)
+        {
+            $room = $this->roomDAO->GetRoomById($roomId);
+            require_once(VIEWS_PATH."room-update.php");
+            
+            $this->ShowRoomList($room->getCinema()->getName());            
+        }
+
+        // *******************     DAO         *******************************
 
         public function Add($cinemaName, $capacity, $ticketValue, $name)
-        {
-            /*
+        {            
             if (HomeController::CheckAdmin() != true) 
             {
                 HomeController::ForceLogout();
                 return;
-            } */                      
+            }                     
             
-            $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);                        
+            $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);    
 
             $room = new Room($capacity, $cinema, $ticketValue, $name);
 
@@ -54,37 +72,7 @@
                 $_SESSION['error'] = null;
             }
 
-            header('location:' . FRONT_ROOT . 'Cinema/ShowAddRoom?cinemaName?' . $cinemaName);
-        }        
-        
-        public function ShowRoomUpdate($roomId)
-        {
-            if (HomeController::CheckAdmin() != true) 
-            {
-                HomeController::ForceLogout();
-                return;
-            }
-
-            $room = $this->roomDAO->Get($roomId);
-
-            require_once(VIEWS_PATH . 'room-update.php');            
-        }
-
-        public function Update($id, $cinemaName, $ticketValue, $capacity, $name)
-        {
-            if (HomeController::CheckAdmin() != true) 
-            {
-                HomeController::ForceLogout();
-                return;
-            }            
-
-            $cinema = $cinemaDAO->GetCinemaByName($cinemaName);            
-            $room = new Room($capacity, $cinema, $ticketValue, $name);
-            $room->setId($id);            
-
-            $this->movieShowDAO->Update($room);
-
-            $this->ShowCinemaDetails();            
+            $this->ShowAddRoom($cinemaName);
         }
 
         public function Delete($roomId)
@@ -95,21 +83,50 @@
                 return;
             }
 
-            $this->movieShowDAO->Delete($roomId);
+            $cinema = $this->roomDAO->GetRoomById($roomId)->getCinema();
+        
+            $this->roomDAO->Delete($roomId);
             
-            $this->ShowCinemaDetails();   
-        }        
+            $this->ShowAddRoom($cinema->getName());   
+        }  
 
-        public function ShowCinemaDetails()
+        public function Update($id, $ticketValue, $capacity, $name, $oldName)
         {
             if (HomeController::CheckAdmin() != true) 
             {
                 HomeController::ForceLogout();
                 return;
-            }
+            }            
 
-            require_once(VIEWS_PATH."cinema-details.php");
+            if ($name != $oldName)
+            {
+                $room = $this->roomDAO->GetRoomById($id);
+                $cinema = $room->getCinema();
+
+                $roomsList = $cinema->getRooms();
+
+                foreach($roomsList as $thisRoom)
+                {
+                    if ($name == $thisRoom->getName())
+                    {
+                        echo "<h1 class'h6 text-warning>The name of the room is already in use.</h1>";        
+                        $this->ShowUpdateView($id);
+                        
+                        return;
+                    }
+                }
+
+                $theRoom = new Room($capacity, $cinema, $ticketValue, $name);
+                $theRoom->setId($id);
+
+                $this->roomDAO->Update($theRoom);
+            }
+            else
+            {
+                echo "<h1 class'h6 text-warning>The old name and the new name are the same.</h1>";                
+            }            
+
+            $this->ShowUpdateView($id);
         }
     }
-
 ?>

@@ -5,85 +5,71 @@
     use DAO\RoomDAO as RoomDAO;
     use Models\Cinema as Cinema;
     use Controllers\HomeController as HomeController;    
+    use Controllers\RoomController as RoomController;
 
     class CinemaController
     {        
         private $cinemaDAO;
         private $roomDAO;
+        private $roomController;
+        
 
         public function __construct()
         {
             $this->cinemaDAO = new CinemaDAO();
             $this->roomDAO = new RoomDAO();
-        }        
 
-        // ********************** ROOMS **************************
+            $this->roomController = new RoomController();
+        }      
 
-        public function ShowAddRoom($cinemaName)
-        {
-            $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);                        
-            
-            require_once(VIEWS_PATH."room-add.php");
-            
-            $this->ShowRoomList($cinemaName);
-        }
+        // // ************************ FUNCIONES RELACIONADAS A LAS VISTAS **************************
         
-        public function ShowRoomList($cinemaName)
-        {
-            $cinema = $this->cinemaDAO->GetCinemaByName($name);            
-            $roomsList = $roomDAO->getRooms();
-
-            require_once(VIEWS_PATH."room-list.php");
-        }
-
-        // ********************** CINEMAS **************************
-
-        public function ShowUpdateView($name)
-        {
-            $cinema = $this->cinemaDAO->GetCinemaByName($name);            
-            require_once(VIEWS_PATH."cinema-modify.php");
-
-            $this->ShowListView();
-        }
-
         public function ShowAddView()
         {
             require_once(VIEWS_PATH."cinema-add.php");
             $this->ShowListView();
         }
 
+        public function ShowUpdateView($name)
+        {
+            $cinema = $this->cinemaDAO->GetCinemaByName($name);            
+            
+            require_once(VIEWS_PATH."cinema-modify.php");
+
+            $this->ShowListView();
+        }
+
         public function ShowListView()
         {   
-            $cinemaList = $this->cinemaDAO->GetAll();
-
-            require_once(VIEWS_PATH."cinema-list.php");
+            $cinemaList = $this->cinemaDAO->GetAllCinemasOnly();            
+            require_once(VIEWS_PATH."cinema-list.php");       
         }        
 
-        # MP : 
-        #   . saque el getID del dao y del constructor de cinema. Lo hace la base de datos ahora.
-        #   . ahora checkea que el nombre del cine sea unico antes de agregarlo.
+        public function ShowRooms($cinemaName)
+        {
+            $this->roomController->ShowAddRoom($cinemaName);
+        }
 
-        public function Add($name, $totalCapacity, $address, $ticketValue)
-        {   
+
+        // ************************ FUNCIONES RELACIONADAS AL DAO *********************************
+
+        public function Add($name, $address)
+        {               
             if (HomeController::CheckAdmin() == true) 
-            {
-                $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);            
+            {                
+                $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);                                            
 
-                # TODO: modularizar esto de ver si el cine existe
-
-                if ($cinemaExist)
-                {
-                    # TODO: hacer que sea un cartel de error mas agradable 
-                    $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';
+                if ($cinemaExist->getId() != null)
+                {        
+                    echo "<h1 class='text-warning h5'>cinema's name already in use</h1>";
                 }
                 else
-                {
-                    $_SESSION['cinemaError'] = null;
-                    $cinema = new Cinema($name, $totalCapacity, $address, $ticketValue, true);            
-                    $this->cinemaDAO->Add($cinema);
+                {                   
+                    $cinema = new Cinema($name, $address);            
+                    $this->cinemaDAO->Add($cinema);                   
                 }
 
-                 header('location:' . FRONT_ROOT . '/AdminManager/ShowAddCinemaView');
+                 $this->ShowAddView();
             }            
             else
             {
@@ -91,51 +77,37 @@
             }            
         }
 
-        public function Update($id, $name, $totalCapacity, $address, $ticketValue)
+        public function Update($id, $name, $oldName, $address)
         {   
             if (HomeController::CheckAdmin() == true) 
             {
                 # solo realiza el update si el nombre del cine no existe en la base de datos
                 # tambien se fija que el nombre no sea el nombre del propio cinema, para eso compara los id
 
-                $changeCinema = false;
-
-                $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);        
-                if ($cinemaExist)
-                {
-                    if ($cinemaExist->getId() == $id)
-                    {                 
-                        $changeCinema = true;                                          
-                    }                                
+                if ($name != $oldName)
+                {   
+                    $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);    
+                    
+                    if ($cinemaExist->getId() == null)
+                    {
+                        $cinema = new Cinema($name,$address);
+                        $cinema->setId($id);
+    
+                        $this->cinemaDAO->Update($cinema);
+                        $this->ShowAddView();
+                    }
+                    else
+                    {
+                        echo "<h1 class='h6 text-warning'>The name of the cinema already exists. Choose another.</h1>";  
+                        $this->ShowUpdateView($name);
+                    }
                 }
                 else
                 {
-                    $changeCinema = true;                      
+                    echo "<h1 class='h6 text-warning'>The old name and the new name are the same.</h1>";  
+                    $this->ShowUpdateView($oldName);
                 }
-
-                if ($changeCinema)
-                {
-                    $cinema = new Cinema(                
-                        $name,
-                        $totalCapacity,
-                        $address,
-                        $ticketValue,
-                        true
-                    );
-
-                    $cinema->setId($id);
-
-                    $this->cinemaDAO->Update($cinema);
-
-                    $_SESSION['cinemaError'] = null;
-
-                    $this->ShowAddView();
-                }
-                else
-                {
-                    $_SESSION['cinemaError'] = 'The name of the cinema already exists. Choose another';  
-                    $this->ShowUpdateView($name);
-                }      
+                
             }            
             else
             {

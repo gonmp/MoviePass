@@ -19,14 +19,14 @@
                     <tbody>
                          <?php
                               foreach($cinemaList as $cinema)
-                              {?>
+                              {?>                              
                                    <tr>
                                         <td><?php echo $cinema->getId(); ?></td>
                                         <td><?php echo $cinema->getName(); ?></td>                                        
                                         <td><?php echo $cinema->getAddress(); ?></td>                                        
 
                                         <!-- boton room details -->                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>Cinema/ShowRooms?name=<?php echo $cinema->getName();?>" class="btn btn-sm btn-outline-success text-white">Rooms details</button></td>                                             
+                                        <td><a href="<?php echo FRONT_ROOT?>Cinema/ShowRooms?cinemaName=<?php echo $cinema->getName();?>" class="btn btn-sm btn-outline-success text-white">Rooms details</button></td>                                             
 
                                         <!-- boton modificar -->                                        
                                         <td><a href="<?php echo FRONT_ROOT?>Cinema/ShowUpdateView?name=<?php echo $cinema->getName();?>" class="btn btn-sm btn-outline-warning text-white">Modify</button></td>                                             

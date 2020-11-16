@@ -1,5 +1,5 @@
 <?php
-    //require_once('checkAdmin.php');
+    require_once('checkAdmin.php');
 ?>
 <main>
     <section id="roomAdd">

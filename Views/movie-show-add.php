@@ -25,12 +25,30 @@
                         ?>
                     </select>
                 </div>
+
                 <!-- seleccionar cine -->
                 <div class="col-3 m-1">                    
                     <label for="" class="px-1 text-primary d-block">select cinema</label>                    
                     <select class="custom-select" name="cinemaId">
                                                 
                         <!-- opciones de cines desde la base de datos -->
+                        <?php 
+                            foreach($this->cinemaList as $cinema)
+                            {
+                                ?><option value="<?php echo $cinema->GetId() ?>"><?php echo $cinema->GetName()?></option>                            
+                            <?php
+                            }                      
+                        ?>
+
+                    </select>
+                </div>
+
+                <!-- seleccionar sala -->
+                <div class="col-3 m-1">                    
+                    <label for="" class="px-1 text-primary d-block">select cinema</label>                    
+                    <select class="custom-select" name="cinemaId">
+                                                
+                        <!-- opciones de salas del cine -->
                         <?php 
                             foreach($this->cinemaList as $cinema)
                             {

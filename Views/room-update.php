@@ -4,61 +4,43 @@
 <main>
     <section id="roomAdd">
         
-        <h1 class="text-danger px-2 pt-4">Add Room</h1>
+        <h1 class="text-danger px-2 pt-4">Modifying Room id: <span class="text-white"><?php echo $room->getId();?></span></h1>
 
-        <form action="<?php echo FRONT_ROOT ?>Room/Add" method="post">            
+        <form action="<?php echo FRONT_ROOT ?>Room/Update" method="post">            
             
-            <div class="px-1 pb-3 row">
+            <div class="px-1 pb-3 row">               
 
-                <!-- seleccionar cine -->
-                <div class="col-3 m-1">                    
-                    <label for="" class="px-1 text-primary d-block">select cinema</label>                    
-                    <select class="custom-select" name="cinemaName">
-                                                
-                        <!-- opciones de cines desde la base de datos -->
-                        <?php 
-                            foreach($this->cinemaList as $cinema)
-                            {
-                                ?><option value="<?php echo $cinema->GetName() ?>"><?php echo $cinema->GetName()?></option>                            
-                            <?php
-                            }                      
-                        ?>
+                <!-- id -->
+                <input hidden name="id" value="<?php echo $room->getId();?>">
 
-                    </select>
-                </div>
+                <!-- old name -->
+                <input hidden name="oldName" value="<?php echo $room->getName();?>">
 
                 <!-- seleccionar capacidad  -->
                 <div class="col-2 p-0 m-1 mr-3">                    
                     <label for="" class="px-1 text-primary d-block">select capacity</label>                    
-                    <input required type="number" name="capacity" min="1" max="" value="0" class="my-1">                    
+                    <input required type="number" value="<?php echo $room->getCapacity()?>" name="capacity" min="1" max="" value="0" class="my-1">                    
                 </div>                                
 
                 <!-- seleccionar valor del ticket -->
                 <div class="col-2 p-0 m-1 mr-3">                    
                     <label for="" class="px-1 text-primary d-block">select ticket value</label>                    
-                    <input required type="number" name="ticketValue" value="0" min="1" max="" class="my-1">                    
+                    <input required type="number" value="<?php echo $room->getTicketValue()?>" name="ticketValue" value="0" min="1" max="" class="my-1">                    
                 </div>                         
 
                 <!-- seleccionar nombre -->
                 <div class="col-2 p-0 m-1 mr-3">                    
                     <label for="" class="px-1 text-primary d-block">room's name</label>                    
-                    <input required type="text" name="name" placeholder="room's name" min="1" max="" class="my-1" minlength="1" maxlength="20" pattern="[A-Za-z0-9 ]+" title="only letters and numbers">                    
+                    <input required type="text" value="<?php echo $room->getName()?>" name="name" placeholder="room's name" min="1" max="" class="my-1" minlength="1" maxlength="20" pattern="[A-Za-z0-9 ]+" title="only letters and numbers">                    
                 </div>                         
-
                                 
-                <!-- boton agregar room -->
+                <!-- boton modificar -->
                 <div class="col-2 p-0 m-0 ml-4">  
-                    <label for="" class="px-1 text-primary d-block">add room</label>
-                    <button type="submit" class="btn btn-success my-1 px-5">ADD</button>
+                    <label for="" class="px-1 text-primary d-block">modify room</label>
+                    <button type="submit" class="btn btn-success my-1 px-5">Modify</button>
                 </div>
             </div>
 
         </form>
     </section>
 </main>
-<script src="<?php echo JS_PATH ?>date.js"></script>
-
-
-
-
-
