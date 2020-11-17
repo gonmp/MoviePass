@@ -57,21 +57,14 @@
                 <!-- seleccionar fecha -->
                 <div class="col-2 p-0 m-1">                    
                     <label for="" class="px-1 text-primary d-block">date</label>                   
-                    <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1"
+                    <input required type="date" name="movieShowDate" id="date" min="" max="" class="my-1 mdate"
                     value= <?php echo date_format($movieShow->getShowDate(),"Y-m-d");?>>
                 </div>                
 
                 <!-- seleccionar horario -->
-                <div class="col-1 p-0 m-1 ml-5">                    
+                <div class="col-1 p-0 m-1 mr-3">                    
                     <label for="" class="px-1 text-primary d-block">select time</label>                    
-                    <select name="movioShowTime" class="custom-select">                                                      
-                        
-                        <!-- opciones de tiempo -->
-                        <option value="9"  <?php if ($movieShow->getShowDateNumber() == "09") {echo "selected";}?>>9 hs</option>
-                        <option value="13" <?php if ($movieShow->getShowDateNumber() == "13") {echo "selected";}?>>13 hs</option>                        
-                        <option value="17" <?php if ($movieShow->getShowDateNumber() == "17") {echo "selected";}?>>17 hs</option>                        
-                        <option value="21" <?php if ($movieShow->getShowDateNumber() == "21") {echo "selected";}?>>21 hs</option>                        
-                    </select>                                   
+                    <input required type="time" name="movieShowTime" value="<?php echo date_format($movieShow->getShowDate(), "H:i");?>" min="<?php echo Scripts\Utils::GetTime();?>" max="18" class="my-1">                    
                 </div>                
                                 
                 <!-- boton update movie show -->
