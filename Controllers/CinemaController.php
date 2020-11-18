@@ -77,19 +77,17 @@
             }            
         }
 
-        public function Update($id, $name, $oldName, $address)
+        public function Update($id, $name, $address)
         {   
             if (HomeController::CheckAdmin() == true) 
-            {
-                # solo realiza el update si el nombre del cine no existe en la base de datos
-                # tambien se fija que el nombre no sea el nombre del propio cinema, para eso compara los id
+            {                
+                $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);   
 
-                if ($name != $oldName)
-                {   
-                    $cinemaExist = $this->cinemaDAO->GetCinemaByName($name);    
-                    
-                    if ($cinemaExist->getId() == null)
+                if ($cinemaExist->getId() != null)
+                {
+                    if ($cinemaExist->getId() == $id)
                     {
+                        # dejo el nombre sin cambiar
                         $cinema = new Cinema($name,$address);
                         $cinema->setId($id);
     
@@ -98,16 +96,22 @@
                     }
                     else
                     {
+                        # el nombre elegido pertenece a otro cine
                         echo "<h1 class='h6 text-warning'>The name of the cinema already exists. Choose another.</h1>";  
-                        $this->ShowUpdateView($name);
+                                              
+                        $thisCinema = $this->cinemaDAO->GetCinemaById($id);
+                        $this->ShowUpdateView($thisCinema->getName());
                     }
                 }
                 else
                 {
-                    echo "<h1 class='h6 text-warning'>The old name and the new name are the same.</h1>";  
-                    $this->ShowUpdateView($oldName);
+                    # dejo el nombre sin cambiar
+                    $cinema = new Cinema($name,$address);
+                    $cinema->setId($id);
+
+                    $this->cinemaDAO->Update($cinema);
+                    $this->ShowAddView();
                 }
-                
             }            
             else
             {

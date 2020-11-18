@@ -1,28 +1,15 @@
-<?php     
-   /*  if (!isset($_SESSION['validLogin']))
-     {
-          header("location:GoHome");
-     }
-     else if (!$_SESSION['validLogin'])
-     {
-          header("location:GoHome");
-     }     */     
-?>
-
-<nav class="container-fluid">     
-     
-     <!-- fila principal -->
-     <div class="row"> 
+<nav class="container">     
+     <div class="row align-items-center py-2 border border-top-0 border-secondary rounded-bottom m-0">
 
           <!-- primera columna: moviepass logo -->
-          <div class="col p-1">
+          <div class="col">
                <a href="<?php echo FRONT_ROOT ?>Home/Index">
                     <img src="<?php echo FRONT_ROOT ."/". VIEWS_PATH?>/img/moviepass_logo.png" alt="moviepass logo" class="img-fluid border border-dark rounded" style="width: 9rem">
                </a>
           </div>
 
           <!-- segunda columna: segun estado del usuario -->
-          <div class="col-5 py-1 mx-0">               
+          <div class="col">               
                <?php                
 
                if ($_SESSION['userLogged'])
@@ -54,6 +41,6 @@
           </div>
      </div>
 </nav>     
-<hr class="hr-style mt-1">
+
 
 

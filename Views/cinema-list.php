@@ -4,7 +4,7 @@
 
 <main class="">
      <section id="cinemaList" class="">
-          <div class="container-fluid mt-4">               
+          <div class="container">               
                <table class="table table-hover table-dark table-sm">
                     <thead class="bg-dark">
                          <tr>
