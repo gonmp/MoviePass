@@ -3,7 +3,7 @@
 ?>
 <main>
     <section id="movieShowAdd">
-        
+        <div class="container">
         <h1 class="text-danger px-2 pt-4">Add Movie Show</h1>
 
         <form action="<?php echo FRONT_ROOT ?>MovieShow/Add" method="post">            
@@ -79,7 +79,8 @@
                 </div>
             </div>
 
-        </form>
+            </form>
+        </div>
     </section>
 </main>
 <script src="<?php echo JS_PATH ?>date.js"></script>

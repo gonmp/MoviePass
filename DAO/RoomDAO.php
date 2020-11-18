@@ -22,15 +22,17 @@
                 ':name' => $room->getName(),
             );
 
-            $this->connection = Connection::GetInstance();            
+            $this->connection = Connection::GetInstance();       
 
             try
             {
-                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);
+                $rowAffected = $this->connection->ExecuteNonQuery($query, $parameters);               
+
                 return $rowAffected;
             }
             catch(\Exception $ex)
             {
+                var_dump($ex);
                 return -1;
             }            
         }

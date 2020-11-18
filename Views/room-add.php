@@ -12,6 +12,12 @@
 
                 <input type="text" hidden name="cinemaName" value="<?php echo $cinema->getName();?>">
 
+                <!-- seleccionar nombre -->
+                <div class="col">                    
+                    <label for="" class="text-primary d-block">room's name</label>                    
+                    <input required type="text" name="name" placeholder="room's name" min="1" max="" class="" minlength="1" maxlength="20" pattern="[A-Za-z0-9 ]+" title="only letters and numbers">                    
+                </div>                         
+
                 <!-- seleccionar capacidad  -->
                 <div class="col">                    
                     <label for="" class="text-primary d-block">select capacity</label>                    
@@ -23,13 +29,6 @@
                     <label for="" class="text-primary d-block">select ticket value</label>                    
                     <input required type="number" name="ticketValue" value="" min="1" max="" class="">                    
                 </div>                         
-
-                <!-- seleccionar nombre -->
-                <div class="col">                    
-                    <label for="" class="text-primary d-block">room's name</label>                    
-                    <input required type="text" name="name" placeholder="room's name" min="1" max="" class="" minlength="1" maxlength="20" pattern="[A-Za-z0-9 ]+" title="only letters and numbers">                    
-                </div>                         
-
 
                 <!-- botones -->
                 <div class="btn-group">                                

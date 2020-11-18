@@ -26,7 +26,7 @@
                     <!-- boton agregar cine -->
                     <div class="col">  
                         <label for="" class="text-success d-block">add new cinema</label>
-                        <button type="submit" class="btn btn-success my-0 px-5">ADD</button>
+                        <button type="submit" class="btn btn-success my-0 px-5">ADD</button>                        
                     </div>                
                 </div>
             </form>
