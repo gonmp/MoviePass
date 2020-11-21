@@ -35,8 +35,8 @@
                         <?php 
                             foreach($this->cinemaList as $cinema)
                             {
-                                ?><option value="<?php echo $cinema->GetId() ?>"><?php echo $cinema->GetName()?></option>                            
-                            <?php
+                                ?><option value="<?php echo $cinema->GetId() ?>"><?php echo $cinema->GetName()?></option>
+                            <?php                                
                             }                      
                         ?>
 

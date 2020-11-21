@@ -11,8 +11,10 @@
                               <th scope="col" class="text-primary">ID</th>
                               <th scope="col" class="text-primary">Movie</th>    
                               <th scope="col" class="text-primary">Cinema</th>
+                              <th scope="col" class="text-primary">Room</th>
                               <th scope="col" class="text-primary">Date</th>
-                              <th scope="col" class="text-primary">Time</th>
+                              <th scope="col" class="text-primary">Start Time</th>
+                              <th scope="col" class="text-primary">End Time</th>
                               <th scope="col"></th>                     
                               <th scope="col"></th>    
                          </tr>
@@ -24,9 +26,11 @@
                                    <tr>
                                         <td><?php echo $movieShow->getId(); ?></td>
                                         <td><?php echo $movieShow->getMovie()->getTitle(); ?></td>    
-                                        <td><?php echo $movieShow->getCinema()->getName(); ?></td>
+                                        <td><?php echo $movieShow->getRoom()->getCinema()->getName(); ?></td>
+                                        <td><?php echo $movieShow->getRoom()->getName(); ?></td>
                                         <td><?php echo $movieShow->getShowDate()->format('d-m-Y'); ?></td>
                                         <td><?php echo $movieShow->getShowDate()->format('H : i') . ' hs'; ?></td>
+                                        <td><?php echo $movieShow->getEndTime()->format('H : i') . ' hs'; ?></td>
 
                                         <!-- boton modificar -->                                        
                                         <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning text-white">Modify</button></td>                                                                                     

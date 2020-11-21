@@ -17,13 +17,13 @@
                 <!-- elementos del menu -->
                 <ul class="dropdown-menu">        
                     <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/AdminManager/ShowAddCinemaView">Manage Cinemas</a></li>
-                    <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/AdminManager/ShowAddMovieShowView">Manage Movies Shows</a></li>
+                    <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/MovieShow/ShowAddMovieShow">Manage Movies Shows</a></li>
                     <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/AdminManager/ShowMovieList">List Movies</a></li>
                 </ul>
             </div>            
 
             <!-- actualizar base de datos -->
-            <a href="<?php echo FRONT_ROOT ?>AdminManager/UpdateDataBase" class="rounded-0 col btn btn-outline-success text-white">UPDATE DATABASE</a>    
+            <a hidden href="<?php echo FRONT_ROOT ?>AdminManager/UpdateDataBase" class="rounded-0 col btn btn-outline-success text-white">UPDATE DATABASE</a>    
             
             <!-- logout -->
             <a href="<?php echo FRONT_ROOT ?>Home/Logout" class="rounded-0 col btn btn-outline-danger text-white">log out</a>

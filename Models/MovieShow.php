@@ -28,7 +28,26 @@
         public function getMovie() {return $this->movie;}
         public function getRoom() {return $this->room;}
         public function getShowDate() {return $this->showDate;}
-        public function getDuration() {return $this->duration;}        
+        public function getDuration() {return $this->duration;}       
+        
+        public function getEndTime()
+        {            
+            $movieShowDateTo = $this->getShowDate();
+
+            # crear la fecha con la hora del inicio de la pelicula
+            $endTime = $this->getShowDate();            
+            
+            # sumarle el horario de la pelicula
+            $timeMovieDuration = explode(':', $this->getDuration());
+            $hours = $timeMovieDuration[0];
+            $minutes = $timeMovieDuration[1];            
+            
+            # devolver la variable
+            date_add($endTime, date_interval_create_from_date_string($hours . ' hours'));
+            date_add($endTime, date_interval_create_from_date_string($minutes . ' minutes'));           
+            
+            return $endTime;
+        }
 
         public function getShowDateNumber()
         {

@@ -5,11 +5,11 @@
     <section id="cinemaAdd">
         
         <div class="container">
-            <h1 class="text-danger px-2 pt-4">Add Cinema</h1>
+            <h1 class="text-danger">Add Cinema</h1>
 
             <form action="<?php echo FRONT_ROOT ?>Cinema/Add" method="post">           
                 
-                <div class="row pb-2">
+                <div class="row">
 
                     <!-- nombre -->                
                     <div class="col">
@@ -26,7 +26,7 @@
                     <!-- boton agregar cine -->
                     <div class="col">  
                         <label for="" class="text-success d-block">add new cinema</label>
-                        <button type="submit" class="btn btn-success my-0 px-5">ADD</button>                        
+                        <button type="submit" class="btn btn-success px-5">ADD</button>                        
                     </div>                
                 </div>
             </form>

@@ -3,18 +3,12 @@
 ?>
 <main>
     <section id="movieShowSelectRoom">
-        
-        <h1 class="text-danger px-2 pt-4">Select one of this rooms</h1>
+        <div class="container">        
+            <h2 class="text-danger">Select room</h2>
 
-        <form action="<?php echo FRONT_ROOT ?>MovieShow/SelectMovie" method="post">            
-            
-            <div class="px-1 pb-3 row">               
-
-                <!-- seleccionar cine -->
-                <div class="col-3 m-1">                    
-                    <label for="" class="px-1 text-primary d-block">select room</label>                    
-                    <select class="custom-select" name="roomId">
-                                                
+            <div class="row p-0 m-0">               
+                <form action="<?php echo FRONT_ROOT ?>MovieShow/SelectTime" method="post">                                                
+                    <select class="px-5" name="roomId">                                                    
                         <!-- opciones de cines desde la base de datos -->
                         <?php 
                             foreach($roomList as $room)
@@ -23,18 +17,14 @@
                             <?php
                             }                      
                         ?>
+                    </select>                                                                                     
 
-                    </select>
-                </div>
-                                
-                <!-- boton continuar -->
-                <div class="col-2 p-0 m-0 ml-4">  
-                    <label for="" class="px-1 text-primary d-block">continue</label>
-                    <button type="submit" class="btn btn-success my-1 px-5">NEXT</button>
-                </div>
+                    <!-- botones -->
+                    <button type="submit" class="btn btn-primary btn-sm px-4 mb-1 p-0">SELECT ROOM</button>
+                
+                </form>
             </div>
-
-        </form>
+        </div>
     </section>
 </main>
 <script src="<?php echo JS_PATH ?>date.js"></script>
