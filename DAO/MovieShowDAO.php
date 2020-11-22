@@ -28,6 +28,29 @@
             $this->movieShowList = array();
         }        
 
+        public function GetFromMovieInDate($movieId, $movieDate)
+        {
+            $query = "SELECT * FROM movieshow WHERE date_format(showDate, '%Y-%m-%d') = :movieDate AND movieId = :movieId";
+            $parameters = array(
+                ':movieId' => $movieId, 
+                ':movieDate' => $movieDate
+            );
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {                
+                $results = $this->connection->Execute($query, $parameters);               
+
+                return $results;
+            }
+            catch(\Exception $ex)
+            {
+                
+                return var_dump($ex);
+            }
+        }
+
         public function GetAll()
         {
             $query = "SELECT movieshow.id,

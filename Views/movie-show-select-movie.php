@@ -3,8 +3,8 @@
 ?>
 <main>
     <section id="movieShowSelectMovie">        
-        <div class="container">        
-            <h2 class="text-danger">Select Movie</h2>
+        <div class="container">                    
+            <h2 class="text-danger">Add Movie Show</h2>
             
             <div class="row p-0 m-0">                  
                 <form action="<?php echo FRONT_ROOT ?>MovieShow/SelectDate" method="post">                                                
