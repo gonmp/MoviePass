@@ -19,8 +19,6 @@
         private $cinemaDAO;       
         private $movieShowDAO;      
         private $roomDAO;        
-        
-        private $movieShowIdUpdate;
 
         public function __construct()
         {
@@ -29,15 +27,14 @@
             $this->cinemaDAO = new CinemaDAO();
             $this->cinemaList = $this->cinemaDAO->GetAll();
             $this->movieShowDAO = new MovieShowDAO();
-            $this->roomDAO = new RoomDAO();                        
-
-            $this->movieShowIdUpdate = 0;
+            $this->roomDAO = new RoomDAO();                                    
         }        
 
         // ************ VISTAS *************************
 
         public function ShowAddMovieShow()
         {               
+            $_SESSION['updateMovie'] = null;
             $this->SelectMovie();
             $this->ShowMovieShowList();
         }        
@@ -55,79 +52,17 @@
 
         // ESTE ES EL ENLACE AL QUE LLEVA AL BOTON DE MODIFICAR QUE ESTA EN LA LISTA DE MOVIESHOWS
         public function ShowMovieShowUpdate($movieShowId)
-        {                       
-            $this->movieShowIdUpdate = $movieShowId;
-
-            $movieShow = $this->movieShowDAO->Get($movieShowId);            
+        {   
+            $auxMovieShow = $this->movieShowDAO->Get($movieShowId);            
+            
             require_once(VIEWS_PATH . 'movie-show-details-for-update.php');
-            $this->UpdateMovie($movieShowId, $movieShow->getMovie()->getId());
+            
+            $_SESSION['updateMovie'] = $auxMovieShow->getId();
+
+            $this->SelectMovie();
+
+            $this->ShowMovieShowList();
         }   
-        
-        // ACA VIENE AL TOCAR EL BOTON DE MODIFICAR MOVIE
-        public function UpdateMovie($movieShowId, $movieId)
-        {               
-            $movieShow = $this->movieShowDAO->Get($movieShowId);
-            $movie = $this->movieDAO->GetMovieById($movieId);
-            
-            $movieList = $this->movieDAO->getAll();                   
-            
-            # detalles del movie show
-            require_once(VIEWS_PATH . 'movie-show-details-for-update.php');
-
-            # lista de las peliculas para que seleccione una diferente
-            require_once(VIEWS_PATH . 'movie-show-update-movie.php');             
-        }
-
-        // ACA VIENE CUANDO CAMBIA LA PELICULA
-        public function ValidateUpdateMovie($movieShowId, $movieId)
-        {            
-            $movieShow = $this->movieShowDAO->Get($movieShowId);
-            $movie = $this->movieDAO->GetMovieById($movieId);
-
-            # la primer validacion tiene que ser si la pelicula seleccionada no es la misma que estaba
-            if ($movieShow->getMovie()->getId() == $movieId)
-            {
-                echo "<h6 class='text-warning'>you are selected the same movie</h6>";
-                $this->ShowMovieShowUpdate($movieShow->getId());
-                return;
-            }            
-            
-            # para validar la pelicula, la misma no puede estar en otro cine en la misma fecha
-            # es decir, no puede estar reservada por otro cine
-
-            # necesito la lista de todas las funciones del dia del movie show en donde aparezca la nueva
-            # pelicula seleccionada
-            
-            $movieDate = $movieShow->getShowDate();
-            $movieShowList = $this->movieShowDAO->GetFromMovieInDate($movieId, date_format($movieDate,"Y-m-d"));            
-
-            # si la lista es nula, puedo modificar la pelicula
-            if (sizeof($movieShowList) == 0)
-            {
-                echo "<h6 class='text-success'>update movie success</h6>";
-                $this->Update($movieShowId, $movieId);
-                $this->ShowMovieShowUpdate($movieShowId);
-                return;
-            }
-
-            # si la lista no es nula, tengo que ver si la pelicula fue reservada por el mismo cine
-            foreach($movieShowList as $show)
-            {
-                $room = $this->roomDAO->getRoomById($show['roomId']);
-
-                if ($room->getCinema()->getId() == $movieShow->getRoom()->getCinema()->getId())
-                {
-                    echo "<h6 class='text-success'>same cinema. Update movie success</h6>";
-                    $this->Update($movieShowId, $movieId);
-                    $this->ShowMovieShowUpdate($movieShowId);
-                    return;                   
-                }                
-            }
-
-            # si la lista no es nula y el cine no la reservo, entonces no puedo realizar el cambio
-            echo "<h6 class='text-danger'>the movie is already reserved in another cinema</h6>";
-            $this->ShowMovieShowUpdate($movieShow->getId());            
-        }
 
         // ******** WIZARD DE CREAR SALA **********
         
@@ -138,15 +73,29 @@
         }
         
         public function SelectDate($movieId)
-        {            
+        {               
             $_SESSION['movieId'] = $movieId;            
 
+            if (isset($_SESSION['updateMovie']))
+            {
+                $auxMovieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                                        
+                $auxMovieShow->setMovie = $this->movieDAO->GetMovieById($movieId);
+                var_dump($movieShow->getMovie());
+                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
+            }            
+            
             require_once(VIEWS_PATH.'movie-show-select-date.php');
-            $this->ShowMovieShowList();
+            $this->ShowMovieShowList();            
         }
 
         public function SelectCinema($movieDate)
         {
+            if (isset($_SESSION['updateMovie']))
+            {
+                $movieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                        
+                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
+            }            
+
             $textoToAdmin = null;            
             $_SESSION['movieDate'] = $movieDate;            
             $allCinemaList = $this->cinemaDAO->getAllCinemasOnly();      
@@ -178,6 +127,12 @@
 
         public function SelectRoom($cinemaName)
         {
+            if (isset($_SESSION['updateMovie']))
+            {
+                $movieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                        
+                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
+            }            
+
             $_SESSION['cinemaName'] = $cinemaName;
 
             $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);
@@ -192,6 +147,12 @@
 
         public function SelectTime($roomId)
         {
+            if (isset($_SESSION['updateMovie']))
+            {
+                $movieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                        
+                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
+            }    
+
             $_SESSION['roomId'] = $roomId;
 
             $room = $this->roomDAO->getRoomById($roomId);
@@ -202,8 +163,6 @@
 
         // ************ DAO *************************
 
-
-        # movie room #dateTime
         public function Add($time)
         {
             if ($this->ValidateTime($time) == false)
@@ -226,8 +185,16 @@
             $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));            
 
             $movieShow = new MovieShow($movie, $room, $date);                        
-
-            $rowAffected = $this->movieShowDAO->Add($movieShow);
+            
+            if(isset($_SESSION['updateMovie']))
+            {
+                $movieShow->setId($_SESSION['updateMovie']);
+                $rowAffected = $this->movieShowDAO->Update($movieShow);            
+            }
+            else
+            {
+                $rowAffected = $this->movieShowDAO->Add($movieShow);
+            }
 
             if ($rowAffected == -1)
             {                

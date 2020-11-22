@@ -33,7 +33,7 @@
                                         <td class="text-success"><?php echo $movieShow->getEndTime()->format('H : i') . ' hs'; ?></td>
 
                                         <!-- boton modificar -->                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning text-white">Change Movie</button></td>                                                                                     
+                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning text-white">Change</button></td>                                                                                     
 
                                         <!-- boton modificar -->                                        
                                         <td><a href="<?php echo FRONT_ROOT?>MovieShow/Delete?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-danger text-white">Delete</button></td>                                             

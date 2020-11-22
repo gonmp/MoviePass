@@ -5,7 +5,7 @@
 <main class="">
      <section id="movieShowList" class="">
           <div class="container">           
-               <h3 class="text-primary">Modifying Movie Show: <span class="text-white"><?php echo $movieShow->getId();?></span></h3>    
+               <h3 class="text-primary">Modifying Movie Show: <span class="text-white"><?php echo $auxMovieShow->getId();?></span></h3>    
                <table class="table table-hover table-dark table-sm">
                     <thead class="bg-dark">
                          <tr>
@@ -20,13 +20,13 @@
                     </thead>
                     <tbody>                         
                          <tr>
-                              <td class="text-primary"><?php echo $movieShow->getId(); ?></td>
-                              <td class="text-white"><?php echo $movieShow->getMovie()->getTitle(); ?></td>
-                              <td class="text-danger"><?php echo $movieShow->getRoom()->getCinema()->getName(); ?></td>
-                              <td><?php echo $movieShow->getRoom()->getName(); ?></td>
-                              <td class="text-primary"><?php echo $movieShow->getShowDate()->format('d-m-Y'); ?></td>
-                              <td class="text-success"><?php echo $movieShow->getShowDate()->format('H : i') . ' hs'; ?></td>
-                              <td class="text-success"><?php echo $movieShow->getEndTime()->format('H : i') . ' hs'; ?></td>                              
+                              <td class="text-primary"><?php echo $auxMovieShow->getId(); ?></td>
+                              <td class="text-white"><?php echo $auxMovieShow->getMovie()->getTitle(); ?></td>
+                              <td class="text-danger"><?php echo $auxMovieShow->getRoom()->getCinema()->getName(); ?></td>
+                              <td><?php echo $auxMovieShow->getRoom()->getName(); ?></td>
+                              <td class="text-primary"><?php echo $auxMovieShow->getShowDate()->format('d-m-Y'); ?></td>
+                              <td class="text-success"><?php echo $auxMovieShow->getShowDate()->format('H : i') . ' hs'; ?></td>
+                              <td class="text-success"><?php echo $auxMovieShow->getEndTime()->format('H : i') . ' hs'; ?></td>                              
                          </tr>                                                                                      
                     </tbody>
                 </table>                              
