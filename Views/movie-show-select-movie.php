@@ -12,8 +12,20 @@
                         <?php
                             foreach($movieList as $movie)
                             {?>
-                                <option value="<?php echo $movie->getId();?>">
+                                <option value="<?php echo $movie->getId();?>"
+                                <?php
+                                if ($movieSelected != null)
+                                {
+                                    if ($movie->getId() == $movieSelected->getId())
+                                    {?>
+                                        selected
+                                    <?php
+                                    }
+                                }
+                                ?>
+                                >
                                     <?php echo $movie->getTitle(); ?>
+                                    
                                 </option>
                             <?php
                             }

@@ -10,8 +10,16 @@
                 <form action="<?php echo FRONT_ROOT ?>MovieShow/SelectCinema" method="post">                                
                     
                     <!-- seleccionar fecha -->                      
-                    <input type="date" name="movieDate" class="mdate" min="" max="" value="">                    
-                    
+                    <input id="updateDate" class="mdate" required type="date" name="movieDate" min="" max="" 
+                    value=
+                    <?php  
+                        if ($dateSelected != null)
+                        {
+                            echo date_format($auxMovieShow->getShowDate(),"Y-m-d");                        
+                        }
+                    ?>
+                    >                    
+
                     <!-- botones -->
                     <button type="submit" class="btn btn-primary btn-sm px-4 mb-1 p-0">SELECT DATE</button>           
 

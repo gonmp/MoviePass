@@ -10,7 +10,19 @@
                 <form action="<?php echo FRONT_ROOT ?>MovieShow/Add" method="post">                                
                     
                     <!-- seleccionar fecha -->                      
-                    <input type="time" name="movieTime" class="px-2" min="" max="" value="<?php echo Scripts\Utils::GetTime();?>">                    
+                    <input type="time" name="movieTime" class="px-2" min="" max="" 
+                    value=
+                    <?php 
+                        if ($timeSelected != null)
+                        {
+                            echo $timeSelected;
+                        } 
+                        else
+                        {
+                            echo Scripts\Utils::GetTime();
+                        }
+                    ?>                    
+                    >                    
                     
                     <!-- botones -->
                     <button type="submit" class="btn btn-primary btn-sm px-4 mb-1 p-0">SELECT TIME</button>           

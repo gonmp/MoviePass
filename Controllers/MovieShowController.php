@@ -75,13 +75,22 @@
         
         public function SelectMovie()
         {
+            $movieSelected = null;
+            if (isset($_SESSION['updateMovieShow']))
+            {
+                $auxMovieShow = AuxMovieShow::read();
+                $auxMovieId = $auxMovieShow->getMovieId();
+                $movieSelected = $this->movieDAO->GetMovieById($auxMovieId);
+            }
+
             $movieList = $this->movieDAO->getAll();                   
             require_once(VIEWS_PATH."movie-show-select-movie.php");             
         }
         
         public function SelectDate($movieId)
         {               
-            $_SESSION['movieId'] = $movieId;            
+            $_SESSION['movieId'] = $movieId;         
+            $dateSelected = null;   
 
             if (isset($_SESSION['updateMovieShow']))
             {
@@ -95,7 +104,7 @@
                 $auxMovieShow = $this->movieShowDAO->Get($jsonMovieShow->getId());
                 $movie = $this->movieDAO->GetMovieById($movieId);                                
                 $auxMovieShow->setMovie($movie);        
-                $auxMovieShow->setCinemaName($jsonMovieShow->getCinemaName());        
+                $auxMovieShow->setCinemaName($jsonMovieShow->getCinemaName()); 
 
                 require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
             }            
@@ -131,6 +140,7 @@
                 $textoToAdmin = "the movie is already reserved. You can only choose this cinema:";
             }                       
             
+            $selectedCinema = null;
             if (isset($_SESSION['updateMovieShow']))
             {
                 # obtengo el movieshow
@@ -152,6 +162,7 @@
 
                 $auxMovieShow->setCinemaName($jsonMovieShow->getCinemaName());        
 
+                $selectedCinema = $auxMovieShow->getCinemaName();
                 require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
             }                        
             
@@ -194,6 +205,7 @@
 
         public function SelectTime($roomId)
         {
+            $timeSelected = null;
             if (isset($_SESSION['updateMovieShow']))
             {
                 # obtengo el movieshow
@@ -213,6 +225,8 @@
 
                 $jsonMovieShow->setRoomId($roomId);
                 $jsonMovieShow->saveData();
+
+                $timeSelected = date_format($auxMovieShow->getShowDate(),"H:i");
 
                 require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
             }    
@@ -245,7 +259,7 @@
 
             if ($this->ValidateTime($time, $movieShowId) == false)
             {
-                echo "<h6 class='text-warning'>el horario ya esta reservado</h6>";
+                echo "<h6 class='text-warning'>the room is already reserved</h6>";
                 $this->ShowAddMovieShow();
                 return;
             }
@@ -288,7 +302,7 @@
 
             if ($rowAffected == -1)
             {                
-               echo "<h6 class='text-warning'>error al cargar los datos</h6>";
+               echo "<h6 class='text-warning'>error adding to database</h6>";
             }           
 
             $this->ShowAddMovieShow();

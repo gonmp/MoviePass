@@ -20,7 +20,17 @@
                         <?php 
                             foreach($cinemaList as $cinema)
                             {?>
-                                <option value="<?php echo $cinema->getName();?>">
+                                <option value="<?php echo $cinema->getName();?>"
+                                <?php if($selectedCinema != null)
+                                {
+                                    if ($cinema->getName() == $selectedCinema)
+                                    {?>
+                                        selected
+                                    <?php
+                                    }
+                                }
+                                ?>
+                                >
                                     <?php echo $cinema->getName()?>
                                 </option>
                             <?php
