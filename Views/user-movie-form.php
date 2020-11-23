@@ -6,7 +6,7 @@
         <div class="container">        
             
             <!-- movie search -->
-            <div class="row">                        
+            <div class="row mt-5">                        
                 <div class="col">
                     <h1 class="text-danger">Movie search</h1>                
                 </div>

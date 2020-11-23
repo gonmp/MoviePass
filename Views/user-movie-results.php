@@ -1,6 +1,7 @@
 <main>
      <section id="movieShowResult">
-          <div class="container-fluid m-0 mt-4 p-0">            
+          <div class="container">            
+          <div class="row justify-content-center">
                <?php                    
                     $movieName = null;
                     foreach($list as $movieShow)
@@ -9,20 +10,20 @@
                          {
                               $movieName = $movieShow->getMovie()->getTitle();              
                          ?>                                        
-                              <div class="col-2 float-left" style="height: 26rem;">                              
+                              <div class="card d-inline-block m-1" style="width: 9rem;">                         
 
                                    <!-- imagen con link al detalle de la pelicula -->
                                    <a href="<?php echo FRONT_ROOT?>/Movie/ShowMovieDetails?movieId=<?php echo $movieShow->getMovie()->getId()?>">
-                                   <img class="img-thumbnail img-responsive" src="https://image.tmdb.org/t/p/w500/<?php echo $movieShow->getMovie()->getposter_path()?>" alt="<?php echo $movieShow->getMovie()->getTitle();?>">
+                                   <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/<?php echo $movieShow->getMovie()->getposter_path()?>" alt="<?php echo $movieShow->getMovie()->getTitle();?>">
                                    </a>
 
                                    <!-- titulo -->
-                                   <strong class="d-block text-center text-primary m-0 mt-2 mb-2"><?php echo $movieShow->getMovie()->getTitle();?></strong>                         
+                                   <strong class="card-title"><?php echo $movieShow->getMovie()->getTitle();?></strong>                         
 
                                    <!-- generos -->                         
-                                   <div class="text-left">                              
+                                   <div class="card-text">                              
                                         <p class="d-inline text-danger">genres: </p>
-                                        <span class="text-white"><?php
+                                        <span class="text-dark"><?php
                                         foreach($movieShow->getMovie()->getGenres() as $genre) 
                                         { 
                                              echo $genre->GetNameGenre() . ". ";
@@ -34,7 +35,8 @@
                          }?>
                     <?php                          
                     }
-               ?>                                                                       
+               ?>        
+               </div>                                                               
         </div>
     </section>
 </main>
