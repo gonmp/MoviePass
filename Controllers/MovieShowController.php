@@ -240,7 +240,7 @@
 
             if(isset($_SESSION['updateMovieShow']))
             {                
-                $movieShowId = $jsonMovieShow->getRoomId();
+                $movieShowId = $jsonMovieShow->getId();
             }                        
 
             if ($this->ValidateTime($time, $movieShowId) == false)
@@ -250,7 +250,7 @@
                 return;
             }
             
-            # update
+            # update            
             if(isset($_SESSION['updateMovieShow']))
             {
                 $roomId = $jsonMovieShow->getRoomId();
@@ -279,9 +279,9 @@
                 
                 $movieShowDateTime = $_SESSION['movieDate'] . ' ' . $time;                                
                 
-                $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));            
+                $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));                            
 
-                $movieShow = new MovieShow($movie, $room, $date);                        
+                $movieShow = new MovieShow($movie, $room, $date);                                        
                 
                 $rowAffected = $this->movieShowDAO->Add($movieShow);
             }
@@ -325,10 +325,10 @@
             $movieShowList = $this->movieShowDAO->GetAll();
         }            
 
-        private function ValidateTime($time, $movieShowId = null)
+        private function ValidateTime($time, $movieShowId)
         {   
             $validate = true;            
-            $roomReservations = $this->roomDAO->GetReservationsOfRoom($_SESSION['roomId']);                        
+            $roomReservations = $this->roomDAO->GetReservationsOfRoom($_SESSION['roomId']);         
 
             if (sizeof($roomReservations) == 0)
             {
@@ -340,7 +340,7 @@
             {
                 # horario desde
                 $movieShowDateFrom= $_SESSION['movieDate'] . ' ' . $time;            
-                $dateFrom = date_create($movieShowDateFrom, timezone_open('America/Argentina/Buenos_Aires'));  
+                $dateFrom = date_create($movieShowDateFrom, timezone_open('America/Argentina/Buenos_Aires'));                  
 
                 # le sumo el horario de la pelicula mas los 15 minutos de descanso de la funcion
                 $movieDuration = $this->movieDAO->GetMovieById($_SESSION['movieId'])->getDuration();          
@@ -354,23 +354,23 @@
                 $minutes = $timeMovieDuration[1];
                 
                 date_add($dateTo, date_interval_create_from_date_string($hours . ' hours'));
-                date_add($dateTo, date_interval_create_from_date_string($minutes . ' minutes'));           
+                date_add($dateTo, date_interval_create_from_date_string($minutes . ' minutes'));                           
 
                 $validate = false;                
 
                 # esta logicamente planteado de una manera que sea facil de leer y entender. Lo esta
                 # pensado para que sea eficiente en la comparacion. 
-                # la variable $validate es auxiliar para entender el razonamiento de las comprobaciones.
+                # la variable $validate es auxiliar para entender el razonamiento de las comprobaciones.                
 
                 foreach ($roomReservations as $reservation)
                 {                    
                     # me fijo si la reserva no es la misma sala, en caso de update
                     if ($movieShowId != null)
                     {
-                        if ($movieShowId == $reservation->getId())
+                        if ($movieShowId == $reservation['id'])
                         {
                             $validate = true;
-                        }
+                        }                
                         else
                         {
                             # si el final de la nueva es menor al inicio de la reserva, true
@@ -388,8 +388,26 @@
                             {                        
                                 return false;                                   
                             }
+                        }        
+                    }        
+                    else
+                    {
+                        # si el final de la nueva es menor al inicio de la reserva, true
+                        if ($dateTo < $reservation['from'])
+                        {
+                            $validate = true;                        
                         }
-                    }                    
+                        
+                        # si el inicio de la nueva es mayor al final de la reserva, true
+                        else if ($dateFrom > $reservation['to'])
+                        {
+                            $validate = true;                        
+                        }
+                        else
+                        {                        
+                            return false;                                   
+                        }
+                    }                                                                
                 }
             }           
             return $validate;             

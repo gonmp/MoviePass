@@ -41,9 +41,10 @@
 
                 foreach($results as $result)
                 {                    
-                    $dateFrom = date_create($result[0], timezone_open('America/Argentina/Buenos_Aires'));
-                    $dateTo = date_create($result[1], timezone_open('America/Argentina/Buenos_Aires'));                    
-                                        
+                    $dateFrom = date_create($result[1], timezone_open('America/Argentina/Buenos_Aires'));
+                    $dateTo = date_create($result[2], timezone_open('America/Argentina/Buenos_Aires'));    
+
+                    $reservation['id'] = $result[0];
                     $reservation['from'] = $dateFrom;
                     $reservation['to'] = $dateTo;
 
