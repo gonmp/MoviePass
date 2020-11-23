@@ -1,1 +1,1 @@
-si el cine no tiene salas, no deberia aparecer en la lista de agregar movie show o deberia salir un alerta
+el deleteOldMovieShow no se implementa siempre

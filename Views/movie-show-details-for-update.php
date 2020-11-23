@@ -22,7 +22,7 @@
                          <tr>
                               <td class="text-primary"><?php echo $auxMovieShow->getId(); ?></td>
                               <td class="text-white"><?php echo $auxMovieShow->getMovie()->getTitle(); ?></td>
-                              <td class="text-danger"><?php echo $auxMovieShow->getRoom()->getCinema()->getName(); ?></td>
+                              <td class="text-danger"><?php echo $auxMovieShow->getCinemaName(); ?></td>
                               <td><?php echo $auxMovieShow->getRoom()->getName(); ?></td>
                               <td class="text-primary"><?php echo $auxMovieShow->getShowDate()->format('d-m-Y'); ?></td>
                               <td class="text-success"><?php echo $auxMovieShow->getShowDate()->format('H : i') . ' hs'; ?></td>

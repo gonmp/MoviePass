@@ -4,6 +4,7 @@
     use Controllers\HomeController as HomeController;      
     
     use Models\MovieShow as MovieShow;
+    use Models\AuxMovieShow as AuxMovieShow;
     use Models\Cinema as Cinema;
 
     use DAO\MovieShowDAO as MovieShowDAO;        
@@ -34,17 +35,15 @@
 
         public function ShowAddMovieShow()
         {               
-            $_SESSION['updateMovie'] = null;
+            $_SESSION['updateMovieShow'] = null;
             $this->SelectMovie();
             $this->ShowMovieShowList();
         }        
 
         public function ShowMovieShowList()
         {
-            $movieShowList = $this->movieShowDAO->GetAll();           
-            
-            $this->DeleteOldMovieShow($movieShowList);
-            
+            $movieShowList = $this->movieShowDAO->GetAll();                       
+            $this->DeleteOldMovieShow($movieShowList);            
             require_once(VIEWS_PATH."movie-show-list.php");
         }
         
@@ -54,13 +53,21 @@
         public function ShowMovieShowUpdate($movieShowId)
         {   
             $auxMovieShow = $this->movieShowDAO->Get($movieShowId);            
-            
-            require_once(VIEWS_PATH . 'movie-show-details-for-update.php');
-            
-            $_SESSION['updateMovie'] = $auxMovieShow->getId();
+            $_SESSION['updateMovieShow'] = $auxMovieShow->getId();            
 
+            // salvar los datos de la funcion auxiliar en un json
+            $saveMovieShow = new AuxMovieShow();
+            $saveMovieShow->setId($movieShowId);
+            $saveMovieShow->setMovieId($auxMovieShow->getMovie()->getId());
+            $saveMovieShow->setDateTime($auxMovieShow->getShowDate());       
+            $saveMovieShow->setCinemaName($auxMovieShow->getRoom()->getCinema()->getName());
+            $saveMovieShow->setRoomId($auxMovieShow->getRoom()->getId());
+            $saveMovieShow->saveData();
+
+            $auxMovieShow->setCinemaName($saveMovieShow->getCinemaName());
+            
+            require_once(VIEWS_PATH . 'movie-show-details-for-update.php');            
             $this->SelectMovie();
-
             $this->ShowMovieShowList();
         }   
 
@@ -76,11 +83,20 @@
         {               
             $_SESSION['movieId'] = $movieId;            
 
-            if (isset($_SESSION['updateMovie']))
+            if (isset($_SESSION['updateMovieShow']))
             {
-                $auxMovieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                                        
-                $auxMovieShow->setMovie = $this->movieDAO->GetMovieById($movieId);
-                var_dump($movieShow->getMovie());
+                # leo los datos del json
+                $jsonMovieShow = AuxMovieShow::read();  
+                
+                # actualizo los datos del json
+                $jsonMovieShow->setMovieId($movieId); 
+                $jsonMovieShow->saveData();               
+                
+                $auxMovieShow = $this->movieShowDAO->Get($jsonMovieShow->getId());
+                $movie = $this->movieDAO->GetMovieById($movieId);                                
+                $auxMovieShow->setMovie($movie);        
+                $auxMovieShow->setCinemaName($jsonMovieShow->getCinemaName());        
+
                 require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
             }            
             
@@ -90,12 +106,6 @@
 
         public function SelectCinema($movieDate)
         {
-            if (isset($_SESSION['updateMovie']))
-            {
-                $movieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                        
-                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
-            }            
-
             $textoToAdmin = null;            
             $_SESSION['movieDate'] = $movieDate;            
             $allCinemaList = $this->cinemaDAO->getAllCinemasOnly();      
@@ -119,6 +129,30 @@
                 $cinemaList = array();
                 $cinemaList[0] = $movieShowList[0]->getRoom()->getCinema();                             
                 $textoToAdmin = "the movie is already reserved. You can only choose this cinema:";
+            }                       
+            
+            if (isset($_SESSION['updateMovieShow']))
+            {
+                # obtengo el movieshow
+                $jsonMovieShow = AuxMovieShow::read(); 
+                $auxMovieShow = $this->movieShowDAO->Get($jsonMovieShow->getId());
+                
+                # muestro la pelicula
+                $movie = $this->movieDAO->GetMovieById($jsonMovieShow->getMovieId());                
+                $auxMovieShow->setMovie($movie);                                
+
+                # actualizo la nueva fecha
+                $time = date_format($jsonMovieShow->getDateTime(), "H:i");
+                $newDate = $movieDate . ' ' . $time;                
+                $auxDate = date_create($newDate, timezone_open('America/Argentina/Buenos_Aires'));               
+
+                $auxMovieShow->setShowDate($auxDate);                
+                $jsonMovieShow->setDateTime($auxDate);
+                $jsonMovieShow->saveData();
+
+                $auxMovieShow->setCinemaName($jsonMovieShow->getCinemaName());        
+
+                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
             }                        
             
             require_once(VIEWS_PATH.'movie-show-select-cinema.php');
@@ -127,19 +161,32 @@
 
         public function SelectRoom($cinemaName)
         {
-            if (isset($_SESSION['updateMovie']))
-            {
-                $movieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                        
-                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
-            }            
-
             $_SESSION['cinemaName'] = $cinemaName;
-
             $cinema = $this->cinemaDAO->GetCinemaByName($cinemaName);
-
+            
             $_SESSION['cinemaId'] = $cinema->getId();
-
             $roomList = $cinema->getRooms();
+
+            if (isset($_SESSION['updateMovieShow']))
+            {
+                # obtengo el movieshow
+                $jsonMovieShow = AuxMovieShow::read(); 
+                $auxMovieShow = $this->movieShowDAO->Get($jsonMovieShow->getId());
+                
+                # muestro la pelicula
+                $movie = $this->movieDAO->GetMovieById($jsonMovieShow->getMovieId());                
+                $auxMovieShow->setMovie($movie);                                      
+
+                # actualizo la fecha
+                $auxMovieShow->setShowDate($jsonMovieShow->getDateTime());                
+
+                # actualizo el cinema
+                $jsonMovieShow->setCinemaName($cinemaName);
+                $jsonMovieShow->saveData();
+
+                $auxMovieShow->setCinemaName($cinemaName);                
+                require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
+            }      
             
             require_once(VIEWS_PATH."movie-show-select-room.php");      
             $this->ShowMovieShowList();      
@@ -147,9 +194,26 @@
 
         public function SelectTime($roomId)
         {
-            if (isset($_SESSION['updateMovie']))
+            if (isset($_SESSION['updateMovieShow']))
             {
-                $movieShow = $this->movieShowDAO->Get($_SESSION['updateMovie']);                        
+                # obtengo el movieshow
+                $jsonMovieShow = AuxMovieShow::read(); 
+                $auxMovieShow = $this->movieShowDAO->Get($jsonMovieShow->getId());
+                
+                # muestro la pelicula
+                $movie = $this->movieDAO->GetMovieById($jsonMovieShow->getMovieId());                
+                $auxMovieShow->setMovie($movie);          
+                
+                # actualizo el cine
+                $auxMovieShow->setCinemaName($jsonMovieShow->getCinemaName());
+
+                # actualizo el room
+                $room = $this->roomDAO->GetRoomById($roomId);
+                $auxMovieShow->setRoom($room);
+
+                $jsonMovieShow->setRoomId($roomId);
+                $jsonMovieShow->saveData();
+
                 require_once(VIEWS_PATH . 'movie-show-details-for-update.php');                
             }    
 
@@ -165,34 +229,60 @@
 
         public function Add($time)
         {
-            if ($this->ValidateTime($time) == false)
+            if (HomeController::CheckAdmin() != true) 
+            {
+                HomeController::ForceLogout();
+                return;
+            }                                    
+
+            $movieShowId = null;
+            $jsonMovieShow = AuxMovieShow::read();
+
+            if(isset($_SESSION['updateMovieShow']))
+            {                
+                $movieShowId = $jsonMovieShow->getRoomId();
+            }                        
+
+            if ($this->ValidateTime($time, $movieShowId) == false)
             {
                 echo "<h6 class='text-warning'>el horario ya esta reservado</h6>";
                 $this->ShowAddMovieShow();
                 return;
             }
             
-            if (HomeController::CheckAdmin() != true) 
+            # update
+            if(isset($_SESSION['updateMovieShow']))
             {
-                HomeController::ForceLogout();
-                return;
-            }                        
+                $roomId = $jsonMovieShow->getRoomId();
+                $room = $this->roomDAO->GetRoomById($roomId);
 
-            $movie = $this->movieDAO->GetMovieById($_SESSION['movieId']);
-            $room = $this->roomDAO->GetRoomById($_SESSION['roomId']);
-            
-            $movieShowDateTime = $_SESSION['movieDate'] . ' ' . $time;                                
-            $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));            
+                $movieId = $jsonMovieShow->getMovieId();
+                $movie = $this->movieDAO->GetMovieById($movieId);
 
-            $movieShow = new MovieShow($movie, $room, $date);                        
-            
-            if(isset($_SESSION['updateMovie']))
-            {
-                $movieShow->setId($_SESSION['updateMovie']);
+                $day = $jsonMovieShow->getDateTime();
+                $day = date_format($day, "Y-m-d");                
+                $movieShowDateTime = $day . ' ' . $time;                                                
+                $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));                           
+
+                $movieShow = new MovieShow($movie, $room, $date);                                        
+                $movieShow->setId($jsonMovieShow->getId());
+
                 $rowAffected = $this->movieShowDAO->Update($movieShow);            
             }
+
+            # add
             else
             {
+                $movie = $this->movieDAO->GetMovieById($_SESSION['movieId']);
+                
+                $room = $this->roomDAO->GetRoomById($_SESSION['roomId']);                
+                
+                $movieShowDateTime = $_SESSION['movieDate'] . ' ' . $time;                                
+                
+                $date = date_create($movieShowDateTime, timezone_open('America/Argentina/Buenos_Aires'));            
+
+                $movieShow = new MovieShow($movie, $room, $date);                        
+                
                 $rowAffected = $this->movieShowDAO->Add($movieShow);
             }
 
@@ -202,27 +292,7 @@
             }           
 
             $this->ShowAddMovieShow();
-        }    
-
-        public function Update($id, $movieId = null, $cinemaId = null, $movieShowDate = null, $movieShowTime = null)
-        {
-            if (HomeController::CheckAdmin() != true) 
-            {
-                HomeController::ForceLogout();
-                return;
-            }                       
-
-            $movieShow = $this->movieShowDAO->Get($id);
-
-            if ($movieId != null)
-            {
-                $movieShow->setMovie($this->movieDAO->GetMovieById($movieId));
-            }
-
-            $this->movieShowDAO->Update($movieShow);
-
-            $this->ShowMovieShowUpdate($id);            
-        }
+        }            
 
         public function Delete($movieShowId)
         {
@@ -255,10 +325,10 @@
             $movieShowList = $this->movieShowDAO->GetAll();
         }            
 
-        private function ValidateTime($time)
+        private function ValidateTime($time, $movieShowId = null)
         {   
             $validate = true;            
-            $roomReservations = $this->roomDAO->GetReservationsOfRoom($_SESSION['roomId']);            
+            $roomReservations = $this->roomDAO->GetReservationsOfRoom($_SESSION['roomId']);                        
 
             if (sizeof($roomReservations) == 0)
             {
@@ -294,21 +364,32 @@
 
                 foreach ($roomReservations as $reservation)
                 {                    
-                    # si el final de la nueva es menor al inicio de la reserva, true
-                    if ($dateTo < $reservation['from'])
+                    # me fijo si la reserva no es la misma sala, en caso de update
+                    if ($movieShowId != null)
                     {
-                        $validate = true;                        
-                    }
-                    
-                    # si el inicio de la nueva es mayor al final de la reserva, true
-                    else if ($dateFrom > $reservation['to'])
-                    {
-                        $validate = true;                        
-                    }
-                    else
-                    {                        
-                        return false;                                   
-                    }
+                        if ($movieShowId == $reservation->getId())
+                        {
+                            $validate = true;
+                        }
+                        else
+                        {
+                            # si el final de la nueva es menor al inicio de la reserva, true
+                            if ($dateTo < $reservation['from'])
+                            {
+                                $validate = true;                        
+                            }
+                            
+                            # si el inicio de la nueva es mayor al final de la reserva, true
+                            else if ($dateFrom > $reservation['to'])
+                            {
+                                $validate = true;                        
+                            }
+                            else
+                            {                        
+                                return false;                                   
+                            }
+                        }
+                    }                    
                 }
             }           
             return $validate;             
@@ -334,6 +415,6 @@
                     return $cinema;
                 }
             }
-        }
+        }        
     }
 ?>

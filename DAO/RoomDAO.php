@@ -29,7 +29,7 @@
 
         public function GetReservationsOfRoom($roomId)
         {
-            $query = "SELECT ms.showDate, DATE_ADD(DATE_ADD(ms.showDate, INTERVAL DATE_FORMAT(m.duration,'%H:%i') HOUR_MINUTE), INTERVAL 15 MINUTE) FROM movieshow ms JOIN movies m ON ms.movieId = m.id WHERE ms.roomId = :roomId;";
+            $query = "SELECT ms.id, ms.showDate, DATE_ADD(DATE_ADD(ms.showDate, INTERVAL DATE_FORMAT(m.duration,'%H:%i') HOUR_MINUTE), INTERVAL 15 MINUTE) FROM movieshow ms JOIN movies m ON ms.movieId = m.id WHERE ms.roomId = :roomId;";
             $parameters = array(':roomId' => $roomId);
 
             $this->connection = Connection::GetInstance();
@@ -43,7 +43,7 @@
                 {                    
                     $dateFrom = date_create($result[0], timezone_open('America/Argentina/Buenos_Aires'));
                     $dateTo = date_create($result[1], timezone_open('America/Argentina/Buenos_Aires'));                    
-                    
+                                        
                     $reservation['from'] = $dateFrom;
                     $reservation['to'] = $dateTo;
 
