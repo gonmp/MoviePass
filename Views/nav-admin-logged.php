@@ -23,7 +23,7 @@
             </div>            
 
             <!-- actualizar base de datos -->
-            <a hidden href="<?php echo FRONT_ROOT ?>AdminManager/UpdateDataBase" class="rounded-0 col btn btn-outline-success text-white">UPDATE DATABASE</a>    
+            <a href="<?php echo FRONT_ROOT ?>AdminManager/UpdateDataBase" class="rounded-0 col btn btn-outline-success text-white">UPDATE DATABASE</a>    
             
             <!-- logout -->
             <a href="<?php echo FRONT_ROOT ?>Home/Logout" class="rounded-0 col btn btn-outline-danger text-white">log out</a>
