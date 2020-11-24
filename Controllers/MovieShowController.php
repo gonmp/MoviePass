@@ -262,7 +262,7 @@
 
             if ($this->ValidateTime($time, $movieShowId) == false)
             {
-                echo "<h6 class='text-warning'>the room is already reserved</h6>";
+                echo "<h6 class='text-warning'>error: the room is already reserved</h6>";
                 $this->ShowAddMovieShow();
                 return;
             }

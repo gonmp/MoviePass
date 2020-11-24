@@ -1,11 +1,11 @@
 {
-    "id": "138",
-    "movieId": "837",
+    "id": "148",
+    "movieId": "62",
     "dateTime": {
-        "date": "2020-11-25 17:00:00.000000",
+        "date": "2020-11-27 21:35:00.000000",
         "timezone_type": 3,
         "timezone": "America\/Argentina\/Buenos_Aires"
     },
-    "cinemaName": "barcelona",
-    "roomId": "2"
+    "cinemaName": "cinemacenter",
+    "roomId": "4"
 }
