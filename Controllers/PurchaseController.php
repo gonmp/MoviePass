@@ -27,6 +27,8 @@
         private $purchaseDAO;
         private $userDAO;
 
+        private $movieList;
+
         public function __construct()
         {
             $this->movieDAO = new MovieDAO();
@@ -36,6 +38,8 @@
             $this->roomDAO = new RoomDAO();
             $this->purchaseDAO = new PurchaseDAO();
             $this->userDAO = new UserDAO();
+            $this->movieList = $this->movieDAO->GetAll();
+            $this->cinemaList = $this->cinemaDAO->GetAllCinemasOnly();
         }
 
         public function Add ($userName, $password)
@@ -69,6 +73,9 @@
             $movieShowId = $_GET['movieShowId'];
             $numberOfTickets = $_POST['numberOfTickets'];
             $movieShow = $this->movieShowDAO->Get($movieShowId);
+            $date = date_create(null, timezone_open('America/Argentina/Buenos_Aires'));
+            $user = $this->userDAO->GetUserById($_SESSION['userLogged']->GetId());
+            $purchase = new Purchase($date, $user, $movieShow, $numberOfTickets);
             require_once(VIEWS_PATH."purchaseTwo.php");
         }
 
@@ -112,7 +119,9 @@
 
                 $result = $this->purchaseDAO->Add($purchase);
 
-                $this->SendEmail($email, $user->getUserName());
+                $purchaseId = $this->purchaseDAO->GetLastPurchaseId();
+
+                $this->SendEmail($email, $user->getUserName(), $purchaseId);
 
                 require_once(VIEWS_PATH."payment-success.php");
                     
@@ -168,8 +177,17 @@
             header('location:' . FRONT_ROOT . 'Movie/ShowAllMoviesPremieres');
         }
         
-        public function SendEmail($email, $userName)
+        public function SendEmail($email, $userName, $purchaseId)
         {
+            $tickets = $this->purchaseDAO->Get($purchaseId)->getTickets();
+
+            $text = "<h3>Dear ".$userName." , your bougth was successfull!!!. Your tickets are:\n</h3>";
+
+            foreach($tickets as $ticket)
+            {
+                $text = $text . $ticket->getQr() . "\n";
+            }
+
             $body = [
                 'Messages' => [
                     [
@@ -184,7 +202,7 @@
                         ]
                     ],
                     'Subject' => "Your bougth was successfull!!!",
-                    'HTMLPart' => "<h3>Dear ".$userName." , your bougth was successfull!!!</h3>"
+                    'HTMLPart' => $text
                     ]
                 ]
             ];
@@ -206,6 +224,76 @@
             curl_close ($ch);
 
             $response = json_decode($server_output);
+        }
+
+        public function ShowAdminPurchasesMovie()
+        {
+            require_once(VIEWS_PATH."admin-purchase-movie.php");
+        }
+
+        public function ShowAdminPurchasesMovieResults()
+        {
+            $movieId = $_POST['movieId'];
+
+            $dateFrom = date_create(
+                $_POST['startDate'],
+                timezone_open('America/Argentina/Buenos_Aires')
+            );
+            
+            $dateTo = date_create(
+                $_POST['endDate'],
+                timezone_open('America/Argentina/Buenos_Aires')
+            );
+
+            $dateFromString = date_format($dateFrom, "Y-m-d");
+
+            $dateToString = date_format($dateTo, "Y-m-d");
+
+            $movieSelect = $this->movieDAO->GetMovieById($movieId);
+
+            $total = $this->purchaseDAO->GetTotalByMovieId($movieId, $dateFrom, $dateTo);
+
+            if($total == null)
+            {
+                $total = 0;
+            }
+
+            require_once(VIEWS_PATH."admin-purchase-movie-results.php");
+        }
+
+        public function ShowAdminPurchasesCinema()
+        {
+            require_once(VIEWS_PATH."admin-purchase-cinema.php");
+        }
+
+        public function ShowAdminPurchasesCinemaResults()
+        {
+            $cinemaId = $_POST['cinemaId'];
+
+            $dateFrom = date_create(
+                $_POST['startDate'],
+                timezone_open('America/Argentina/Buenos_Aires')
+            );
+            
+            $dateTo = date_create(
+                $_POST['endDate'],
+                timezone_open('America/Argentina/Buenos_Aires')
+            );
+
+            $dateFromString = date_format($dateFrom, "Y-m-d");
+
+            $dateToString = date_format($dateTo, "Y-m-d");
+
+            $cinemaSelect = $this->cinemaDAO->GetCinemaById($cinemaId);
+
+            $total = $this->purchaseDAO->GetTotalByCinemaId($cinemaId, $dateFrom, $dateTo);
+
+            if($total == null)
+            {
+                $total = 0;
+            }
+
+            require_once(VIEWS_PATH."admin-purchase-cinema-results.php");
         }
     }
 ?>

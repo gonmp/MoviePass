@@ -3,9 +3,9 @@
 ?>
 
 <div class="container-fluid">                         
-    <h1 class="text-white">
-        Usted esta por realizar una compra para la película <?php echo $movieShow->getMovie()->getTitle(); ?>. Seleccione la cantidad de entradas que desea.   
-    </h1>
+    <h3 class="text-white m-4">
+        You are about to buy tickets for <?php echo $movieShow->getMovie()->getTitle(); ?>  
+    </h3>
     <form action="<?php echo FRONT_ROOT ?>Purchase/ShowPurchaseViewTwo?movieShowId=<?php echo $movieShow->getId()?>" method="post">
         <div class="d-block w-75 mx-auto">
             <label class="text-white d-block h4" for="quantity">First select the number of tickets do you want</label>
@@ -26,7 +26,7 @@ function validate() {
     input = document.getElementById("quantity").value;
     if(input > x)
     {
-        text = "Sorry, but there are not that many tickets available";
+        text = "Sorry, but there are not that many tickets available. There are only " + <?php echo $remanentSpots ?> + " spots available.";
         document.getElementById("error").innerHTML = text;
         return false
     }

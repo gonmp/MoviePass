@@ -72,6 +72,15 @@
             }     
         }
 
+        public function GetLastPurchaseId()
+        {
+            $query = 'SELECT MAX(id) FROM purchases';
+            $this->connection = Connection::GetInstance();
+            $result = $this->connection->Execute($query);
+
+            return $result[0][0];
+        }
+
         public function GetAll()
         {
             $this->purhcaseList = array();
@@ -290,15 +299,15 @@
             }
         }
 
-        public function GetTotalByMovieId($movieId, $startDate, $endDate)
+        public function GetTotalByMovieId($movieId, $startDateTime, $endDateTime)
         {
 
             $query = "SELECT SUM(total) FROM purchases
             LEFT OUTER JOIN movieshow ON purchases.movieShowId = movieshow.id
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
-            WHERE movies.id = :movieId;";
+            WHERE movies.id = :movieId AND DATE(purchases.purchaseDate) BETWEEN :startDateTime  AND :endDateTime;";
 
-            $parameters = array(':movieId' => $movieId);
+            $parameters = array(':movieId' => $movieId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
 
             $this->connection = Connection::GetInstance();
 
@@ -315,16 +324,16 @@
             }
         }
 
-        public function GetTotalByCinemaId($cinemaId, $startDate, $endDate)
+        public function GetTotalByCinemaId($cinemaId, $startDateTime, $endDateTime)
         {
 
             $query = "SELECT SUM(total) FROM purchases
             LEFT OUTER JOIN movieshow ON purchases.movieShowId = movieshow.id
             LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
             LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
-            WHERE cinemas.id = :cinemaId;";
+            WHERE cinemas.id = :cinemaId AND DATE(purchases.purchaseDate) BETWEEN :startDateTime  AND :endDateTime;";
 
-            $parameters = array(':cinemaId' => $cinemaId);
+            $parameters = array(':cinemaId' => $cinemaId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
 
             $this->connection = Connection::GetInstance();
 
