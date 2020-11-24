@@ -4,6 +4,7 @@
     use DAO\MovieDAO as MovieDAO;
     use DAO\GenreDAO as GenreDAO;
     use DAO\MovieShowDAO as MovieShowDAO;
+    use DAO\PurchaseDAO as PurchaseDAO;
     
     use Models\Movie as Movie;
     use Models\Genre as Genre;
@@ -14,12 +15,14 @@
         private $movieDAO;
         private $genreDAO;
         private $movieShowDAO;
+        private $purchaseDAO;
 
         public function __construct()
         {
             $this->movieDAO = new MovieDAO();
             $this->genreDAO = new GenreDAO();
             $this->movieShowDAO = new MovieShowDAO();
+            $this->purchaseDAO = new PurchaseDAO();
         }
         
         // MOSTRAR DETALES DE UNA PELICULA 
@@ -92,6 +95,21 @@
 
             require_once(VIEWS_PATH."user-movie-form.php");
             require_once(VIEWS_PATH."user-show-all-movies.php"); 
-        }        
+        }
+        
+        public function BuyTickets()
+        {
+            if ($_SESSION['userLogged'])
+            {
+                $movieShowId = $_GET['movieShowId'];
+                $movieShow = $this->movieShowDAO->Get($movieShowId);
+                $remanentSpots = $movieShow->getRoom()->getCapacity() - $this->purchaseDAO->GetTicketsSoldByMovieShowId($movieShow->getId());
+                require_once(VIEWS_PATH."purchase.php");
+            }
+            else
+            {
+                require_once(VIEWS_PATH."purchase-no-logged.php");
+            }
+        }
     }
 ?>
