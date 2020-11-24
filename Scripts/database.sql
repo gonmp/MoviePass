@@ -75,11 +75,14 @@ CREATE TABLE IF NOT EXISTS movieshow(
 CREATE TABLE IF NOT EXISTS purchases(
     id INT AUTO_INCREMENT NOT NULL,
     userId INT NOT NULL,
-    total INT NOT NULL,
-    discount INT,
+    total FLOAT NOT NULL,
+    discount FLOAT,
     purchaseDate datetime,
+    numberOfTickets INT NOT NULL,
+    movieShowId INT NOT NULL,
     constraint pk_purchaseId PRIMARY KEY (id),
-    constraint fk_userId FOREIGN KEY (userId) references users(id) ON DELETE CASCADE
+    constraint fk_userId FOREIGN KEY (userId) references users(id) ON DELETE CASCADE,
+    constraint fk_purchases_movieShowId FOREIGN KEY (movieShowId) references movieshow(id) ON DELETE CASCADE
 )Engine=InnoDB;
 
 CREATE TABLE IF NOT EXISTS tickets
