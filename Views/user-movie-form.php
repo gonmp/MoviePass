@@ -4,7 +4,7 @@
 <main>
     <section id="movieShowAdd">        
         <div class="container">                    
-            <div class="mt-5 pb-2 transparentPanel border border-secondary border-bottom-0 rounded">            
+            <div class="mt-2 pb-2 transparentPanel border border-primary border-bottom-0 rounded">            
                 
             <!-- movie search -->
                 <div class="row m-0 p-0">                        

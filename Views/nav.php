@@ -1,8 +1,8 @@
 <nav class="container">     
-     <div class="row align-items-center py-2 border border-top-0 border-secondary rounded-bottom m-0 transparentPanel">
+     <div class="row p-1 border border-top-0 border-primary rounded-bottom m-0 transparentPanel">
 
           <!-- primera columna: moviepass logo -->
-          <div class="col">
+          <div class="col-7">
                <a href="<?php echo FRONT_ROOT ?>Home/Index">
                     <img src="<?php echo FRONT_ROOT ."/". VIEWS_PATH?>/img/moviepass_logo.png" alt="moviepass logo" class="img-fluid border border-dark rounded" style="width: 9rem">
                </a>
@@ -17,8 +17,7 @@
                     if ($_SESSION['userLogged']->GetAdmin())
                     {
                          # admin
-                         require_once('nav-admin-logged.php');
-                         
+                         require_once('nav-admin-logged.php');                         
                     }
                     else
                     {

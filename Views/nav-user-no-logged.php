@@ -1,13 +1,13 @@
-<form action="<?php echo FRONT_ROOT ?>User/Login" method="post"> 
+<form action="<?php echo FRONT_ROOT ?>User/Login" method="post">     
     <div class="row">
-        <div class="col-8">
-            <input type="text" name="name" value="" placeholder="user name" title="only letters and numbers" pattern="[A-Za-z0-9 ]+" required class="form-control-sm bg-dark-x text-white border border-primary m-0 p-1">
+        <div class="col-5">
+            <input type="text" name="name" value="" placeholder="user name" title="only letters and numbers" pattern="[A-Za-z0-9 ]+" required class="form-control-sm bg-dark-x text-white border border-primary m-0 p-1 mb-1">
             <input type="password" name="password" value="" placeholder="password" title="only letters and numbers" pattern="[A-Za-z0-9 ]+" required class="form-control-sm bg-dark-x text-white border border-primary m-0 p-1">
         </div>
 
         <div class="col">
-            <button type="submit" class="btn btn-outline-primary btn-sm text-white">Login</button>
-            <a href="<?php echo FRONT_ROOT ?>User/ShowRegisterView" class="btn btn-outline-danger btn-sm text-white">Register</a>
+            <button type="submit" class="btn btn-outline-primary btn-sm text-white mBtn">Login</button>
+            <a href="<?php echo FRONT_ROOT ?>User/ShowRegisterView" class="mBtn btn btn-outline-danger btn-sm text-white">Register</a>
         </div>
 
         <?php 
@@ -20,5 +20,5 @@
             </div>
             <?php    
         }?>
-    </div>
+    </div>        
 </form>

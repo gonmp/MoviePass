@@ -385,7 +385,7 @@ label {
 }
 
 .transparentPanel {
-     background-color: rgba(0, 0, 0, 0.7);
+     background-color: rgba(0, 0, 0, 0.75);
 }
 
 .mText {
@@ -401,7 +401,7 @@ label {
      color: rgb(206, 255, 116);
 }
 
-.mTitle {
+.mTitle, .mTittle {
      font-family: 'Knewave';
      font-size: 3rem;
      color: #ffe657;
