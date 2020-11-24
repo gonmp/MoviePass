@@ -3,7 +3,7 @@
 ?>
 
 <div class="container-fluid">
-    <form action="<?php echo FRONT_ROOT ?>Purchase/ShowPurchaseViewThree?movieShowId=<?php echo $movieShow->getId()?>&numberOfTickets=<?php echo $numberOfTickets ?>" method="post">
+    <form action="<?php echo FRONT_ROOT ?>Purchase/SetPurchaseSelect?movieShowId=<?php echo $movieShow->getId()?>&numberOfTickets=<?php echo $numberOfTickets ?>" method="post">
     <div class="d-block w-75 mx-auto">
     <p class="text-white h4">
             Verify that all data is correct before proceed to pay
