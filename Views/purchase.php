@@ -2,20 +2,25 @@
     require_once(VIEWS_PATH.'nav.php');
 ?>
 
-<div class="container-fluid">                         
-    <h3 class="text-white m-4">
-        You are about to buy tickets for <?php echo $movieShow->getMovie()->getTitle(); ?>  
-    </h3>
-    <form action="<?php echo FRONT_ROOT ?>Purchase/ShowPurchaseViewTwo?movieShowId=<?php echo $movieShow->getId()?>" method="post">
-        <div class="d-block w-75 mx-auto">
-            <label class="text-white d-block h4" for="quantity">First select the number of tickets do you want</label>
-            <input class="w-25" type="number" id="quantity" min="1" name="numberOfTickets" required>
-            <p id="error" class="text-danger">
-                
-            </p>
-            <button class="btn btn-primary" type="submit" onclick="return validate()">Next</button>
+<div class="container">                         
+    <div clas="row">
+        <div class="transparentPanel border border-primary border-bottom-0 rounded mt-1 p-1">
+            
+            <h3 class="mText" style="font-size:3rem">
+                You are about to buy tickets for <span class="text-white"><?php echo $movieShow->getMovie()->getTitle(); ?></span>  
+            </h3>
+
+            <form class="p-2" action="<?php echo FRONT_ROOT ?>Purchase/ShowPurchaseViewTwo?movieShowId=<?php echo $movieShow->getId()?>" method="post">                
+                <label class="mText text-white d-block h4" for="quantity">First select the number of tickets do you want</label>
+                <input class="bg-dark text-white w-25" type="number" id="quantity" min="1" name="numberOfTickets" value="0" required>
+                <p id="error" class="mText">
+                    
+                </p>
+                <button class="mBtn text-white btn btn-outline-primary" type="submit" onclick="return validate()">Next</button>
+
+            </form>   
         </div>
-    </form>   
+    </div>
 </div>
 <script>
 function validate() {

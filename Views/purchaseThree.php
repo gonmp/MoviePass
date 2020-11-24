@@ -1,10 +1,8 @@
 <?php
     require_once(VIEWS_PATH.'nav.php');
 ?>
-
-<div class="payment-title">
-        <h1 class="text-white">Payment Information</h1>
-    </div>
+<div class="transparentPanel container border border-primary rounded border-bottom-0 mt-1 pb-5">    
+    <h1 class="d-block mText text-center" style="font-size:3rem">Payment Information</h1>    
     <div class="card-container preload">
         <div class="creditcard">
             <div class="front">
@@ -104,41 +102,41 @@
         </div>
     </div>
     <form action="<?php echo FRONT_ROOT ?>Purchase/ValidatePayment?movieShowId=<?php echo $movieShowId?>&numberOfTickets=<?php echo $numberOfTickets ?>" method="post"> 
-    <div class="form-container">
-        <div class="field-container">
-            <label for="email">Enter a email to contanct</label>
-            <input id="email" maxlength="40" type="email" name="email">
-        </div>
-        <div class="field-container">
-            <label for="name">Name</label>
-            <input id="name" maxlength="20" type="text">
-        </div>
-        <div class="field-container">
-            <label for="cardnumber">Card Number</label><!--<span id="generatecard">generate random</span>-->
-            <input id="cardnumber" type="text" pattern="[0-9\s]*" inputmode="numeric" name="cardnumber">
-            <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink">
+        <div class="form-container mb-4">
+            <div class="field-container">
+                <label class="mText" for="email">Enter a email to contanct</label>
+                <input id="email" maxlength="40" type="email" name="email">
+            </div>
+            <div class="field-container">
+                <label class="mText" for="name">Name</label>
+                <input id="name" maxlength="20" type="text">
+            </div>
+            <div class="field-container">
+                <label class="mText" for="cardnumber">Card Number</label><!--<span id="generatecard">generate random</span>-->
+                <input id="cardnumber" type="text" pattern="[0-9\s]*" inputmode="numeric" name="cardnumber">
+                <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
 
-            </svg>
+                </svg>
+            </div>
+            <div class="field-container">
+                <label class="mText" for="expirationdate">Expiration (mm/yy)</label>
+                <input id="expirationdate" type="text" pattern="[0-9\/]*" inputmode="numeric">
+            </div>
+            <div class="field-container">
+                <label class="mText" for="securitycode">Security Code</label>
+                <input id="securitycode" type="text" pattern="[0-9]*" inputmode="numeric">
+            </div>
+            <div class="field-container">
+                <input id="checkout-button" class="btn btn-primary mt-4" type="submit" value="Pay">
+            </div>
         </div>
-        <div class="field-container">
-            <label for="expirationdate">Expiration (mm/yy)</label>
-            <input id="expirationdate" type="text" pattern="[0-9\/]*" inputmode="numeric">
-        </div>
-        <div class="field-container">
-            <label for="securitycode">Security Code</label>
-            <input id="securitycode" type="text" pattern="[0-9]*" inputmode="numeric">
-        </div>
-        <div class="field-container">
-            <input id="checkout-button" class="btn btn-primary mt-4" type="submit" value="Pay">
-        </div>
-        <div class="field-container">
-            <input id="checkout-button" class="btn btn-danger mt-4" type="submit" onclick="event.preventDefault(); window.history.go(-1);" value="Back">
-        </div>
-        
-        
-    </div>
     </form>
+</div>
+    
+
+
+        
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/3.4.0/imask.min.js"></script>
 
@@ -455,3 +453,4 @@ securitycode.addEventListener('focus', function () {
         });
     });*/
   </script>
+  
