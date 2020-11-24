@@ -3,7 +3,7 @@
 ?>
 <main>
     <section id="movieShowAdd">
-        
+        <div class="container">
         <h1 class="text-danger px-2 pt-4">Add Movie Show</h1>
 
         <form action="<?php echo FRONT_ROOT ?>MovieShow/Add" method="post">            
@@ -25,12 +25,30 @@
                         ?>
                     </select>
                 </div>
+
                 <!-- seleccionar cine -->
                 <div class="col-3 m-1">                    
                     <label for="" class="px-1 text-primary d-block">select cinema</label>                    
                     <select class="custom-select" name="cinemaId">
                                                 
                         <!-- opciones de cines desde la base de datos -->
+                        <?php 
+                            foreach($this->cinemaList as $cinema)
+                            {
+                                ?><option value="<?php echo $cinema->GetId() ?>"><?php echo $cinema->GetName()?></option>
+                            <?php                                
+                            }                      
+                        ?>
+
+                    </select>
+                </div>
+
+                <!-- seleccionar sala -->
+                <div class="col-3 m-1">                    
+                    <label for="" class="px-1 text-primary d-block">select cinema</label>                    
+                    <select class="custom-select" name="cinemaId">
+                                                
+                        <!-- opciones de salas del cine -->
                         <?php 
                             foreach($this->cinemaList as $cinema)
                             {
@@ -61,7 +79,8 @@
                 </div>
             </div>
 
-        </form>
+            </form>
+        </div>
     </section>
 </main>
 <script src="<?php echo JS_PATH ?>date.js"></script>

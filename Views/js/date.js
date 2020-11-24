@@ -25,7 +25,11 @@ let maxDate = maxYear + '-' + maxMonth + '-' + maxDay;
 let allDates = document.getElementsByClassName('mdate');
 
 Array.from(allDates).forEach(e => {
-  e.setAttribute('value', todayDate);  
   e.setAttribute('min', minDate);
   e.setAttribute('max', maxDate);
+
+  if (e.getAttribute('id') != 'updateDate')
+  {
+    e.setAttribute('value', todayDate);  
+  }
 })

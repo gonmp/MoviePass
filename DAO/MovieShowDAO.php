@@ -26,6 +26,29 @@
             $this->cinemaDAO = new CinemaDAO();
             $this->roomDAO = new RoomDAO();
             $this->movieShowList = array();
+        }        
+
+        public function GetFromMovieInDate($movieId, $movieDate)
+        {
+            $query = "SELECT * FROM movieshow WHERE date_format(showDate, '%Y-%m-%d') = :movieDate AND movieId = :movieId";
+            $parameters = array(
+                ':movieId' => $movieId, 
+                ':movieDate' => $movieDate
+            );
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {                
+                $results = $this->connection->Execute($query, $parameters);               
+
+                return $results;
+            }
+            catch(\Exception $ex)
+            {
+                
+                return var_dump($ex);
+            }
         }
 
         public function GetAll()
@@ -587,6 +610,32 @@
 
                 return $this->movieShowList;
 
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        }
+
+        public function GetAllTimesFromRoom($roomId)
+        {
+            $query = "SELECT DATE_FORMAT(showDate, '%H:%i') FROM movieshow WHERE roomId = :id;";
+            
+            $parameters = array(':id' => $roomId);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query, $parameters);
+                $times = array();
+
+                foreach($results as $result)
+                {                    
+                    array_push($times, $result[0]);                 
+                }
+
+                return $times;
             }
             catch(\Exception $ex)
             {
