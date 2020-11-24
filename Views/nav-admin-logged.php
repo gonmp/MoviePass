@@ -19,6 +19,8 @@
                     <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/AdminManager/ShowAddCinemaView">Manage Cinemas</a></li>
                     <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/MovieShow/ShowAddMovieShow">Manage Movies Shows</a></li>
                     <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/AdminManager/ShowMovieList">List Movies</a></li>
+                    <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/Purchase/ShowAdminPurchasesMovie">Purchases by movie</a></li>
+                    <li><a class="dropdown-item" href="<?php echo FRONT_ROOT?>/Purchase/ShowAdminPurchasesCinema">Purchases by cinema</a></li>
                 </ul>
             </div>            
 

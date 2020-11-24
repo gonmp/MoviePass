@@ -10,7 +10,8 @@
     use DAO\MovieShowDAO as MovieShowDAO;        
     use DAO\MovieDAO as MovieDAO;    
     use DAO\CinemaDAO as CinemaDAO;
-    use DAO\RoomDAO as RoomDAO;    
+    use DAO\RoomDAO as RoomDAO;
+    use DAO\PurchaseDAO as PurchaseDAO;    
 
     class MovieShowController
     {
@@ -19,7 +20,8 @@
         private $cinemaList;
         private $cinemaDAO;       
         private $movieShowDAO;      
-        private $roomDAO;        
+        private $roomDAO;
+        private $purchaseDAO;        
 
         public function __construct()
         {
@@ -28,7 +30,8 @@
             $this->cinemaDAO = new CinemaDAO();
             $this->cinemaList = $this->cinemaDAO->GetAll();
             $this->movieShowDAO = new MovieShowDAO();
-            $this->roomDAO = new RoomDAO();                                    
+            $this->roomDAO = new RoomDAO();
+            $this->purchaseDAO = new PurchaseDAO();                                    
         }        
 
         // ************ VISTAS *************************
@@ -43,7 +46,7 @@
         public function ShowMovieShowList()
         {
             $movieShowList = $this->movieShowDAO->GetAll();                       
-            $this->DeleteOldMovieShow($movieShowList);            
+            $this->DeleteOldMovieShow($movieShowList);           
             require_once(VIEWS_PATH."movie-show-list.php");
         }
         

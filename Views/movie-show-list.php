@@ -15,6 +15,8 @@
                               <th scope="col" class="text-light">Room</th>
                               <th scope="col" class="text-success">Start Time</th>
                               <th scope="col" class="text-success">End Time</th>
+                              <th scope="col" class="text-success">Tickets Sold</th>
+                              <th scope="col" class="text-success">Available Spots</th>
                               <th scope="col"></th>                     
                               <th scope="col"></th>    
                          </tr>
@@ -31,6 +33,8 @@
                                         <td><?php echo $movieShow->getRoom()->getName(); ?></td>
                                         <td class="text-success"><?php echo $movieShow->getShowDate()->format('H : i') . ' hs'; ?></td>
                                         <td class="text-success"><?php echo $movieShow->getEndTime()->format('H : i') . ' hs'; ?></td>
+                                        <td class="text-success"><?php echo $this->purchaseDAO->GetTicketsSoldByMovieShowId($movieShow->getId()); ?></td>
+                                        <td class="text-success"><?php echo $movieShow->getRoom()->getCapacity() - $this->purchaseDAO->GetTicketsSoldByMovieShowId($movieShow->getId()); ?></td>
 
                                         <!-- boton modificar -->                                        
                                         <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning text-white">Change</button></td>                                                                                     

@@ -72,6 +72,15 @@
             }     
         }
 
+        public function GetLastPurchaseId()
+        {
+            $query = 'SELECT MAX(id) FROM purchases';
+            $this->connection = Connection::GetInstance();
+            $result = $this->connection->Execute($query);
+
+            return $result[0][0];
+        }
+
         public function GetAll()
         {
             $this->purhcaseList = array();
@@ -95,6 +104,74 @@
             try
             {
                 $results = $this->connection->Execute($query);
+
+                $this->purchaseList = array();
+
+                foreach($results as $result)
+                {
+                    $date = date_create($result['purchaseDate'], timezone_open('America/Argentina/Buenos_Aires'));
+                    $user = $this->userDAO->GetUserById($result[5]);
+                    $movieShow = $this->movieShowDAO->Get($result[6]);
+
+                    $purchase = new Purchase($date, $user, $movieShow, $result[4]);
+                    $purchase->setId($result[0]);
+
+                    if($result[7] != null)
+                    {
+                        $ticketsArray = explode(",", $result[7]);
+
+                        $tickets = array();
+
+                        foreach($ticketsArray as $ticket)
+                        {
+                            $singleTicketArray = explode("¿", $ticket);
+                            $ticketId = $singleTicketArray[0];
+                            $ticketQr = $singleTicketArray[1];
+                            $newTicket = new Ticket($ticketQr, $movieShow, $purchase);
+                            $newTicket->setId($ticketId);
+                            array_push($tickets, $newTicket);
+                        }
+
+                        $purchase->setTickets($tickets);
+                    }
+
+                    array_push($this->purchaseList, $purchase);
+                }
+
+                return $this->purchaseList;
+            }
+
+            catch(\Exception $ex)
+            {
+                throw $ex;                
+            }
+        }
+
+        public function GetAllByUserId($userId)
+        {
+
+            $query = "SELECT purchases.id,
+            purchases.purchaseDate,
+            purchases.total,
+            purchases.discount,
+            purchases.numberOfTickets,
+            users.id,
+            movieshow.id,
+            GROUP_CONCAT(tickets.id, '¿', tickets.qr SEPARATOR ',' )
+            FROM purchases
+            LEFT OUTER JOIN users ON purchases.userId = users.id
+            LEFT OUTER JOIN movieshow ON purchases.movieShowId = movieshow.id
+            LEFT OUTER JOIN tickets ON tickets.purchaseId = purchases.id
+            WHERE users.id = :userId
+            GROUP BY purchases.id;";
+
+            $parameters = array(':userId' => $userId);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query, $parameters);
 
                 $this->purchaseList = array();
 
@@ -192,6 +269,79 @@
                 }
 
                 return $purchase;
+            }
+
+            catch(\Exception $ex)
+            {
+                throw $ex;                
+            }
+        }
+
+        public function GetTicketsSoldByMovieShowId($movieShowId)
+        {
+
+            $query = "SELECT SUM(numberOfTickets) FROM purchases WHERE movieShowId = :movieShowId;";
+
+            $parameters = array(':movieShowId' => $movieShowId);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $result = $this->connection->Execute($query, $parameters);
+
+                return $result[0][0];
+            }
+
+            catch(\Exception $ex)
+            {
+                throw $ex;                
+            }
+        }
+
+        public function GetTotalByMovieId($movieId, $startDateTime, $endDateTime)
+        {
+
+            $query = "SELECT SUM(total) FROM purchases
+            LEFT OUTER JOIN movieshow ON purchases.movieShowId = movieshow.id
+            LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
+            WHERE movies.id = :movieId AND DATE(purchases.purchaseDate) BETWEEN :startDateTime  AND :endDateTime;";
+
+            $parameters = array(':movieId' => $movieId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $result = $this->connection->Execute($query, $parameters);
+
+                return $result[0][0];
+            }
+
+            catch(\Exception $ex)
+            {
+                throw $ex;                
+            }
+        }
+
+        public function GetTotalByCinemaId($cinemaId, $startDateTime, $endDateTime)
+        {
+
+            $query = "SELECT SUM(total) FROM purchases
+            LEFT OUTER JOIN movieshow ON purchases.movieShowId = movieshow.id
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
+            WHERE cinemas.id = :cinemaId AND DATE(purchases.purchaseDate) BETWEEN :startDateTime  AND :endDateTime;";
+
+            $parameters = array(':cinemaId' => $cinemaId, ':startDateTime' => date_format($startDateTime, "Y-m-d H:i:s"), ':endDateTime' => date_format($endDateTime, "Y-m-d H:i:s"));
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $result = $this->connection->Execute($query, $parameters);
+
+                return $result[0][0];
             }
 
             catch(\Exception $ex)

@@ -42,8 +42,7 @@
         private function setDiscount()
         {
             $dw = date("w", date_timestamp_get($this->movieShow->getShowDate()));
-            var_dump($dw);
-            if(($dw == 1 || $dw == 2) && $this->numberOfTickets > 1)
+            if(($dw == 2 || $dw == 3) && $this->numberOfTickets > 1)
             {
                 $this->discount = 0.25;
             }
