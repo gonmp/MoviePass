@@ -1,0 +1,11 @@
+{
+    "id": "148",
+    "movieId": "62",
+    "dateTime": {
+        "date": "2020-11-27 21:35:00.000000",
+        "timezone_type": 3,
+        "timezone": "America\/Argentina\/Buenos_Aires"
+    },
+    "cinemaName": "cinemacenter",
+    "roomId": "4"
+}

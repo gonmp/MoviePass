@@ -24,12 +24,7 @@
             $_SESSION['errorCinema'] = null;
             $_SESSION['error'] = null;
             $this->ShowAddCinemaView();
-        }
-
-        public function ShowAddMovieShowView()
-        {
-            $this->movieShowController->ShowAddMovieShow();            
-        }        
+        }     
 
         public function ShowAddCinemaView()
         {

@@ -7,6 +7,7 @@
     use Models\Movie as Movie;
     use Models\Cinema as Cinema;
     use Models\Genre as Genre;
+    use Models\Room as Room;
 
     class MovieShowDAO implements IMovieShowDAO
     {
@@ -17,12 +18,37 @@
         private $tableCinemas = "cinemas";
         private $movieDAO;
         private $cinemaDAO;
+        private $roomDAO;
         
         public function __construct ()
         {
             $this->movieDAO = new MovieDAO();
             $this->cinemaDAO = new CinemaDAO();
+            $this->roomDAO = new RoomDAO();
             $this->movieShowList = array();
+        }        
+
+        public function GetFromMovieInDate($movieId, $movieDate)
+        {
+            $query = "SELECT * FROM movieshow WHERE date_format(showDate, '%Y-%m-%d') = :movieDate AND movieId = :movieId";
+            $parameters = array(
+                ':movieId' => $movieId, 
+                ':movieDate' => $movieDate
+            );
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {                
+                $results = $this->connection->Execute($query, $parameters);               
+
+                return $results;
+            }
+            catch(\Exception $ex)
+            {
+                
+                return var_dump($ex);
+            }
         }
 
         public function GetAll()
@@ -40,19 +66,22 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            rooms.id,
+            rooms.capacity,
+            rooms.ticketValue,
+            rooms.name,
             cinemas.id,
             cinemas.name,
-            cinemas.totalCapacity,
             cinemas.address,
-            cinemas.ticketValue,
-            cinemas.enable,
             movieshow.showDate
             FROM movieshow
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
-            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id GROUP BY movieshow.id;";
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id GROUP BY movieshow.id;";
 
             $this->connection = Connection::GetInstance();
 
@@ -76,12 +105,13 @@
                         $result['original_language'],
                         $result['original_title'],
                         $result['vote_average'],
-                        $result['overview']
+                        $result['overview'],
+                        $result['duration']
                         );
         
-                    if($result[13] != null)
+                    if($result[14] != null)
                     {
-                        $genresArray = explode(",", $result[13]);
+                        $genresArray = explode(",", $result[14]);
     
                         $genres = array();
                         foreach($genresArray as $genre)
@@ -98,17 +128,23 @@
     
                     $cinema = new Cinema(
                         $result['name'],
-                        $result['totalCapacity'],
-                        $result['address'],
-                        $result['ticketValue'],
-                        $result['enable']
+                        $result['address']
                     );
     
-                    $cinema->setId($result[14]);
+                    $cinema->setId($result[19]);
+
+                    $room = new Room(
+                        $result['capacity'],
+                        $cinema,
+                        $result['ticketValue'],
+                        $result[18]
+                    );
+
+                    $room->setId($result[15]);
     
                     $showDate = date_create($result['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
     
-                    $movieShow = new MovieShow($movie, $cinema, $showDate);
+                    $movieShow = new MovieShow($movie, $room, $showDate);
 
                     $movieShow->SetId($result[0]);
 
@@ -140,19 +176,22 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            rooms.id,
+            rooms.capacity,
+            rooms.ticketValue,
+            rooms.name,
             cinemas.id,
             cinemas.name,
-            cinemas.totalCapacity,
             cinemas.address,
-            cinemas.ticketValue,
-            cinemas.enable,
             movieshow.showDate
             FROM movieshow
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
-            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
             WHERE movieshow.showDate BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
@@ -180,12 +219,13 @@
                         $result['original_language'],
                         $result['original_title'],
                         $result['vote_average'],
-                        $result['overview']
+                        $result['overview'],
+                        $result['duration']
                         );
 
-                    if($result[13] != null)
+                    if($result[14] != null)
                     {
-                        $genresArray = explode(",", $result[13]);
+                        $genresArray = explode(",", $result[14]);
 
                         $genres = array();
                         foreach($genresArray as $genre)
@@ -202,17 +242,23 @@
 
                     $cinema = new Cinema(
                         $result['name'],
-                        $result['totalCapacity'],
-                        $result['address'],
-                        $result['ticketValue'],
-                        $result['enable']
+                        $result['address']
                     );
 
-                    $cinema->setId($result[14]);
+                    $cinema->setId($result[19]);
+
+                    $room = new Room(
+                        $result['capacity'],
+                        $cinema,
+                        $result['ticketValue'],
+                        $result[18]
+                    );
+
+                    $room->setId($result[15]);
 
                     $showDate = date_create($result['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
 
-                    $movieShow = new MovieShow($movie, $cinema, $showDate);
+                    $movieShow = new MovieShow($movie, $room, $showDate);
 
                     $movieShow->SetId($result[0]);
 
@@ -244,19 +290,22 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            rooms.id,
+            rooms.capacity,
+            rooms.ticketValue,
+            rooms.name,
             cinemas.id,
             cinemas.name,
-            cinemas.totalCapacity,
             cinemas.address,
-            cinemas.ticketValue,
-            cinemas.enable,
             movieshow.showDate
             FROM movieshow
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
-            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
             WHERE movies.id = :id AND movieshow.showDate BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
@@ -284,12 +333,13 @@
                         $result['original_language'],
                         $result['original_title'],
                         $result['vote_average'],
-                        $result['overview']
+                        $result['overview'],
+                        $result['duration']
                         );
 
-                    if($result[13] != null)
+                    if($result[14] != null)
                     {
-                        $genresArray = explode(",", $result[13]);
+                        $genresArray = explode(",", $result[14]);
 
                         $genres = array();
                         foreach($genresArray as $genre)
@@ -306,17 +356,23 @@
 
                     $cinema = new Cinema(
                         $result['name'],
-                        $result['totalCapacity'],
-                        $result['address'],
-                        $result['ticketValue'],
-                        $result['enable']
+                        $result['address']
                     );
 
-                    $cinema->setId($result[14]);
+                    $cinema->setId($result[19]);
+
+                    $room = new Room(
+                        $result['capacity'],
+                        $cinema,
+                        $result['ticketValue'],
+                        $result[18]
+                    );
+
+                    $room->setId($result[15]);
 
                     $showDate = date_create($result['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
 
-                    $movieShow = new MovieShow($movie, $cinema, $showDate);
+                    $movieShow = new MovieShow($movie, $room, $showDate);
 
                     $movieShow->SetId($result[0]);
 
@@ -348,19 +404,22 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            rooms.id,
+            rooms.capacity,
+            rooms.ticketValue,
+            rooms.name,
             cinemas.id,
             cinemas.name,
-            cinemas.totalCapacity,
             cinemas.address,
-            cinemas.ticketValue,
-            cinemas.enable,
             movieshow.showDate
             FROM movieshow
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
-            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
             WHERE movies.id = :id AND DATE(movieshow.showDate) BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
@@ -388,12 +447,13 @@
                         $result['original_language'],
                         $result['original_title'],
                         $result['vote_average'],
-                        $result['overview']
+                        $result['overview'],
+                        $result['duration']
                         );
 
-                    if($result[13] != null)
+                    if($result[14] != null)
                     {
-                        $genresArray = explode(",", $result[13]);
+                        $genresArray = explode(",", $result[14]);
 
                         $genres = array();
                         foreach($genresArray as $genre)
@@ -410,17 +470,23 @@
 
                     $cinema = new Cinema(
                         $result['name'],
-                        $result['totalCapacity'],
-                        $result['address'],
-                        $result['ticketValue'],
-                        $result['enable']
+                        $result['address']
                     );
 
-                    $cinema->setId($result[14]);
+                    $cinema->setId($result[19]);
+
+                    $room = new Room(
+                        $result['capacity'],
+                        $cinema,
+                        $result['ticketValue'],
+                        $result[18]
+                    );
+
+                    $room->setId($result[15]);
 
                     $showDate = date_create($result['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
 
-                    $movieShow = new MovieShow($movie, $cinema, $showDate);
+                    $movieShow = new MovieShow($movie, $room, $showDate);
 
                     $movieShow->SetId($result[0]);
 
@@ -452,19 +518,22 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            rooms.id,
+            rooms.capacity,
+            rooms.ticketValue,
+            rooms.name,
             cinemas.id,
             cinemas.name,
-            cinemas.totalCapacity,
             cinemas.address,
-            cinemas.ticketValue,
-            cinemas.enable,
             movieshow.showDate
             FROM movieshow
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
-            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
             WHERE genres.id = :id AND movieshow.showDate BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
@@ -492,12 +561,13 @@
                         $result['original_language'],
                         $result['original_title'],
                         $result['vote_average'],
-                        $result['overview']
+                        $result['overview'],
+                        $result['duration']
                         );
 
-                    if($result[13] != null)
+                    if($result[14] != null)
                     {
-                        $genresArray = explode(",", $result[13]);
+                        $genresArray = explode(",", $result[14]);
 
                         $genres = array();
                         foreach($genresArray as $genre)
@@ -514,17 +584,23 @@
 
                     $cinema = new Cinema(
                         $result['name'],
-                        $result['totalCapacity'],
-                        $result['address'],
-                        $result['ticketValue'],
-                        $result['enable']
+                        $result['address']
                     );
 
                     $cinema->setId($result[14]);
 
+                    $room = new Room(
+                        $result['capacity'],
+                        $cinema,
+                        $result['ticketValue'],
+                        $result[18]
+                    );
+
+                    $room->setId($result[15]);
+
                     $showDate = date_create($result['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
 
-                    $movieShow = new MovieShow($movie, $cinema, $showDate);
+                    $movieShow = new MovieShow($movie, $room, $showDate);
 
                     $movieShow->SetId($result[0]);
 
@@ -534,6 +610,32 @@
 
                 return $this->movieShowList;
 
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        }
+
+        public function GetAllTimesFromRoom($roomId)
+        {
+            $query = "SELECT DATE_FORMAT(showDate, '%H:%i') FROM movieshow WHERE roomId = :id;";
+            
+            $parameters = array(':id' => $roomId);
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query, $parameters);
+                $times = array();
+
+                foreach($results as $result)
+                {                    
+                    array_push($times, $result[0]);                 
+                }
+
+                return $times;
             }
             catch(\Exception $ex)
             {
@@ -556,19 +658,22 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            rooms.id,
+            rooms.capacity,
+            rooms.ticketValue,
+            rooms.name,
             cinemas.id,
             cinemas.name,
-            cinemas.totalCapacity,
             cinemas.address,
-            cinemas.ticketValue,
-            cinemas.enable,
             movieshow.showDate
             FROM movieshow
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
-            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
             WHERE cinemas.id = :id AND movieshow.showDate BETWEEN :startDateTime  AND :endDateTime
             GROUP BY movieshow.id;";
 
@@ -596,12 +701,13 @@
                         $result['original_language'],
                         $result['original_title'],
                         $result['vote_average'],
-                        $result['overview']
+                        $result['overview'],
+                        $result['duration']
                         );
 
-                    if($result[13] != null)
+                    if($result[14] != null)
                     {
-                        $genresArray = explode(",", $result[13]);
+                        $genresArray = explode(",", $result[14]);
 
                         $genres = array();
                         foreach($genresArray as $genre)
@@ -618,17 +724,23 @@
 
                     $cinema = new Cinema(
                         $result['name'],
-                        $result['totalCapacity'],
-                        $result['address'],
-                        $result['ticketValue'],
-                        $result['enable']
+                        $result['address']
                     );
 
                     $cinema->setId($result[14]);
 
+                    $room = new Room(
+                        $result['capacity'],
+                        $cinema,
+                        $result['ticketValue'],
+                        $result[18]
+                    );
+
+                    $room->setId($result[15]);
+
                     $showDate = date_create($result['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
 
-                    $movieShow = new MovieShow($movie, $cinema, $showDate);
+                    $movieShow = new MovieShow($movie, $room, $showDate);
 
                     $movieShow->SetId($result[0]);
 
@@ -660,19 +772,22 @@
             movies.original_title,
             movies.vote_average,
             movies.overview,
+            movies.duration,
             GROUP_CONCAT(genres.id, '/', genres.name SEPARATOR ',' ),
+            rooms.id,
+            rooms.capacity,
+            rooms.ticketValue,
+            rooms.name,
             cinemas.id,
             cinemas.name,
-            cinemas.totalCapacity,
             cinemas.address,
-            cinemas.ticketValue,
-            cinemas.enable,
             movieshow.showDate
             FROM movieshow
             LEFT OUTER JOIN movies ON movieshow.movieId = movies.id
             LEFT OUTER JOIN moviesgenres ON movies.id = moviesgenres.movieId
             LEFT OUTER JOIN genres ON moviesgenres.genreId = genres.id
-            LEFT OUTER JOIN cinemas ON movieshow.cinemaId = cinemas.id
+            LEFT OUTER JOIN rooms ON movieshow.roomId = rooms.id
+            LEFT OUTER JOIN cinemas ON rooms.cinemaId = cinemas.id
             WHERE movieshow.id = :id
             GROUP BY movieshow.id;";
 
@@ -702,12 +817,13 @@
                 $result[0]['original_language'],
                 $result[0]['original_title'],
                 $result[0]['vote_average'],
-                $result[0]['overview']
+                $result[0]['overview'],
+                $result[0]['duration']
                 );
 
-                if($result[0][13] != null)
+                if($result[0][14] != null)
                 {
-                    $genresArray = explode(",", $result[0][13]);
+                    $genresArray = explode(",", $result[0][14]);
 
                     $genres = array();
                     foreach($genresArray as $genre)
@@ -724,17 +840,23 @@
 
                 $cinema = new Cinema(
                     $result[0]['name'],
-                    $result[0]['totalCapacity'],
-                    $result[0]['address'],
-                    $result[0]['ticketValue'],
-                    $result[0]['enable']
+                    $result[0]['address']
                 );
 
-                $cinema->setId($result[0][14]);
+                $cinema->setId($result[0][19]);
+
+                $room = new Room(
+                    $result[0]['capacity'],
+                    $cinema,
+                    $result[0]['ticketValue'],
+                    $result[0][18]
+                );
+
+                $room->setId($result[0][15]);
 
                 $showDate = date_create($result[0]['showDate'], timezone_open('America/Argentina/Buenos_Aires'));
 
-                $movieShow = new MovieShow($movie, $cinema, $showDate);
+                $movieShow = new MovieShow($movie, $room, $showDate);
 
                 $movieShow->SetId($result[0][0]);
 
@@ -749,11 +871,11 @@
         
         public function Add(MovieShow $movieShow)
         {
-            $query = 'INSERT INTO ' . $this->table . ' (movieId, cinemaId, showDate) VALUES (:movieId, :cinemaId, :showDate);';
+            $query = 'INSERT INTO ' . $this->table . ' (movieId, roomId, showDate) VALUES (:movieId, :roomId, :showDate);';
 
             $parameters = array(
                 ':movieId' => $movieShow->getMovie()->getId(),
-                ':cinemaId' => $movieShow->getCinema()->getId(),
+                ':roomId' => $movieShow->getRoom()->getId(),
                 ':showDate' => date_format($movieShow->getShowDate(), "Y-m-d H:i:s")
             );
 
@@ -772,12 +894,12 @@
 
         function Update(MovieShow $movieShow)
         {
-            $query = 'UPDATE ' . $this->table . ' SET movieId = :movieId, cinemaId = :cinemaId, showDate = :showDate WHERE id = :id';
+            $query = 'UPDATE ' . $this->table . ' SET movieId = :movieId, roomId = :roomId, showDate = :showDate WHERE id = :id';
             
             # var_dump($query);
 
             $parameters = array(':movieId' => $movieShow->getMovie()->getId(),
-            ':cinemaId' => $movieShow->getCinema()->getId(),
+            ':roomId' => $movieShow->getRoom()->getId(),
             ':showDate' => date_format($movieShow->getShowDate(), "Y-m-d H:i:s"),
             ':id' => $movieShow->getId());
 
