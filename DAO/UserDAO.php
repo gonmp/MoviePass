@@ -34,6 +34,35 @@
             }            
         }
 
+        public function GetUserById($id)
+        {
+            try
+            {
+                $query = "SELECT id, name, password, admin FROM " . $this->table . " WHERE id = :id;";
+                
+                $this->connection = Connection::GetInstance();
+                
+                $parameters = array(':id' => $id);
+                
+                $result = $this->connection->Execute($query, $parameters);
+
+                if($result == null)
+                {
+                    return null;
+                }
+                
+                $user = new User($result[0]['name'], $result[0]['password'], $result[0]['admin']);
+                
+                $user->setId($result[0]['id']);
+
+                return $user;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }   
+        }
+
         public function GetUserByName($name)
         {
             try
