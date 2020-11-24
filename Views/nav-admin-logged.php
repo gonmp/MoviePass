@@ -3,16 +3,13 @@
 ?>
 <div class="row">
 
-        <!-- saludar al admin -->
-        <strong><p class="col text-capitalize h4 text-white">Hello Admin!</p></strong>    
-
         <div class="btn-group">
                 
             <!-- manu del admin -->
             <div class="dropdown">               
                 
                 <!-- boton del menu -->
-                <button class="col rounded-0 btn btn-outline-primary dropdown-toggle text-warning" type="button" data-toggle="dropdown">MENU</button>                        
+                <button class="mBtn col rounded-0 btn btn-outline-primary dropdown-toggle text-warning" type="button" data-toggle="dropdown">MENU</button>                        
 
                 <!-- elementos del menu -->
                 <ul class="dropdown-menu">        
@@ -23,9 +20,9 @@
             </div>            
 
             <!-- actualizar base de datos -->
-            <a hidden href="<?php echo FRONT_ROOT ?>AdminManager/UpdateDataBase" class="rounded-0 col btn btn-outline-success text-white">UPDATE DATABASE</a>    
+            <a href="<?php echo FRONT_ROOT ?>AdminManager/UpdateDataBase" class="mBtn rounded-0 col btn btn-outline-success text-white">UPDATE DATABASE</a>    
             
             <!-- logout -->
-            <a href="<?php echo FRONT_ROOT ?>Home/Logout" class="rounded-0 col btn btn-outline-danger text-white">log out</a>
+            <a href="<?php echo FRONT_ROOT ?>Home/Logout" class="mBtn rounded-0 col btn btn-outline-danger text-white">log out</a>
         </div>    
 </div>
