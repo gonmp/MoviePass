@@ -43,9 +43,7 @@
                 
                 $this->connection = Connection::GetInstance();
 
-                $result = $this->connection->Execute($query, $parameters);
-
-                var_dump($result);
+                $result = $this->connection->Execute($query, $parameters);                
 
                 if ($result == null)
                 {
@@ -145,6 +143,34 @@
             }
         }
 
+        public function GetAllCinemasOnly()
+        {
+            $this->cinemaList = array();
+
+            $query = "SELECT * FROM $this->table;";
+
+            $this->connection = Connection::GetInstance();
+
+            try
+            {
+                $results = $this->connection->Execute($query);                                
+
+                foreach($results as $result)
+                {
+                    $cinema = new Cinema($result['name'], $result['address']);
+                    $cinema->setId($result['id']);
+
+                    array_push($this->cinemaList, $cinema);
+                }
+
+                return $this->cinemaList;
+            }
+            catch(\Exception $ex)
+            {
+                throw $ex;
+            }
+        }
+
         public function GetAll()
         {
             $this->cinemaList = array();
@@ -155,7 +181,7 @@
 
             try
             {
-                $results = $this->connection->Execute($query);
+                $results = $this->connection->Execute($query);                
 
                 foreach($results as $result)
                 {
@@ -189,7 +215,7 @@
                     }
 
                     array_push($this->cinemaList, $cinema);
-                }
+                }                
 
                 return $this->cinemaList;
             }            

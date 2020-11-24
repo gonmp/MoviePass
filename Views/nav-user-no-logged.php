@@ -1,13 +1,14 @@
 <form action="<?php echo FRONT_ROOT ?>User/Login" method="post"> 
 
-    <div class="float-left py-1 mx-0">
-        <input type="text" name="name" value="" placeholder="user name" title="only letters and numbers" pattern="[A-Za-z0-9 ]+" required class="form-control-sm bg-dark-x text-white border border-primary">
-        <input type="password" name="password" value="" placeholder="password" title="only letters and numbers" pattern="[A-Za-z0-9 ]+" required class="form-control-sm bg-dark-x text-white border border-primary">
+<div class="row">
+    <div class="col-8">
+        <input type="text" name="name" value="" placeholder="user name" title="only letters and numbers" pattern="[A-Za-z0-9 ]+" required class="form-control-sm bg-dark-x text-white border border-primary m-0 p-1">
+        <input type="password" name="password" value="" placeholder="password" title="only letters and numbers" pattern="[A-Za-z0-9 ]+" required class="form-control-sm bg-dark-x text-white border border-primary m-0 p-1">
     </div>
 
-    <div class="float-left py-1 mx-3">
+    <div class="col">
         <button type="submit" class="btn btn-outline-primary btn-sm text-white">Login</button>
-        <a href="<?php echo FRONT_ROOT ?>User/ShowRegisterView" class="mx-1 btn btn-outline-danger btn-sm text-white">Register</a>
+        <a href="<?php echo FRONT_ROOT ?>User/ShowRegisterView" class="btn btn-outline-danger btn-sm text-white">Register</a>
     </div>
 
     <?php 
@@ -20,4 +21,5 @@
         </div>
         <?php    
     }?>
+</div>
 </form>
