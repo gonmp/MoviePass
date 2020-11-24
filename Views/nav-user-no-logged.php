@@ -11,7 +11,7 @@
     </div>
 
     <?php 
-    if ($_SESSION['error'] != null)
+    if (isset($_SESSION['error']) && $_SESSION['error'] != null)
     {?>
         <div class="row float-left">
             <div class="col">
