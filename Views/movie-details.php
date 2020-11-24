@@ -80,7 +80,7 @@
                             <td><?php echo $movieShow->getRoom()->getName();?></td>
                             <td><?php echo $movieShow->getShowDate()->format('H : i');?></td>
                             <td><?php echo $movieShow->getRoom()->getTicketValue();?></td>      
-                            <td>comprar</td>                      
+                            <td><a href="<?php echo FRONT_ROOT ?>Movie/BuyTickets?movieShowId=<?php echo $movieShow->getId()?>" class="btn btn-sm btn-outline-danger text-white">Buy ticket</a></td>                      
                         </tr>                        
                     <?php
                     }?>                        

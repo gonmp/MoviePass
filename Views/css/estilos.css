@@ -39,26 +39,30 @@ body {
 }
 
 .form-container .field-container:first-of-type {
-  grid-area: name;
+  grid-area: email;
 }
 
 .form-container .field-container:nth-of-type(2) {
-  grid-area: number;
+  grid-area: name;
 }
 
 .form-container .field-container:nth-of-type(3) {
-  grid-area: expiration;
+  grid-area: number;
 }
 
 .form-container .field-container:nth-of-type(4) {
+  grid-area: expiration;
+}
+
+.form-container .field-container:nth-of-type(5) {
   grid-area: security;
 }
 
-.form-container .field-container:nth-of-type(5) {
+.form-container .field-container:nth-of-type(6) {
   grid-area: pay1;
 }
 
-.form-container .field-container:nth-of-type(5) {
+.form-container .field-container:nth-of-type(7) {
   grid-area: pay2;
 }
 
@@ -75,8 +79,8 @@ body {
   display: grid;
   grid-column-gap: 10px;
   grid-template-columns: auto auto;
-  grid-template-rows: 90px 90px 90px 90px;
-  grid-template-areas: 'name name' 'number number' 'expiration security' 'pay1 pay2';
+  grid-template-rows: 90px 90px 90px 90px 90px;
+  grid-template-areas: 'email email' 'name name' 'number number' 'expiration security' 'pay2 pay1';
   max-width: 400px;
   height: 400px;
   padding: 20px;
@@ -114,12 +118,13 @@ label {
   -o-transition: none !important;
 }
 
-.container {
+.card-container {
   width: 100%;
   max-width: 400px;
   max-height: 251px;
   height: 54vw;
   padding: 20px;
+  margin: auto;
 }
 
 #ccsingle {
@@ -342,7 +347,7 @@ label {
 }
 
 /* FLIP ANIMATION */
-.container {
+.card-container {
   perspective: 1000px;
 }
 

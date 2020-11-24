@@ -5,7 +5,7 @@
 <div class="payment-title">
         <h1 class="text-white">Payment Information</h1>
     </div>
-    <div class="container preload">
+    <div class="card-container preload">
         <div class="creditcard">
             <div class="front">
                 <div id="ccsingle"></div>
@@ -106,11 +106,15 @@
     <form action="<?php echo FRONT_ROOT ?>Purchase/ValidatePayment?movieShowId=<?php echo $movieShowId?>&numberOfTickets=<?php echo $numberOfTickets ?>" method="post"> 
     <div class="form-container">
         <div class="field-container">
+            <label for="email">Enter a email to contanct</label>
+            <input id="email" maxlength="40" type="email" name="email">
+        </div>
+        <div class="field-container">
             <label for="name">Name</label>
             <input id="name" maxlength="20" type="text">
         </div>
         <div class="field-container">
-            <label for="cardnumber">Card Number</label><span id="generatecard">generate random</span>
+            <label for="cardnumber">Card Number</label><!--<span id="generatecard">generate random</span>-->
             <input id="cardnumber" type="text" pattern="[0-9\s]*" inputmode="numeric" name="cardnumber">
             <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -355,9 +359,9 @@ const randomCard = function () {
     let randomNumber = Math.floor(Math.random() * testCards.length);
     cardnumber_mask.unmaskedValue = testCards[randomNumber];
 }
-generatecard.addEventListener('click', function () {
+/*generatecard.addEventListener('click', function () {
     randomCard();
-});
+});*/
 
 
 // CREDIT CARD IMAGE JS
