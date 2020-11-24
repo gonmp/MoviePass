@@ -4,9 +4,9 @@
 
 <main class="">
      <section id="roomList">
-          <div class="container">               
-               <table class="table table-hover table-dark table-sm">
-                    <thead class="bg-dark">
+          <div class="container mt-1">               
+               <table class="table table-hover table-dark table-sm border border-secondary">
+                    <thead class="bg-dark mText">
                          <tr>
                               <th scope="col" class="text-primary">ID</th>
                               <th scope="col" class="text-primary">Name</th>                                                            
@@ -21,16 +21,16 @@
                               foreach($roomsList as $room)
                               {?>
                                    <tr>
-                                        <td><?php echo $room->getId(); ?></td>
-                                        <td><?php echo $room->getName(); ?></td>                                                                                
-                                        <td><?php echo $room->getCapacity(); ?></td>                                        
-                                        <td><?php echo $room->getTicketValue(); ?></td>                                        
+                                        <td class="mText"><?php echo $room->getId(); ?></td>
+                                        <td class="mText"><?php echo $room->getName(); ?></td>                                                                                
+                                        <td class="mText"><?php echo $room->getCapacity(); ?></td>                                        
+                                        <td class="mText"><?php echo $room->getTicketValue(); ?></td>                                        
 
                                         <!-- boton modificar -->                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>Room/ShowUpdateView?roomId=<?php echo $room->getId();?>" class="btn btn-sm btn-outline-warning text-white">Modify</button></td>                                             
+                                        <td><a href="<?php echo FRONT_ROOT?>Room/ShowUpdateView?roomId=<?php echo $room->getId();?>" class="mBtn btn btn-sm btn-outline-warning text-white">Modify</button></td>                                             
 
                                         <!-- boton borrar -->                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>Room/Delete?roomId=<?php echo $room->getId();?>" class="btn btn-sm btn-outline-danger text-white">Delete</button></td>                                             
+                                        <td><a href="<?php echo FRONT_ROOT?>Room/Delete?roomId=<?php echo $room->getId();?>" class="mBtn btn btn-sm btn-outline-danger text-white">Delete</button></td>                                             
                                    </tr>                                   
                               <?php
                               }

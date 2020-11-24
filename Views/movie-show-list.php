@@ -5,18 +5,18 @@
 <main class="">
      <section id="movieShowList" class="">
           <div class="container">               
-               <table class="table table-hover table-dark table-sm">
+               <table class="border border-secondary rounded mt-2 table table-hover table-dark table-sm">
                     <thead class="bg-dark">
                          <tr>
-                              <th scope="col" class="text-primary">ID</th>
-                              <th scope="col" class="text-light">Movie</th>    
-                              <th scope="col" class="text-primary">Date</th>
-                              <th scope="col" class="text-danger">Cinema</th>
-                              <th scope="col" class="text-light">Room</th>
-                              <th scope="col" class="text-success">Start Time</th>
-                              <th scope="col" class="text-success">End Time</th>
-                              <th scope="col" class="text-success">Tickets Sold</th>
-                              <th scope="col" class="text-success">Available Spots</th>
+                              <th scope="col" class="text-primary mText">ID</th>
+                              <th scope="col" class="text-light mText">Movie</th>    
+                              <th scope="col" class="text-primary mText">Date</th>
+                              <th scope="col" class="text-danger mText">Cinema</th>
+                              <th scope="col" class="text-light mText">Room</th>
+                              <th scope="col" class="text-success mText">Start Time</th>
+                              <th scope="col" class="text-success mText">End Time</th>
+                              <th scope="col" class="text-warning mText">Tickets Sold</th>
+                              <th scope="col" class="text-white mText">Available Spots</th>
                               <th scope="col"></th>                     
                               <th scope="col"></th>    
                          </tr>
@@ -33,14 +33,14 @@
                                         <td><?php echo $movieShow->getRoom()->getName(); ?></td>
                                         <td class="text-success"><?php echo $movieShow->getShowDate()->format('H : i') . ' hs'; ?></td>
                                         <td class="text-success"><?php echo $movieShow->getEndTime()->format('H : i') . ' hs'; ?></td>
-                                        <td class="text-success"><?php echo $this->purchaseDAO->GetTicketsSoldByMovieShowId($movieShow->getId()); ?></td>
-                                        <td class="text-success"><?php echo $movieShow->getRoom()->getCapacity() - $this->purchaseDAO->GetTicketsSoldByMovieShowId($movieShow->getId()); ?></td>
+                                        <td class="text-warning"><?php echo $this->purchaseDAO->GetTicketsSoldByMovieShowId($movieShow->getId()); ?></td>
+                                        <td class="text-white"><?php echo $movieShow->getRoom()->getCapacity() - $this->purchaseDAO->GetTicketsSoldByMovieShowId($movieShow->getId()); ?></td>
 
                                         <!-- boton modificar -->                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning text-white">Change</button></td>                                                                                     
+                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/ShowMovieShowUpdate?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-warning text-white mBtn">Change</button></td>                                                                                     
 
                                         <!-- boton modificar -->                                        
-                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/Delete?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-danger text-white">Delete</button></td>                                             
+                                        <td><a href="<?php echo FRONT_ROOT?>MovieShow/Delete?movieShowId=<?php echo $movieShow->getId();?>" class="btn btn-sm btn-outline-danger text-white mBtn">Delete</button></td>                                             
                                    </tr>                                   
                               <?php
                               }
