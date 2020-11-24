@@ -70,17 +70,34 @@
 
         public function ShowPurchaseViewTwo ()
         {
+            if ($_SESSION['userLogged'] && isset($_POST['numberOfTickets']))
+            {
+                $_SESSION['isPurchaseSelected'] = false;
+                $movieShowId = $_GET['movieShowId'];
+                $numberOfTickets = $_POST['numberOfTickets'];
+                $movieShow = $this->movieShowDAO->Get($movieShowId);
+                $date = date_create(null, timezone_open('America/Argentina/Buenos_Aires'));
+                $user = $this->userDAO->GetUserById($_SESSION['userLogged']->GetId());
+                $purchase = new Purchase($date, $user, $movieShow, $numberOfTickets);
+                require_once(VIEWS_PATH."purchaseTwo.php");          
+            }
+            else
+            {
+                header("Location: " . FRONT_ROOT ."Index/Home");
+            }
+        }
+
+        public function SetPurchaseSelect()
+        {
+            $_SESSION['isPurchaseSelected'] = true;
             $movieShowId = $_GET['movieShowId'];
-            $numberOfTickets = $_POST['numberOfTickets'];
-            $movieShow = $this->movieShowDAO->Get($movieShowId);
-            $date = date_create(null, timezone_open('America/Argentina/Buenos_Aires'));
-            $user = $this->userDAO->GetUserById($_SESSION['userLogged']->GetId());
-            $purchase = new Purchase($date, $user, $movieShow, $numberOfTickets);
-            require_once(VIEWS_PATH."purchaseTwo.php");
+            $numberOfTickets = $_GET['numberOfTickets'];
+            header("Location: ".FRONT_ROOT."Purchase/ShowPurchaseViewThree?movieShowId=".$movieShowId."&numberOfTickets=".$numberOfTickets);
         }
 
         public function ShowPurchaseViewThree ()
         {
+            $this->CheckPurchaseSelect();
             $movieShowId = $_GET['movieShowId'];
             $numberOfTickets = $_GET['numberOfTickets'];
             require_once(VIEWS_PATH."purchaseThree.php");
@@ -88,6 +105,7 @@
 
         public function ValidatePayment()
         {
+            $_SESSION['isPurchaseSelected'] = false;
             $movieShowId = $_GET['movieShowId'];
             $numberOfTickets = $_GET['numberOfTickets'];
             
@@ -294,6 +312,14 @@
             }
 
             require_once(VIEWS_PATH."admin-purchase-cinema-results.php");
+        }
+
+        public function CheckPurchaseSelect()
+        {
+            if(!isset($_SESSION['isPurchaseSelected']) || !$_SESSION['isPurchaseSelected'])
+            {
+                header("Location: " . FRONT_ROOT ."Index/Home");
+            }
         }
     }
 ?>
