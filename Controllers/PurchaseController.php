@@ -85,6 +85,7 @@
             $numberOfTickets = $_GET['numberOfTickets'];
             
             $cardNumber = $_POST['cardnumber'];
+            $email = $_POST['email'];
             \Stripe\Stripe::setApiKey('sk_test_51HqJvNKO2Y0Jg2sUua2odEVQdzvU0ii3xCg5aC9o92AECMfEsE4518uDUZCxwod1fcypzeuSWBlYaUmBYs2k8YZy00rLKQGklE');
 
             $stripe = new \Stripe\StripeClient(
@@ -103,22 +104,22 @@
 
                 $movieShow = $this->movieShowDAO->Get($movieShowId);
 
-                $user = $this->userDAO->GetUserById(5);
+                $user = $this->userDAO->GetUserById($_SESSION['userLogged']->GetId());
 
                 $date = date_create(null, timezone_open('America/Argentina/Buenos_Aires'));
 
                 $purchase = new Purchase($date, $user, $movieShow, $numberOfTickets);
 
-                var_dump($purchase);
-
                 $result = $this->purchaseDAO->Add($purchase);
 
-                var_dump($result);
+                $this->SendEmail($email, $user->getUserName());
+
+                require_once(VIEWS_PATH."payment-success.php");
                     
             }
             catch(\Exception $ex)
             {
-                var_dump("Hubo un error durante el pago");
+                require_once(VIEWS_PATH."payment-error.php");
             }
             
         }
@@ -165,6 +166,46 @@
             }            
             
             header('location:' . FRONT_ROOT . 'Movie/ShowAllMoviesPremieres');
-        }               
+        }
+        
+        public function SendEmail($email, $userName)
+        {
+            $body = [
+                'Messages' => [
+                    [
+                    'From' => [
+                        'Email' => "moviepass.mmfg@gmail.com",
+                        'Name' => "MoviePass"
+                    ],
+                    'To' => [
+                        [
+                        'Email' => $email,
+                        'Name' => $userName
+                        ]
+                    ],
+                    'Subject' => "Your bougth was successfull!!!",
+                    'HTMLPart' => "<h3>Dear ".$userName." , your bougth was successfull!!!</h3>"
+                    ]
+                ]
+            ];
+            
+            $json = json_encode($body);
+            
+            $ch = curl_init();
+
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3.1/send");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+                'Content-Type: application/json')
+            );
+            curl_setopt($ch, CURLOPT_USERPWD, "52ddfcf3aa336fb4c9544a049a5410d1:5494cc2be143533fb007b505d4f6b326");
+            $server_output = curl_exec($ch);
+            curl_close ($ch);
+
+            $response = json_decode($server_output);
+        }
     }
 ?>
