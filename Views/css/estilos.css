@@ -29,6 +29,28 @@ body {
      border: 1px #003dad dotted;     
 }
 
+.transparentPanel {
+     background-color: rgba(0, 0, 0, 0.7);
+}
+
+.mText {
+     font-family: 'Caveat';
+     font-variant: small-caps;
+     font-size: 1.5rem;
+     color: rgb(255, 125, 244);          
+}
+
+.mBtn {
+     font-family: 'Goldman';
+     font-size: 1.2rem;
+     color: rgb(206, 255, 116);
+}
+
+.mTitle {
+     font-family: 'Knewave';
+     font-size: 3rem;
+     color: #ffe657;
+}
 /*
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600');
 

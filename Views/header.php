@@ -13,7 +13,20 @@
      <link rel="stylesheet" type="text/css" href="<?php echo CSS_PATH ?>estilos.css">    
 
      <!-- <link rel="stylesheet" type="text/css" href="<?php echo CSS_PATH ?>bootstrap.min.css"> -->
+
+     <!-- fonts -->
+     <link rel="preconnect" href="https://fonts.gstatic.com">
+     <link href="https://fonts.googleapis.com/css2?family=Knewave&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Goldman&display=swap" rel="stylesheet">     
+     <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">     
+     
      
      <title>Movie Pass</title>
+
 </head>
 <body>
+
+
+
+
+

@@ -1,5 +1,5 @@
 <nav class="container">     
-     <div class="row align-items-center py-2 border border-top-0 border-secondary rounded-bottom m-0">
+     <div class="row align-items-center py-2 border border-top-0 border-secondary rounded-bottom m-0 transparentPanel">
 
           <!-- primera columna: moviepass logo -->
           <div class="col">
@@ -39,8 +39,10 @@
                }               
                ?>
           </div>
+     </div>     
+     
+     <!-- background video -->
+     <div style="width: 200%; height: 200%; position: fixed; left:-50%; top: -50%; z-index: -99; pointer-events: none">
+          <iframe width="100%" height="100%" src="https://www.youtube.com/embed/sRE5iQCdRvE?mute=1&autoplay=1&controls=0&loop=1"> </iframe>
      </div>
 </nav>     
-
-
-

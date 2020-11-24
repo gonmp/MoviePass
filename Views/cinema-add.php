@@ -5,9 +5,11 @@
     <section id="cinemaAdd">
         
         <div class="container">
-            <h1 class="text-danger">Add Cinema</h1>
+            <div class="row m-0 mt-2 pb-2 mb-0 border border-secondary border-bottom-0 transparentPanel">            
+                
+                <form class="p-2" action="<?php echo FRONT_ROOT ?>Cinema/Add" method="post">           
 
-            <form action="<?php echo FRONT_ROOT ?>Cinema/Add" method="post">           
+                <h1 class="text-danger">Add Cinema</h1>           
                 
                 <div class="row">
 
@@ -30,6 +32,7 @@
                     </div>                
                 </div>
             </form>
+            </div>
         </div>
     </section>
 </main>
