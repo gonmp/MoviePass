@@ -5,6 +5,6 @@
 
     interface IPurchaseDAO
     {
-        function AddPurchase(Purchase $purchase);      
+        function Add(Purchase $purchase);      
     }
 ?>
